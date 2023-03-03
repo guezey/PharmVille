@@ -1,10 +1,11 @@
-import logo from './logo.svg';
+import NavigationBar from "./Components/NavigationBar";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
 function App() {
   return (
     <div>
-        SA
+        <NavigationBar />
     </div>
   );
 }
