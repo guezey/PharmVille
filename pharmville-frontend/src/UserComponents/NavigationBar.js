@@ -24,7 +24,7 @@ function NavigationBar() {
                     <Container className='search'>
                         <input type="text" class="searchTerm" placeholder="Search for pharmacy or medicine"></input>
                         <button type="submit" class="searchButton">
-                            <i class="fa fa-search"></i>
+                            <i className="fa fa-search"></i>
                         </button>
                     </Container>
                     <Nav>
