@@ -1,24 +1,25 @@
+
 h1 {
     font-size: 16px;
-    color: #183a1d;
+    color: var(--cardFont);
     padding-top: 0.4rem;
 }
 
 p {
-    color: #183a1d;
+    color: var(--cardFont);
     margin-bottom: 0;
 }
 
 .itemHolder {
-    background-color: #f6c453;
+    background-color: var(--cardLight);
     text-align: center;
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
     margin-top: 2rem;
 }
 
 .borders {
-    border-color: #f0a04b;
+    border-color: var(--cardDark);
     border-width: 2px;
     border-right-style: solid;
 
@@ -27,11 +28,11 @@ p {
 .detailsButton {
     display: block;
     height: 30px;
-    border-radius: 12px;
+    border-radius: 8px;
     margin-left: auto;
-    border-color: #f0a04b;
-    background-color: #fefbe9;
-    color: #183a1d;
+    border-color: var(--cardDark);
+    background-color: var(--cardDark);
+    color: var(--cardFont);
     margin-bottom: 0.3rem;
     margin-top: 0;
 }
@@ -41,15 +42,15 @@ p {
 }
 
 .detailsHolder {
-    background-color: #f0a04b;
+    background-color: var(--cardDark);
     margin-top: 0;
     text-align: left;
-    border-radius: 12px;
+    border-radius: 8px;
     box-shadow: 0 1px 8px rgba(0, 0, 0, 0.25);
 }
 
 ul {
-    color: #183a1d;
+    color: var(--cardFont);
 }
 
 li {
@@ -66,7 +67,7 @@ li {
 
 ::-webkit-scrollbar {
     width: 0.5rem;
-    background-color: #fefbe9;
+    background-color: var(--cardLight);
   }
 
   ::-webkit-scrollbar-track {
@@ -75,10 +76,10 @@ li {
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #f0a04b; 
+    background: var(--dark); 
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #b07638; 
+    background: #202022; 
   }

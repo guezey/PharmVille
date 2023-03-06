@@ -1,3 +1,11 @@
+:root {
+    --dark: #1E2D2F;
+    --light: #FEFEE3;
+    --cardLight: #8EAF9D;
+    --cardDark: #799485;
+    --cardFont: #f7f5f0;
+  }
+
 body {
-    background-color: #fefbe9;
+    background-color: #f7f5f0;
 }

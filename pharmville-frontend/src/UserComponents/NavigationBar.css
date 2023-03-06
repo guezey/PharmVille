@@ -1,10 +1,10 @@
 
 .color-nav {
-    background-color: #183a1d;
+    background-color: var(--dark);
 }
 
 .color-p {
-    color: #fefbe9;
+    color: var(--light);
 }
 
 .search {
@@ -15,7 +15,7 @@
   
   .searchTerm {
     width: 100%;
-    border: 3px solid #fefbe9;
+    border: 3px solid var(--light);
     border-right: none;
     padding: 5px;
     border-radius: 5px 0 0 5px;
@@ -24,13 +24,13 @@
   }
   
   .searchTerm:focus{
-    color: #183a1d;
+    color: var(--dark);
   }
   
   .searchButton {
     width: 40px;
-    border: 1px solid #fefbe9;
-    background: #fefbe9;
+    border: 1px solid var(--light);
+    background: var(--light);
     text-align: center;
     border-radius: 0 5px 5px 0;
     cursor: pointer;
