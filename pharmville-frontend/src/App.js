@@ -18,14 +18,16 @@ import Store from "./UserComponents/Store";
 import Profile from "./UserComponents/Profile";
 import Prescription from "./UserComponents/Prescription";
 import Cart from "./UserComponents/Cart";
+import Login from "./UserComponents/Login";
 function App() {
-  let user = "Pharmacy";
+  let user = "Patient";
   if (user === "Patient") {
     return (
       <Router>
         <NavigationBar />
         <Routes>
           <Route path="/" element={<Store />} />
+          <Route path="/auth" element={<Login/>} />
           <Route path='/prescriptions' element={<Prescription />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/cart' element={<Cart />} />
