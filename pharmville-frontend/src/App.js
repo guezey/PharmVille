@@ -20,14 +20,23 @@ import Prescription from "./UserComponents/Prescription";
 import Cart from "./UserComponents/Cart";
 import Login from "./UserComponents/Login";
 function App() {
-  let user = "Patient";
-  if (user === "Patient") {
+  let user = "Logout";
+  if (user === "Logout" ) {
+    return (
+      <Router>
+        <NavbarAdmin />
+        <Routes>
+          <Route path="/" element={<Login />} />
+        </Routes>
+      </Router>
+    );
+  }
+  else if (user === "Patient") {
     return (
       <Router>
         <NavigationBar />
         <Routes>
           <Route path="/" element={<Store />} />
-          <Route path="/auth" element={<Login/>} />
           <Route path='/prescriptions' element={<Prescription />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/cart' element={<Cart />} />

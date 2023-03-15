@@ -6,9 +6,13 @@ import {
   MDBBtn,
   MDBIcon,
 } from "mdb-react-ui-kit";
+import "./Login.css";
 function Login() {
   return (
-    <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
+    <div>
+      <h1 className="logInFont">Login</h1>
+    <MDBContainer className="p-3 my-5 d-flex flex-column logInHolder">
+      
       <MDBInput
         wrapperClass="mb-4"
         label="Email address"
@@ -32,7 +36,7 @@ function Login() {
         <a href="!#">Forgot password?</a>
       </div>
 
-      <MDBBtn className="mb-4" color="dark">Sign in</MDBBtn>
+      <button className="mb-4 logInButton">Sign in</button>
 
       <div className="text-center">
         <p style={{color: "#1E2D2F"}}>
@@ -40,6 +44,7 @@ function Login() {
         </p>
       </div>
     </MDBContainer>
+    </div>
   );
 }
 
