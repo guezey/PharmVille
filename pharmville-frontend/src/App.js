@@ -1,6 +1,15 @@
 import NavigationBar from "./UserComponents/NavigationBar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import NavbarDoctor from "./DoctorComponents/NavbarDoctor";
+import MainPageDoctor from "./DoctorComponents/MainPageDoctor";
+import NavbarPharmacy from "./PharmacyComponents/NavbarPharmacy";
+import Deliveries from "./PharmacyComponents/Deliveries";
+import SystemReports from "./PharmacyComponents/SystemReports";
+import Products from "./PharmacyComponents/Products";
+import MyShop from "./PharmacyComponents/MyShop";
+import NavbarAdmin from "./AdminComponents/NavbarAdmin";
+import MainPageAdmin from "./AdminComponents/MainPageAdmin";
 import {
   BrowserRouter as Router, Routes,
   Route,
@@ -9,18 +18,66 @@ import Store from "./UserComponents/Store";
 import Profile from "./UserComponents/Profile";
 import Prescription from "./UserComponents/Prescription";
 import Cart from "./UserComponents/Cart";
+import Login from "./UserComponents/Login";
 function App() {
-  return (
-    <Router>
-      <NavigationBar />
-                    <Routes>
-                    <Route path="/" element={<Store/>} />
-                    <Route path='/prescriptions' element={<Prescription/>} />
-                    <Route path='/profile' element={<Profile/>} />
-                    <Route path='/cart' element={<Cart/>} />
-                    </Routes>
-    </Router>
-  );
+  let user = "Logout";
+  if (user === "Logout" ) {
+    return (
+      <Router>
+        <NavbarAdmin />
+        <Routes>
+          <Route path="/" element={<Login />} />
+        </Routes>
+      </Router>
+    );
+  }
+  else if (user === "Patient") {
+    return (
+      <Router>
+        <NavigationBar />
+        <Routes>
+          <Route path="/" element={<Store />} />
+          <Route path='/prescriptions' element={<Prescription />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/cart' element={<Cart />} />
+        </Routes>
+      </Router>
+    );
+  }
+  else if ( user === "Doctor" ) {
+    return (
+      <Router>
+        <NavbarDoctor />
+        <Routes>
+          <Route path="/" element={<MainPageDoctor />} />
+        </Routes>
+      </Router>
+    );
+  }
+  else if ( user === "Pharmacy" ) {
+    return (
+      <Router>
+        <NavbarPharmacy />
+        <Routes>
+          <Route path="/" element={<MyShop />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/deliveries" element={<Deliveries />} />
+          <Route path="/reports" element={<SystemReports />} />
+        </Routes>
+      </Router>
+    );
+  }
+  else if ( user === "Admin" ) {
+    return (
+      <Router>
+        <NavbarAdmin />
+        <Routes>
+          <Route path="/" element={<MainPageAdmin />} />
+        </Routes>
+      </Router>
+    );
+  }
+
 }
 
 export default App;

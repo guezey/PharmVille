@@ -3,45 +3,95 @@ import PrescriptionItem from './PrescriptionItem';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+
 const prescriptions = [
   {
-    id: 1,
+    key: 1,
+    id: 1238632,
     date: '11/02/23',
-    type: 'red',
-    status: 'active' ,
+    type: 'Red',
+    status: 'Active' ,
+    expired: '14/02/23',
     drug: ['Paroksetin']  ,
   },
   {
-    id: 2,
+    key: 2,
+    id: 16980075623,
     date: '07/01/23',
-    type: 'normal',
-    status: 'expired' ,
+    type: 'Normal',
+    status: 'Expired' ,
+    expired: '14/02/23',
     drug: ['Nexium', 'Gaviscon'] ,
   },
   {
-    id: 3,
+    key: 3,
+    id: 123446742,
     date: '19/11/22',
-    type: 'normal',
-    status: 'used' ,
+    type: 'Normal',
+    status: 'Used' ,
+    expired: '14/02/23',
     drug: 
       ['Parol', 'Iburofen', 'Desiferol']
+  },
+  {
+    key: 1,
+    id: 1238632,
+    date: '11/02/23',
+    type: 'Red',
+    status: 'Active' ,
+    expired: '14/02/23',
+    drug: ['Paroksetin']  ,
+  },
+  {
+    key: 1,
+    id: 1238632,
+    date: '11/02/23',
+    type: 'Red',
+    status: 'Active' ,
+    expired: '14/02/23',
+    drug: ['Paroksetin']  ,
+  },
+  {
+    key: 1,
+    id: 1238632,
+    date: '11/02/23',
+    type: 'Red',
+    status: 'Active' ,
+    expired: '14/02/23',
+    drug: ['Paroksetin']  ,
+  },
+  {
+    key: 1,
+    id: 1238632,
+    date: '11/02/23',
+    type: 'Red',
+    status: 'Active' ,
+    expired: '14/02/23',
+    drug: ['Paroksetin']  ,
+  },
+  {
+    key: 1,
+    id: 1238632,
+    date: '11/02/23',
+    type: 'Red',
+    status: 'Active' ,
+    expired: '14/02/23',
+    drug: ['Paroksetin']  ,
   },
 ];
 
 function Prescription() {
+
     return (
-     <Container>
-      <Row>
-        <Col xs={8}>
+     <Container className='prescHolder'>
           <div>
           {prescriptions.map((prescription) => 
-          <PrescriptionItem id = {prescription.id}
+          <PrescriptionItem id= {prescription.id}
             date={prescription.date} type={prescription.type}
-            status={prescription.status} drug={prescription.drug}></PrescriptionItem>
+            status={prescription.status} drug={prescription.drug} expired={prescription.expired}>
+            </PrescriptionItem>
             )}
           </div>
-        </Col>
-      </Row>
      </Container>
     );
   }

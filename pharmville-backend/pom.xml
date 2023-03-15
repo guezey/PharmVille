@@ -29,6 +29,44 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>9.8.1</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>flyway-plugin-repo</id>
+            <url>https://plugins.gradle.org/m2/</url>
+        </repository>
+    </repositories>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -73,7 +111,6 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -87,6 +124,20 @@
                                 <artifactId>lombok</artifactId>
                             </exclude>
                         </excludes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.flywaydb</groupId>
+                    <artifactId>flyway-maven-plugin</artifactId>
+                    <version>7.15.0</version>
+                    <configuration>
+                        <url>jdbc:postgresql://localhost:5400/pharm-db</url>
+                        <user>admin</user>
+                        <password>passwd</password>
+                        <connectRetries>10</connectRetries>
+                        <locations>
+                            <location>filesystem:src/main/resources/db/migration</location>
+                        </locations>
                     </configuration>
                 </plugin>
                 <plugin>
