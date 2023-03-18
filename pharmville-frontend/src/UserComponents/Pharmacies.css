@@ -1,0 +1,20 @@
+.pharmacyHolder {
+    background-color: var(--cardDark);
+    border-radius: 6px;
+    width: 80vh;
+    margin-left: 6vh;
+    margin-right: 6vh;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+
+.imgHolder {
+    width: 20vh;
+    height: 20vh;
+    border-radius: 6px;
+    padding: 0;
+}
+
+.center {
+    margin: auto;
+}
