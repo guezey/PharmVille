@@ -20,7 +20,7 @@ import Prescription from "./UserComponents/Prescription";
 import Cart from "./UserComponents/Cart";
 import Login from "./UserComponents/Login";
 function App() {
-  let user = "Logout";
+  let user = "Patient";
   if (user === "Logout" ) {
     return (
       <Router>
