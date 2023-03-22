@@ -19,7 +19,75 @@ import Profile from "./UserComponents/Profile";
 import Prescription from "./UserComponents/Prescription";
 import Cart from "./UserComponents/Cart";
 import Login from "./UserComponents/Login";
+import React, { useState, useEffect } from "react";
 function App() {
+  /**
+  const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+
+  useEffect(() => {
+    const onStorageChange = (e) => {
+      if (e.key === "userRole") {
+        setUserRole(e.newValue);
+      }
+    };
+
+    window.addEventListener("storage", onStorageChange);
+    return () => window.removeEventListener("storage", onStorageChange);
+  }, []);
+
+  if (!userRole) {
+    return <Login />;
+  }
+
+  switch (userRole) {
+    case "Patient":
+      return (
+        <Router>
+          <NavigationBar />
+          <Routes>
+            <Route path="/" element={<Store />} />
+            <Route path='/prescriptions' element={<Prescription />} />
+            <Route path='/profile' element={<Profile />} />
+            <Route path='/cart' element={<Cart />} />
+          </Routes>
+        </Router>
+      );
+    case "Doctor":
+      return (
+        <Router>
+          <NavbarDoctor />
+          <Routes>
+            <Route path="/" element={<MainPageDoctor />} />
+          </Routes>
+        </Router>
+      );
+    case "Pharmacy":
+      return (
+        <Router>
+          <NavbarPharmacy />
+          <Routes>
+            <Route path="/" element={<MyShop />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/deliveries" element={<Deliveries />} />
+            <Route path="/reports" element={<SystemReports />} />
+          </Routes>
+        </Router>
+      );
+    case "Admin":
+      return (
+        <Router>
+          <NavbarAdmin />
+          <Routes>
+            <Route path="/" element={<MainPageAdmin />} />
+          </Routes>
+        </Router>
+      );
+    default:
+      console.error("Invalid user role.");
+      return <Login />;
+  }
+  */
+
   let user = "Logout";
   if (user === "Logout" ) {
     return (
