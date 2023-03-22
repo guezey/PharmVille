@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   MDBContainer,
@@ -33,7 +33,7 @@ function Register({ onBackToLogin }) {
       return;
     }
 
-    if(!/^\d+$/.test(tcKimlikNo)) {
+    if (!/^\d+$/.test(tcKimlikNo)) {
       setErrorMessage("TC Kimlik No must only contain numbers.");
       return;
     }
@@ -153,16 +153,54 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [loginErrorMessage, setLoginErrorMessage] = useState("");
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("rememberedEmail");
+    if (storedEmail) {
+      setEmail(storedEmail);
+      setRememberMe(true);
+    }
+  }, []);
 
   if (isRegistering) {
     return <Register onBackToLogin={() => setIsRegistering(false)} />;
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your logic to handle the login process here
-    console.log(email, password, rememberMe);
+  
+    // Replace with your own backend server URL
+    const apiUrl = "https://your-backend-server.com/api/login";
+  
+    const data = {
+      email,
+      password,
+    };
+  
+    try {
+      const response = await axios.post(apiUrl, data);
+      const userRole = response.data.role;
+  
+      if (userRole) {
+        localStorage.setItem("userRole", userRole);
+        // Redirect or update the state based on userRole
+      } else {
+        // Handle invalid user role from the server
+        console.log("Invalid user role received from server.");
+      }
+    } catch (error) {
+      // Handle errors while sending data to the server
+      setLoginErrorMessage("An error occurred while logging in. Please try again.");
+    }
+  
+    if (rememberMe) {
+      localStorage.setItem("rememberedEmail", email);
+    } else {
+      localStorage.removeItem("rememberedEmail");
+    }
   };
+  
 
   const handleForgotPassword = () => {
     setIsForgotPassword(true);
@@ -263,6 +301,7 @@ function Login() {
           </p>
         </div>
       </MDBContainer>
+      {loginErrorMessage && <p className="error-message mt-4">{loginErrorMessage}</p>}
     </div>
   );
 }
