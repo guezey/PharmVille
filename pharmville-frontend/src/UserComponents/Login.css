@@ -1,27 +1,33 @@
 .logInButton {
-    margin-left: 5vh;
-    margin-right: 5vh;
-    margin: auto;
-    width: 12vh;
-    background-color: var(--dark);
-    color: var(--cardFont);
-    border-radius: 6px;
+  margin-left: 5vh;
+  margin-right: 5vh;
+  margin: auto;
+  width: 12vh;
+  background-color: var(--dark);
+  color: var(--cardFont);
+  border-radius: 6px;
 }
 
 a {
-    color: var(--dark);
+  color: var(--dark);
 }
 
 .logInHolder {
-    width: 60vh;
-    
-    border-radius: 6px;
+  width: 60vh;
+
+  border-radius: 6px;
 }
 
 .logInFont {
-    color: var(--dark);
-    margin: auto;
-    font-size: 6vh;
-    text-align: center;
-    margin-top: 6vh;
+  color: var(--dark);
+  margin: auto;
+  font-size: 6vh;
+  text-align: center;
+  margin-top: 6vh;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  text-align: center;
 }

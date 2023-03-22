@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   MDBContainer,
   MDBInput,
@@ -15,11 +16,60 @@ function Register({ onBackToLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your logic to handle the registration process here
-    console.log(name, surname, tcKimlikNo, email, password, confirmPassword);
+
+    if (
+      !name ||
+      !surname ||
+      !tcKimlikNo ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+      setErrorMessage("All fields are required.");
+      return;
+    }
+
+    if(!/^\d+$/.test(tcKimlikNo)) {
+      setErrorMessage("TC Kimlik No must only contain numbers.");
+      return;
+    }
+
+    if (tcKimlikNo.length !== 11) {
+      setErrorMessage("TC Kimlik No must be exactly 11 digits.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+
+    // Clear error message if form is valid
+    setErrorMessage("");
+
+    // Replace with your own backend server URL
+    const apiUrl = "https://your-backend-server.com/api/register";
+
+    const data = {
+      name,
+      surname,
+      tcKimlikNo,
+      email,
+      password,
+    };
+
+    try {
+      await axios.post(apiUrl, data);
+      // Registration successful, navigate to login
+      onBackToLogin();
+    } catch (error) {
+      // Handle errors while storing data in the database
+      setErrorMessage("An error occurred while registering. Please try again.");
+    }
   };
 
   return (
@@ -81,6 +131,8 @@ function Register({ onBackToLogin }) {
             Register
           </button>
         </form>
+
+        {errorMessage && <p className="error-message mt-4">{errorMessage}</p>}
 
         <div className="text-center">
           <p style={{ color: "#1E2D2F" }}>
