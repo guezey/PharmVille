@@ -149,6 +149,7 @@ function Register({ onBackToLogin }) {
 
 function Login() {
   const [isRegistering, setIsRegistering] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -164,13 +165,53 @@ function Login() {
   };
 
   const handleForgotPassword = () => {
+    setIsForgotPassword(true);
+  };
+
+  const handleBackToLogin = () => {
+    setIsForgotPassword(false);
+  };
+
+  const handleForgotPasswordSubmit = (e) => {
+    e.preventDefault();
     // Add your logic to handle the forgot password process here
-    console.log("Forgot password clicked");
+    console.log("Forgot password email:", email);
   };
 
   const handleRegister = () => {
     setIsRegistering(true);
   };
+
+  if (isForgotPassword) {
+    return (
+      <div>
+        <h1 className="logInFont">Forgot Password</h1>
+        <MDBContainer className="p-3 my-5 d-flex flex-column logInHolder">
+          <form onSubmit={handleForgotPasswordSubmit}>
+            <MDBInput
+              wrapperClass="mb-4"
+              label="Email address"
+              id="formEmail"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <button type="submit" className="mb-4 logInButton">
+              Submit
+            </button>
+          </form>
+          <div className="text-center">
+            <p style={{ color: "#1E2D2F" }}>
+              Back to{" "}
+              <a href="#!" onClick={handleBackToLogin}>
+                Login
+              </a>
+            </p>
+          </div>
+        </MDBContainer>
+      </div>
+    );
+  }
 
   return (
     <div>
