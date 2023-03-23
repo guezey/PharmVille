@@ -3,6 +3,7 @@ package com.cadde.pharmvillebackend.models;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 
 enum IntakeType {
@@ -19,8 +20,8 @@ public class Medicine extends Product {
 
     private SideEffect sideEffects;
     private List<Disease> conflictingDiseases;
-    private List<Disease>  curesDiseases;
-    private List<MedicineInPrescription> prescriptions;
+    private Set<Disease>  curesDiseases;
+    private Set<MedicineInPrescription> prescriptions;
 
 
 }

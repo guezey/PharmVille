@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 enum PrescriptionType {
     RED, GREEN, PURPLE, ORANGE, NORMAL
@@ -21,7 +22,7 @@ public class Prescription {
     private PrescriptionType prescriptionType;
     private PrescriptionStatus status;
 
-    private List<Disease> diseases;
+    private Set<Disease> diseases;
     //TODO: join to owning patient
     //Todo: join to Writing doctor
 
