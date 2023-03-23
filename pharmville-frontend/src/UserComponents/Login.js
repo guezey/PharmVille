@@ -189,7 +189,7 @@ function Login() {
         // Redirect or update the state based on userRole
       } else {
         // Handle invalid user role from the server
-        console.log("Invalid user role received from server.");
+        setLoginErrorMessage("Invalid user role received from server.");
       }
     } catch (error) {
       // Handle errors while sending data to the server
