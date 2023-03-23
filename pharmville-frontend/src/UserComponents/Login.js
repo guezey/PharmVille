@@ -181,9 +181,11 @@ function Login() {
     try {
       const response = await axios.post(apiUrl, data);
       const userRole = response.data.role;
+      const userData = response.data;
   
       if (userRole) {
         localStorage.setItem("userRole", userRole);
+        localStorage.setItem("userData", JSON.stringify(userData));
         // Redirect or update the state based on userRole
       } else {
         // Handle invalid user role from the server

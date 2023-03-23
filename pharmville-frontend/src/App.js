@@ -23,6 +23,7 @@ import React, { useState, useEffect } from "react";
 function App() {
   /**
   const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
+  const [userData, setUserData] = useState(localStorage.getItem("userData"));
 
   useEffect(() => {
     const onStorageChange = (e) => {
@@ -88,7 +89,7 @@ function App() {
   }
   */
 
-  let user = "Logout";
+  let user = "Patient";
   if (user === "Logout" ) {
     return (
       <Router>
