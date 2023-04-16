@@ -25,19 +25,6 @@ function Register({ onBackToLogin }) {
   const [licenseFile, setLicenseFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const FormInput = ({ wrapperClass, label, id, type, value, onChange }) => {
-    return (
-      <MDBInput
-        wrapperClass={wrapperClass}
-        label={label}
-        id={id}
-        type={type}
-        value={value}
-        onChange={onChange}
-      />
-    );
-  };
-
   const FormSelect = ({
     wrapperClass,
     label,
@@ -48,6 +35,9 @@ function Register({ onBackToLogin }) {
   }) => {
     return (
       <div className={wrapperClass}>
+        <label htmlFor={id} className="form-label">
+          {label}
+        </label>
         <select
           className="form-select"
           id={id}
@@ -60,25 +50,41 @@ function Register({ onBackToLogin }) {
             </option>
           ))}
         </select>
-        <label htmlFor={id} className="form-label">
-          {label}
-        </label>
       </div>
     );
   };
 
-  const FormFileInput = ({ wrapperClass, label, id, onChange }) => {
+  const FormFileInput = ({ wrapperClass, label, id, onChange, fileName }) => {
     return (
       <div className={wrapperClass}>
-        <input
-          type="file"
-          className="form-control"
-          id={id}
-          onChange={onChange}
-        />
         <label htmlFor={id} className="form-label">
           {label}
         </label>
+        <div className="input-group">
+          <input
+            type="file"
+            className="form-control"
+            id={id}
+            onChange={onChange}
+            style={{ display: "none" }}
+          />
+          <input
+            type="text"
+            className="form-control"
+            readOnly
+            value={fileName}
+            placeholder="No file chosen"
+            onClick={() => document.getElementById(id).click()}
+          />
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => document.getElementById(id).click()}
+            style={{ backgroundColor: "#1E2D2F" }}
+          >
+            Browse
+          </button>
+        </div>
       </div>
     );
   };
@@ -197,6 +203,7 @@ function Register({ onBackToLogin }) {
               label="Upload Medicine Degree"
               id="formDegreeFile"
               onChange={handleDegreeFileChange}
+              fileName={degreeFile && degreeFile.name}
             />
           )}
           {role === "Pharmacy" && (
@@ -205,57 +212,82 @@ function Register({ onBackToLogin }) {
               label="Upload Pharmacy License"
               id="formLicenseFile"
               onChange={handleLicenseFileChange}
+              fileName={licenseFile && licenseFile.name}
             />
           )}
-          <FormInput
-            wrapperClass="mb-4"
-            label="Name"
-            id="formName"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <FormInput
-            wrapperClass="mb-4"
-            label="Surname"
-            id="formSurname"
-            type="text"
-            value={surname}
-            onChange={(e) => setSurname(e.target.value)}
-          />
-          <FormInput
-            wrapperClass="mb-4"
-            label="TC Kimlik No"
-            id="formTCKimlikNo"
-            type="text"
-            maxLength="11"
-            value={tcKimlikNo}
-            onChange={(e) => setTcKimlikNo(e.target.value)}
-          />
-          <FormInput
-            wrapperClass="mb-4"
-            label="Email address"
-            id="formEmail"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <FormInput
-            wrapperClass="mb-4"
-            label="Password"
-            id="formPassword"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <FormInput
-            wrapperClass="mb-4"
-            label="Confirm Password"
-            id="formConfirmPassword"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
+          <div className="mb-4">
+            <label htmlFor="formName" className="form-label">
+              Name
+            </label>
+            <input
+              className="form-control"
+              id="formName"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="formSurname" className="form-label">
+              Surname
+            </label>
+            <input
+              className="form-control"
+              id="formSurname"
+              type="text"
+              value={surname}
+              onChange={(e) => setSurname(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="formTCKimlikNo" className="form-label">
+              TC Kimlik No
+            </label>
+            <input
+              className="form-control"
+              id="formTCKimlikNo"
+              type="text"
+              maxLength="11"
+              value={tcKimlikNo}
+              onChange={(e) => setTcKimlikNo(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="formEmail" className="form-label">
+              Email address
+            </label>
+            <input
+              className="form-control"
+              id="formEmail"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="formPassword" className="form-label">
+              Password
+            </label>
+            <input
+              className="form-control"
+              id="formPassword"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="formConfirmPassword" className="form-label">
+              Confirm Password
+            </label>
+            <input
+              className="form-control"
+              id="formConfirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
           <button type="submit" className="mb-4 logInButton">
             Register
           </button>
