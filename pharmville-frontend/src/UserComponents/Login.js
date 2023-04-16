@@ -6,6 +6,10 @@ import {
   MDBCheckbox,
   MDBBtn,
   MDBIcon,
+  MDBSelect,
+  MDBSelectInput,
+  MDBSelectOptions,
+  MDBSelectOption,
 } from "mdb-react-ui-kit";
 import "./Login.css";
 
@@ -16,7 +20,68 @@ function Register({ onBackToLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("Patient");
+  const [degreeFile, setDegreeFile] = useState(null);
+  const [licenseFile, setLicenseFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const FormInput = ({ wrapperClass, label, id, type, value, onChange }) => {
+    return (
+      <MDBInput
+        wrapperClass={wrapperClass}
+        label={label}
+        id={id}
+        type={type}
+        value={value}
+        onChange={onChange}
+      />
+    );
+  };
+
+  const FormSelect = ({
+    wrapperClass,
+    label,
+    id,
+    value,
+    onChange,
+    options,
+  }) => {
+    return (
+      <div className={wrapperClass}>
+        <select
+          className="form-select"
+          id={id}
+          value={value}
+          onChange={onChange}
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <label htmlFor={id} className="form-label">
+          {label}
+        </label>
+      </div>
+    );
+  };
+
+  const FormFileInput = ({ wrapperClass, label, id, onChange }) => {
+    return (
+      <div className={wrapperClass}>
+        <input
+          type="file"
+          className="form-control"
+          id={id}
+          onChange={onChange}
+        />
+        <label htmlFor={id} className="form-label">
+          {label}
+        </label>
+      </div>
+    );
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +92,8 @@ function Register({ onBackToLogin }) {
       !tcKimlikNo ||
       !email ||
       !password ||
-      !confirmPassword
+      !confirmPassword ||
+      !role
     ) {
       setErrorMessage("All fields are required.");
       return;
@@ -48,22 +114,44 @@ function Register({ onBackToLogin }) {
       return;
     }
 
+    if (role === "Doctor" && !degreeFile) {
+      setErrorMessage("Please upload your medicine degree for review.");
+      return;
+    }
+
+    if (role === "Pharmacy" && !licenseFile) {
+      setErrorMessage("Please upload your pharmacy license for review.");
+      return;
+    }
+
     // Clear error message if form is valid
     setErrorMessage("");
 
     // Replace with your own backend server URL
     const apiUrl = "https://your-backend-server.com/api/register";
 
-    const data = {
-      name,
-      surname,
-      tcKimlikNo,
-      email,
-      password,
-    };
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("surname", surname);
+    formData.append("tcKimlikNo", tcKimlikNo);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("role", role);
+
+    if (degreeFile) {
+      formData.append("degreeFile", degreeFile);
+    }
+
+    if (licenseFile) {
+      formData.append("licenseFile", licenseFile);
+    }
 
     try {
-      await axios.post(apiUrl, data);
+      await axios.post(apiUrl, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       // Registration successful, navigate to login
       onBackToLogin();
     } catch (error) {
@@ -72,12 +160,54 @@ function Register({ onBackToLogin }) {
     }
   };
 
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
+    setDegreeFile(null);
+    setLicenseFile(null);
+  };
+
+  const handleDegreeFileChange = (e) => {
+    setDegreeFile(e.target.files[0]);
+  };
+
+  const handleLicenseFileChange = (e) => {
+    setLicenseFile(e.target.files[0]);
+  };
+
   return (
     <div>
       <h1 className="logInFont">Register</h1>
       <MDBContainer className="p-3 my-5 d-flex flex-column logInHolder">
         <form onSubmit={handleSubmit}>
-          <MDBInput
+          <FormSelect
+            wrapperClass="mb-4"
+            label="Role"
+            id="formRole"
+            value={role}
+            onChange={handleRoleChange}
+            options={[
+              { value: "Patient", label: "Patient" },
+              { value: "Doctor", label: "Doctor" },
+              { value: "Pharmacy", label: "Pharmacy" },
+            ]}
+          />
+          {role === "Doctor" && (
+            <FormFileInput
+              wrapperClass="mb-4"
+              label="Upload Medicine Degree"
+              id="formDegreeFile"
+              onChange={handleDegreeFileChange}
+            />
+          )}
+          {role === "Pharmacy" && (
+            <FormFileInput
+              wrapperClass="mb-4"
+              label="Upload Pharmacy License"
+              id="formLicenseFile"
+              onChange={handleLicenseFileChange}
+            />
+          )}
+          <FormInput
             wrapperClass="mb-4"
             label="Name"
             id="formName"
@@ -85,7 +215,7 @@ function Register({ onBackToLogin }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <MDBInput
+          <FormInput
             wrapperClass="mb-4"
             label="Surname"
             id="formSurname"
@@ -93,7 +223,7 @@ function Register({ onBackToLogin }) {
             value={surname}
             onChange={(e) => setSurname(e.target.value)}
           />
-          <MDBInput
+          <FormInput
             wrapperClass="mb-4"
             label="TC Kimlik No"
             id="formTCKimlikNo"
@@ -102,7 +232,7 @@ function Register({ onBackToLogin }) {
             value={tcKimlikNo}
             onChange={(e) => setTcKimlikNo(e.target.value)}
           />
-          <MDBInput
+          <FormInput
             wrapperClass="mb-4"
             label="Email address"
             id="formEmail"
@@ -110,7 +240,7 @@ function Register({ onBackToLogin }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <MDBInput
+          <FormInput
             wrapperClass="mb-4"
             label="Password"
             id="formPassword"
@@ -118,7 +248,7 @@ function Register({ onBackToLogin }) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <MDBInput
+          <FormInput
             wrapperClass="mb-4"
             label="Confirm Password"
             id="formConfirmPassword"
@@ -126,14 +256,11 @@ function Register({ onBackToLogin }) {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-
           <button type="submit" className="mb-4 logInButton">
             Register
           </button>
         </form>
-
         {errorMessage && <p className="error-message mt-4">{errorMessage}</p>}
-
         <div className="text-center">
           <p style={{ color: "#1E2D2F" }}>
             Already a member?{" "}
@@ -169,20 +296,20 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Replace with your own backend server URL
     const apiUrl = "https://your-backend-server.com/api/login";
-  
+
     const data = {
       email,
       password,
     };
-  
+
     try {
       const response = await axios.post(apiUrl, data);
       const userRole = response.data.role;
       const userData = response.data;
-  
+
       if (userRole) {
         localStorage.setItem("userRole", userRole);
         localStorage.setItem("userData", JSON.stringify(userData));
@@ -193,16 +320,17 @@ function Login() {
       }
     } catch (error) {
       // Handle errors while sending data to the server
-      setLoginErrorMessage("An error occurred while logging in. Please try again.");
+      setLoginErrorMessage(
+        "An error occurred while logging in. Please try again."
+      );
     }
-  
+
     if (rememberMe) {
       localStorage.setItem("rememberedEmail", email);
     } else {
       localStorage.removeItem("rememberedEmail");
     }
   };
-  
 
   const handleForgotPassword = () => {
     setIsForgotPassword(true);
@@ -303,7 +431,9 @@ function Login() {
           </p>
         </div>
       </MDBContainer>
-      {loginErrorMessage && <p className="error-message mt-4">{loginErrorMessage}</p>}
+      {loginErrorMessage && (
+        <p className="error-message mt-4">{loginErrorMessage}</p>
+      )}
     </div>
   );
 }
