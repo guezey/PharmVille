@@ -15,7 +15,7 @@ import {
   Route,
 } from "react-router-dom";
 import Store from "./UserComponents/Store";
-import Profile from "./UserComponents/Profile";
+import PatientProfile from "./Profile/PatientProfile";
 import Prescription from "./UserComponents/Prescription";
 import Cart from "./UserComponents/Cart";
 import Login from "./UserComponents/Login";
@@ -89,7 +89,7 @@ function App() {
   }
   */
 
-  let user = "Logout";
+  let user = "Patient";
   if (user === "Logout" ) {
     return (
       <Router>
@@ -107,7 +107,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Store />} />
           <Route path='/prescriptions' element={<Prescription />} />
-          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile' element={<PatientProfile />} />
           <Route path='/cart' element={<Cart />} />
         </Routes>
       </Router>

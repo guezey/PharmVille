@@ -1,0 +1,40 @@
+button {
+  margin: 10px;
+  margin-left: 30px;
+  background-color: var(--dark);
+  color: var(--cardFont);
+  border-radius: 6px;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(34, 34, 34);
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  list-style: none;
+  padding: 10px 20px;
+  color: #ffffff;
+  text-transform: capitalize;
+  font-weight: 600;
+  border: 2px solid #799485;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  background: #8EAF9D;
+  transition: all 0.75s;
+}
+
+div.container {
+  text-align: center;
+}
+
+ul.addressUL {
+  display: inline-block;
+  text-align: left;
+}
