@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "./AddressModal.css";
 
 const AddressModal = ({ isOpen, onClose, onAddAddress }) => {
   const [newAddress, setNewAddress] = useState({

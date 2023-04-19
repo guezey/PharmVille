@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import "./AddressModal.css";
 const PasswordModal = ({ isOpen, onClose, onChangePassword, currentPassword }) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -21,7 +21,7 @@ const PasswordModal = ({ isOpen, onClose, onChangePassword, currentPassword }) =
   if (!isOpen) return null;
 
   return (
-    <div className="password-modal">
+    <div className="address-modal">
       <div className="modal-content">
         <h2>Change Password</h2>
         {error && <p className="error-message">{error}</p>}

@@ -215,6 +215,7 @@ function Register({ onBackToLogin }) {
               fileName={licenseFile && licenseFile.name}
             />
           )}
+          {role !== "Pharmacy" && (
           <div className="mb-4">
             <label htmlFor="formName" className="form-label">
               Name
@@ -227,6 +228,8 @@ function Register({ onBackToLogin }) {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+          )}
+          {role !== "Pharmacy" && (
           <div className="mb-4">
             <label htmlFor="formSurname" className="form-label">
               Surname
@@ -239,6 +242,8 @@ function Register({ onBackToLogin }) {
               onChange={(e) => setSurname(e.target.value)}
             />
           </div>
+          )}
+          {role !== "Pharmacy" && (
           <div className="mb-4">
             <label htmlFor="formTCKimlikNo" className="form-label">
               TC Kimlik No
@@ -252,6 +257,7 @@ function Register({ onBackToLogin }) {
               onChange={(e) => setTcKimlikNo(e.target.value)}
             />
           </div>
+          )}
           <div className="mb-4">
             <label htmlFor="formEmail" className="form-label">
               Email address
