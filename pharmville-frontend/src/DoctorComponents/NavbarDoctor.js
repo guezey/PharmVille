@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import pharmvilleLogo from '../images/pharmville.png';
 import '../UserComponents/NavigationBar.css';
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function NavbarDoctor() {
     return (
@@ -24,6 +24,9 @@ function NavbarDoctor() {
                             <i className="fa fa-search"></i>
                         </button>
                     </Container>
+                    <Nav>
+                        <Nav.Link as={NavLink} to={"/profile"} className='color-p'>Profile</Nav.Link>
+                    </Nav>
                 </Navbar.Collapse>
             </Container>
         </Navbar>

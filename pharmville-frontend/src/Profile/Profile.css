@@ -38,3 +38,15 @@ ul.addressUL {
   display: inline-block;
   text-align: left;
 }
+
+td {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(34, 34, 34);
+}
+
+ti {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgb(34, 34, 34);
+}

@@ -16,10 +16,12 @@ import {
 } from "react-router-dom";
 import Store from "./UserComponents/Store";
 import PatientProfile from "./Profile/PatientProfile";
+import DoctorProfile from "./Profile/DoctorProfile";
 import Prescription from "./UserComponents/Prescription";
 import Cart from "./UserComponents/Cart";
 import Login from "./UserComponents/Login";
 import React, { useState, useEffect } from "react";
+import PharmacyProfile from "./Profile/PharmacyProfile";
 function App() {
   /**
   const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
@@ -89,7 +91,7 @@ function App() {
   }
   */
 
-  let user = "Admin";
+  let user = "Pharmacy";
   if (user === "Logout" ) {
     return (
       <Router>
@@ -119,6 +121,7 @@ function App() {
         <NavbarDoctor />
         <Routes>
           <Route path="/" element={<MainPageDoctor />} />
+          <Route path='/profile' element={<DoctorProfile />} />
         </Routes>
       </Router>
     );
@@ -128,10 +131,11 @@ function App() {
       <Router>
         <NavbarPharmacy />
         <Routes>
-          <Route path="/" element={<MyShop />} />
+          <Route path="/" element={<PharmacyProfile />} />
           <Route path="/products" element={<Products />} />
           <Route path="/deliveries" element={<Deliveries />} />
           <Route path="/reports" element={<SystemReports />} />
+          <Route path='/profile' element={<DoctorProfile />} />
         </Routes>
       </Router>
     );
