@@ -3,10 +3,12 @@ import "./AddressModal.css";
 
 const AddressModal = ({ isOpen, onClose, onAddAddress }) => {
   const [newAddress, setNewAddress] = useState({
-    street: '',
+    name: '',
+    country: '',
     city: '',
-    state: '',
-    zip: '',
+    addressField1: '',
+    addressField2: '',
+    postalCode: '',
   });
 
   const handleInputChange = (event) => {
@@ -16,7 +18,7 @@ const AddressModal = ({ isOpen, onClose, onAddAddress }) => {
 
   const handleSubmit = () => {
     onAddAddress(newAddress);
-    setNewAddress({ street: '', city: '', state: '', zip: '' });
+    setNewAddress({name: '', country: '', city: '', addressField1: '', addressField2: '', postalCode: ''});
     onClose();
   };
 
@@ -28,31 +30,45 @@ const AddressModal = ({ isOpen, onClose, onAddAddress }) => {
         <h2>Add Address</h2>
         <input
           type="text"
-          name="street"
+          name="name"
           value={newAddress.street}
           onChange={handleInputChange}
-          placeholder="Street"
+          placeholder="Name"
+        />
+        <input
+          type="text"
+          name="country"
+          value={newAddress.city}
+          onChange={handleInputChange}
+          placeholder="Country"
         />
         <input
           type="text"
           name="city"
-          value={newAddress.city}
+          value={newAddress.state}
           onChange={handleInputChange}
           placeholder="City"
         />
         <input
           type="text"
-          name="state"
-          value={newAddress.state}
+          name="address field 1"
+          value={newAddress.postalCode}
           onChange={handleInputChange}
-          placeholder="State"
+          placeholder="Address Field 1"
         />
         <input
           type="text"
-          name="zip"
-          value={newAddress.zip}
+          name="address field 2"
+          value={newAddress.postalCode}
           onChange={handleInputChange}
-          placeholder="Zip"
+          placeholder="Address Field 2"
+        />
+        <input
+          type="text"
+          name="postal code"
+          value={newAddress.postalCode}
+          onChange={handleInputChange}
+          placeholder="Postal Code"
         />
         <button onClick={handleSubmit}>Add Address</button>
         <button onClick={onClose}>Cancel</button>

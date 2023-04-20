@@ -21,7 +21,17 @@ function UpdateProduct() {
         </label>
         <br />
         <label>
+          Product Company:
+          <input type="text" value={productId} onChange={(e) => setProductId(e.target.value)} />
+        </label>
+        <br />
+        <label>
           New Name:
+          <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} />
+        </label>
+        <br />
+        <label>
+          New Company:
           <input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} />
         </label>
         <br />
@@ -31,8 +41,38 @@ function UpdateProduct() {
         </label>
         <br />
         <label>
-          New Price:
+          New Price (TL):
           <input type="number" value={productPrice} onChange={(e) => setProductPrice(e.target.value)} />
+        </label>
+        <br />
+        <label>
+          New Drug Class:
+          <input type="number" value={productPrice} onChange={(e) => setProductPrice(e.target.value)} />
+        </label>
+        <br />
+        <label>
+          New Amount:
+          <input type="number" value={productPrice} onChange={(e) => setProductPrice(e.target.value)} />
+        </label>
+        <br />
+        <label>
+          New Undesired Side Effect:
+          <input type="number" value={productPrice} onChange={(e) => setProductPrice(e.target.value)} />
+        </label>
+        <br />
+        <label>
+          New Prescription Type:
+          <input type="number" value={productPrice} onChange={(e) => setProductPrice(e.target.value)} />
+        </label>
+        <br />
+        <label>
+          New Age Group:
+          <input type="number" value={productPrice} onChange={(e) => setProductPrice(e.target.value)} />
+        </label>
+        <br />
+        <label>
+          New Prospectus:
+          <input type="file" value={productName} onChange={(e) => setProductName(e.target.value)} />
         </label>
         <br />
         <button onClick={handleUpdateProduct}>Update Product</button>

@@ -3,7 +3,6 @@ import PatientInfo from "./PatientInfo";
 import AddressList from "./AddressList";
 import PasswordChange from "./PasswordChange";
 import MedicineHistory from "./MedicineHistory";
-import Prescriptions from "./Prescriptions";
 import Orders from "./Orders";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col } from "react-bootstrap";
@@ -47,24 +46,6 @@ const PatientProfile = () => {
         endDate: "2022-06-30",
       },
     ],
-    prescriptions: [
-      {
-        id: 1,
-        medication: "Lisinopril",
-        dose: "10 mg",
-        frequency: "Once daily",
-        startDate: "2023-01-01",
-        endDate: "2023-12-31",
-      },
-      {
-        id: 2,
-        medication: "Metformin",
-        dose: "500 mg",
-        frequency: "Twice daily",
-        startDate: "2023-01-01",
-        endDate: "2023-12-31",
-      },
-    ],
     orders: [
       {
         id: 1,
@@ -102,13 +83,6 @@ const PatientProfile = () => {
         <Col>
           <div className="bg-light p-4 mb-4 text-dark text-left">
             <MedicineHistory medicineHistory={patientData.medicineHistory} />
-          </div>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <div className="bg-light p-4 mb-4 text-dark text-left">
-            <Prescriptions prescriptions={patientData.prescriptions} />
           </div>
         </Col>
       </Row>

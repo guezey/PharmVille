@@ -45,8 +45,8 @@ function ViewPharmacyApplications() {
           <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>License</th>
             <th>Status</th>
+            <th>License</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -55,8 +55,10 @@ function ViewPharmacyApplications() {
             <tr key={application.id}>
               <td>{application.id}</td>
               <td>{application.name}</td>
-              <td>{application.license}</td>
               <td>{application.status}</td>
+              <td>
+                <button>View</button>
+              </td>
               <td>
                 <button onClick={() => handleAccept(application.id)}>Accept</button>
                 <button onClick={() => handleDecline(application.id)}>Decline</button>

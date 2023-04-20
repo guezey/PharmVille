@@ -17,6 +17,11 @@ function DeleteProduct() {
           <input type="text" value={productId} onChange={(e) => setProductId(e.target.value)} />
         </label>
         <br />
+        <label>
+          Product Company:
+          <input type="text" value={productId} onChange={(e) => setProductId(e.target.value)} />
+        </label>
+        <br />
         <button onClick={handleDeleteProduct}>Delete Product</button>
       </form>
     </div>

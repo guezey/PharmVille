@@ -45,8 +45,8 @@ function ViewDoctorApplications() {
           <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Degree</th>
             <th>Status</th>
+            <th>Diploma</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -55,8 +55,10 @@ function ViewDoctorApplications() {
             <tr key={application.id}>
               <td>{application.id}</td>
               <td>{application.name}</td>
-              <td>{application.degree}</td>
               <td>{application.status}</td>
+              <td>
+                <button>View</button>
+              </td>
               <td>
                 <button onClick={() => handleAccept(application.id)}>Accept</button>
                 <button onClick={() => handleDecline(application.id)}>Decline</button>
