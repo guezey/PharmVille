@@ -58,6 +58,15 @@ function AddProduct() {
         </label>
         <br />
         <label>
+          Image:
+          <input
+            type="file"
+            value={ageGroup}
+            onChange={(e) => setAgeGroup(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
           Type:
           <select
             value={productType}

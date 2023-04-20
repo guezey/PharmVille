@@ -1,4 +1,7 @@
-button {
+/* This file bugs out the admin page. Combine the css files or use css module */
+
+
+/*button {
   margin: 10px;
   margin-left: 30px;
   background-color: var(--dark);
@@ -50,3 +53,4 @@ ti {
   font-weight: 600;
   color: rgb(34, 34, 34);
 }
+*/

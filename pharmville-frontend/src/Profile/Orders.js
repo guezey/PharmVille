@@ -12,6 +12,7 @@ const Orders = ({ orders }) => {
             <th style={{color:"black"}}>Medication</th>
             <th style={{color:"black"}}>Quantity</th>
             <th style={{color:"black"}}>Date Ordered</th>
+            <th style={{color:"black"}}></th>
           </tr>
         </thead>
         <tbody>
@@ -21,6 +22,7 @@ const Orders = ({ orders }) => {
               <td style={{color:"black"}}>{order.medication}</td>
               <td style={{color:"black"}}>{order.quantity}</td>
               <td style={{color:"black"}}>{order.dateOrdered}</td>
+              <td style={{color:"black"}}><button>Cancel</button></td>
             </tr>
           ))}
         </tbody>
