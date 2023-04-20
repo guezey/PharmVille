@@ -49,15 +49,21 @@ const PatientProfile = () => {
     orders: [
       {
         id: 1,
-        medication: "Lisinopril",
-        quantity: "30",
+        medication: "Lisinopril, Advil",
+        quantity: "1, 3",
         dateOrdered: "2023-01-01",
       },
       {
         id: 2,
         medication: "Metformin",
-        quantity: "60",
-        dateOrdered: "2023-01-01",
+        quantity: "5",
+        dateOrdered: "2023-02-02",
+      },
+      {
+        id: 3,
+        medication: "Hardline Whey Protein",
+        quantity: "1",
+        dateOrdered: "2023-03-03",
       },
     ],  
   });
@@ -75,14 +81,6 @@ const PatientProfile = () => {
         <Col>
           <div className="bg-light p-4 mb-4 text-dark text-left">
             <AddressList addresses={patientData.addresses} />
-          </div>
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          <div className="bg-light p-4 mb-4 text-dark text-left">
-            <MedicineHistory medicineHistory={patientData.medicineHistory} />
           </div>
         </Col>
       </Row>

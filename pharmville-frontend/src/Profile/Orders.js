@@ -9,7 +9,7 @@ const Orders = ({ orders }) => {
         <thead>
           <tr>
             <th style={{color:"black"}}>ID</th>
-            <th style={{color:"black"}}>Medication</th>
+            <th style={{color:"black"}}>Product</th>
             <th style={{color:"black"}}>Quantity</th>
             <th style={{color:"black"}}>Date Ordered</th>
             <th style={{color:"black"}}></th>

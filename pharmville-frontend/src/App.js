@@ -91,7 +91,7 @@ function App() {
   }
   */
 
-  let user = "Pharmacy";
+  let user = "Patient";
   if (user === "Logout" ) {
     return (
       <Router>
