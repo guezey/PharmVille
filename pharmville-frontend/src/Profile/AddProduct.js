@@ -6,9 +6,25 @@ const AddProduct = () => {
     const [description, setDescription] = useState("");
     const [stock, setStock] = useState("");
     const [price, setPrice] = useState("");
+    const [company, setCompany] = useState("");
+    const [image, setImage] = useState(null);
     const [aroma, setAroma] = useState("");
+    const [weight, setWeight] = useState("");
+    const [BCAA, setBCAA] = useState("");
+    const [service_amount, setService_amount] = useState("");
+    const [arginine, setArginine] = useState("");
+    const [carb, setCarb] = useState("");
+    const [fat, setFat] = useState("");
+    const [protein, setProtein] = useState("");
     const [category, setCategory] = useState("");
     const [skinType, setSkinType] = useState("");
+    const [volume, setVolume] = useState("");
+
+    const handleImageChange = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setImage(event.target.files[0]);
+        }
+    };
 
     const handleProductTypeChange = (event) => {
         setProductType(event.target.value);
@@ -49,6 +65,15 @@ const AddProduct = () => {
                     onChange={(event) => setName(event.target.value)}
                 />
 
+                <label htmlFor="company">Company:</label>
+                <input
+                    type="text"
+                    id="company"
+                    placeholder="Enter company"
+                    value={company}
+                    onChange={(event) => setCompany(event.target.value)}
+                />
+
                 <label htmlFor="description">Description:</label>
                 <input
                     type="text"
@@ -76,6 +101,14 @@ const AddProduct = () => {
                     onChange={(event) => setPrice(event.target.value)}
                 />
 
+                <label htmlFor="image">Product Image:</label>
+                <input
+                    type="file"
+                    id="image"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                />
+
                 {productType === "proteinPowder" && (
                     <>
                         <label htmlFor="aroma">Aroma:</label>
@@ -85,6 +118,62 @@ const AddProduct = () => {
                             placeholder="Enter aroma"
                             value={aroma}
                             onChange={(event) => setAroma(event.target.value)}
+                        />
+                        <label htmlFor="weight">Weight:</label>
+                        <input
+                            type="text"
+                            id="weight"
+                            placeholder="Enter weight"
+                            value={weight}
+                            onChange={(event) => setWeight(event.target.value)}
+                        />
+                        <label htmlFor="BCAA">BCAA:</label>
+                        <input
+                            type="text"
+                            id="BCAA"
+                            placeholder="Enter BCAA Percentage"
+                            value={BCAA}
+                            onChange={(event) => setBCAA(event.target.value)}
+                        />
+                        <label htmlFor="service_amount">Service Amount:</label>
+                        <input
+                            type="text"
+                            id="service_amount"
+                            placeholder="Enter service amount"
+                            value={service_amount}
+                            onChange={(event) => setService_amount(event.target.value)}
+                        />
+                        <label htmlFor="arginine">Arginine:</label>
+                        <input
+                            type="text"
+                            id="arginine"
+                            placeholder="Enter arginine percentage"
+                            value={arginine}
+                            onChange={(event) => setArginine(event.target.value)}
+                        />
+                        <label htmlFor="carb">Carbonhydrate:</label>
+                        <input
+                            type="text"
+                            id="carb"
+                            placeholder="Enter carbonhydrate percentage"
+                            value={carb}
+                            onChange={(event) => setCarb(event.target.value)}
+                        />
+                        <label htmlFor="fat">Fat:</label>
+                        <input
+                            type="text"
+                            id="fat"
+                            placeholder="Enter fat percentage"
+                            value={fat}
+                            onChange={(event) => setFat(event.target.value)}
+                        />
+                        <label htmlFor="protein">Protein:</label>
+                        <input
+                            type="text"
+                            id="protein"
+                            placeholder="Enter protein percentage"
+                            value={protein}
+                            onChange={(event) => setProtein(event.target.value)}
                         />
                     </>
                 )}
@@ -106,6 +195,14 @@ const AddProduct = () => {
                             placeholder="Enter skin type"
                             value={skinType}
                             onChange={(event) => setSkinType(event.target.value)}
+                        />
+                        <label htmlFor="volume">Volume:</label>
+                        <input
+                            type="text"
+                            id="volume"
+                            placeholder="Enter volume"
+                            value={volume}
+                            onChange={(event) => setVolume(event.target.value)}
                         />
                     </>
                 )}
