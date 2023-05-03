@@ -1,0 +1,33 @@
+.pharmacyHolder {
+    background-color: var(--cardDark);
+    border-radius: 6px;
+    width: 80vh;
+    margin-left: 6vh;
+    margin-right: 6vh;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
+}
+
+.imgHolder {
+    width: 20vh;
+    height: 20vh;
+    border-radius: 6px;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+    margin: 0;
+  }
+
+  /* Set the width of the first column to 200px and the background color to gray */
+  .column-1 {
+
+  }
+
+  /* Set the width of the second column to the remaining space and the background color to white */
+  .column-2 {
+    flex: 1;
+    background-color: white;
+  }

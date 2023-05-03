@@ -1,0 +1,48 @@
+.filterHolder {
+    width: 240px;
+    height: 100%;
+    background-color: aliceblue;
+    overflow-y: auto;
+    text-align: left;
+    margin-top: 20px;
+}
+
+.filterLabel {
+    font-size: 16px;
+    color: rgb(30,45,47);
+}
+
+.arrowSize {
+    width: 20px;
+    height: 20px;
+    margin: 10px;
+}
+
+.filterComponent {
+    display: flex;
+}
+
+.radio-buttons {
+    margin-left: 10px;
+    margin-top: 0px;
+    display: block;
+}
+
+.buttonElements {
+    display: flex;
+    margin-top: 10px;
+}
+
+.buttonLabel {
+    margin-left: 10px;
+    font-size: 14px;
+    color: rgb(30,45,47);
+}
+
+.genComp {
+    margin: 20px;
+}
+
+hr {
+    margin: 0;
+}
