@@ -1,18 +1,16 @@
-.pharmacyHolder {
-    background-color: var(--cardDark);
-    border-radius: 6px;
-    width: 80vh;
-    margin-left: 6vh;
-    margin-right: 6vh;
-    margin-top: 2vh;
-    margin-bottom: 2vh;
+.medicineHolder {
+  text-align: center;
+  width: 200px;
+  align-items: center;
+  margin: 10px;
 }
 
 .imgHolder {
-    width: 20vh;
-    height: 20vh;
+    width: 150px;
+    height: 100%;
     border-radius: 6px;
-    padding: 0;
+    padding: 10px;
+    text-align: center;
 }
 
 .container {
@@ -23,11 +21,24 @@
 
   /* Set the width of the first column to 200px and the background color to gray */
   .column-1 {
-
+   
+    text-align: left;
+    position: relative;
+    left: 0;
+    margin-left: 0;
   }
 
   /* Set the width of the second column to the remaining space and the background color to white */
   .column-2 {
     flex: 1;
-    background-color: white;
+    margin: 20px;
+    margin: auto;
+    text-align: center;
+    align-items: center;
+    margin-left: 100px;
+  }
+
+  .medicinesHolder {
+    margin: 20px;
+    margin: auto;
   }

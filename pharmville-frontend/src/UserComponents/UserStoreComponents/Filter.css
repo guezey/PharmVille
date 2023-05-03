@@ -15,7 +15,8 @@
 .arrowSize {
     width: 20px;
     height: 20px;
-    margin: 10px;
+    margin-right: 0;
+    margin-left: auto;
 }
 
 .filterComponent {
@@ -45,4 +46,36 @@
 
 hr {
     margin: 0;
+}
+
+.pageNo {
+    background-color: aliceblue;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    color: rgb(30,45,47);
+    margin: 10px;
+    margin: auto;
+    margin-top: 40px;
+    border: none;
+}
+
+.pageNo a {
+    color: rgb(30,45,47);
+}
+
+li {
+    background-color: aliceblue;
+}
+
+ul {
+    background-color: aliceblue;
+}
+
+input[type='radio']:checked:after {
+    background-color: #ffa500;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
 }

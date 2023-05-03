@@ -9,7 +9,7 @@ function Store() {
     const [pharmacies, setPharmacies] = useState([]);
     const [loading, setLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(1);
-    const [postPerPage, setPostPerPage] = useState(6);
+    const [postPerPage, setPostPerPage] = useState(8);
 
     useEffect(() => {
         const fetchPharmacy = async () => {
