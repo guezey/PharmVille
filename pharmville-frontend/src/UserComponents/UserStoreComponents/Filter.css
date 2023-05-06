@@ -1,0 +1,81 @@
+.filterHolder {
+    width: 240px;
+    height: 100%;
+    background-color: aliceblue;
+    overflow-y: auto;
+    text-align: left;
+    margin-top: 20px;
+}
+
+.filterLabel {
+    font-size: 16px;
+    color: rgb(30,45,47);
+}
+
+.arrowSize {
+    width: 20px;
+    height: 20px;
+    margin-right: 0;
+    margin-left: auto;
+}
+
+.filterComponent {
+    display: flex;
+}
+
+.radio-buttons {
+    margin-left: 10px;
+    margin-top: 0px;
+    display: block;
+}
+
+.buttonElements {
+    display: flex;
+    margin-top: 10px;
+}
+
+.buttonLabel {
+    margin-left: 10px;
+    font-size: 14px;
+    color: rgb(30,45,47);
+}
+
+.genComp {
+    margin: 20px;
+}
+
+hr {
+    margin: 0;
+}
+
+.pageNo {
+    background-color: aliceblue;
+    width: 20px;
+    height: 20px;
+    font-size: 14px;
+    color: rgb(30,45,47);
+    margin: 10px;
+    margin: auto;
+    margin-top: 40px;
+    border: none;
+}
+
+.pageNo a {
+    color: rgb(30,45,47);
+}
+
+li {
+    background-color: aliceblue;
+}
+
+ul {
+    background-color: aliceblue;
+}
+
+input[type='radio']:checked:after {
+    background-color: #ffa500;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}

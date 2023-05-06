@@ -14,7 +14,7 @@ import {
   BrowserRouter as Router, Routes,
   Route,
 } from "react-router-dom";
-import Store from "./UserComponents/Store";
+import Store from "./UserComponents/UserStoreComponents/Store";
 import PatientProfile from "./Profile/PatientProfile";
 import DoctorProfile from "./Profile/DoctorProfile";
 import Prescription from "./UserComponents/Prescription";
