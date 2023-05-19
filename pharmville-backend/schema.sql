@@ -4,7 +4,7 @@ CREATE TABLE User
     user_id  int PRIMARY KEY AUTO_INCREMENT,
     email    varchar(255) NOT NULL,
     password char(60)     NOT NULL,
-    phone    int(10)
+    phone    VARCHAR(10)
 );
 
 CREATE TABLE Person
@@ -22,7 +22,7 @@ CREATE TABLE Patient
 (
     patient_id int PRIMARY KEY,
     birth_date date,
-    weight     int,
+    weight     float,
     height     int,
     gender     char(1),
     FOREIGN KEY (patient_id) REFERENCES Person (person_id)
@@ -185,32 +185,36 @@ CREATE TABLE class_join_medicine
     FOREIGN KEY (prod_id) REFERENCES Medicine (prod_id)
 );
 
-CREATE TABLE DiseaseType(
-   disease_type varchar(255) PRIMARY KEY NOT NULL
+CREATE TABLE DiseaseType
+(
+    disease_type varchar(255) PRIMARY KEY NOT NULL
 );
 
 
-CREATE TABLE Disease(
-   disease_id int PRIMARY KEY AUTO_INCREMENT NOT NULL,
-   name varchar(255) NOT NULL,
-   disease_type varchar(255),
-   description text,
-   FOREIGN KEY (disease_type) REFERENCES DiseaseType(disease_type)
+CREATE TABLE Disease
+(
+    disease_id   int PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    name         varchar(255) NOT NULL,
+    disease_type varchar(255),
+    description  text,
+    FOREIGN KEY (disease_type) REFERENCES DiseaseType (disease_type)
 );
 
-CREATE TABLE presc_disease(
-   presc_id int,
-   disease_id int,
-   PRIMARY KEY (presc_id, disease_id),
-   FOREIGN KEY (presc_id) REFERENCES Prescription(presc_id),
-   FOREIGN KEY (disease_id) REFERENCES Disease(disease_id)
+CREATE TABLE presc_disease
+(
+    presc_id   int,
+    disease_id int,
+    PRIMARY KEY (presc_id, disease_id),
+    FOREIGN KEY (presc_id) REFERENCES Prescription (presc_id),
+    FOREIGN KEY (disease_id) REFERENCES Disease (disease_id)
 );
-CREATE TABLE patient_disease(
-   patient_id int,
-   disease_id int,
-   PRIMARY KEY (patient_id, disease_id),
-   FOREIGN KEY (patient_id) REFERENCES Patient(patient_id),
-   FOREIGN KEY (disease_id) REFERENCES Disease(disease_id)
+CREATE TABLE patient_disease
+(
+    patient_id int,
+    disease_id int,
+    PRIMARY KEY (patient_id, disease_id),
+    FOREIGN KEY (patient_id) REFERENCES Patient (patient_id),
+    FOREIGN KEY (disease_id) REFERENCES Disease (disease_id)
 );
 
 
@@ -221,24 +225,26 @@ CREATE TABLE SideEffect
     PRIMARY KEY (effect_name)
 );
 
-CREATE TABLE pharmacy_product(
-   pharmacy_id int,
-   prod_id int,
-   price decimal(6,2),
-   stock int,
-   description text,
-   FOREIGN KEY (pharmacy_id) REFERENCES Pharmacy(pharmacy_id),
-   FOREIGN KEY (prod_id) REFERENCES Product(prod_id)
+CREATE TABLE pharmacy_product
+(
+    pharmacy_id int,
+    prod_id     int,
+    price       decimal(6, 2),
+    stock       int,
+    description text,
+    FOREIGN KEY (pharmacy_id) REFERENCES Pharmacy (pharmacy_id),
+    FOREIGN KEY (prod_id) REFERENCES Product (prod_id)
 );
 
-CREATE TABLE medicine_presc(
-   med_id int NOT NULL,
-   presc_id int NOT NULL,
-   dosage varchar(255),
-   description text,
-   PRIMARY KEY (med_id, presc_id),
-   FOREIGN KEY (med_id) REFERENCES Medicine(prod_id),
-   FOREIGN KEY (presc_id) REFERENCES Prescription(presc_id)
+CREATE TABLE medicine_presc
+(
+    med_id      int NOT NULL,
+    presc_id    int NOT NULL,
+    dosage      varchar(255),
+    description text,
+    PRIMARY KEY (med_id, presc_id),
+    FOREIGN KEY (med_id) REFERENCES Medicine (prod_id),
+    FOREIGN KEY (presc_id) REFERENCES Prescription (presc_id)
 );
 
 
@@ -297,34 +303,37 @@ create table Skincare
     foreign key (skincare_type) references SkincareType (skincare_type)
 );
 
-create table applicable_skin_types(
-   skin_type varchar(255) not null ,
-   product_id int not null ,
+create table applicable_skin_types
+(
+    skin_type  varchar(255) not null,
+    product_id int          not null,
 
-   primary key (skin_type, product_id),
-   foreign key (skin_type) references SkinTypes(skin_type),
-   foreign key  (product_id) references Skincare(prod_id)
+    primary key (skin_type, product_id),
+    foreign key (skin_type) references SkinTypes (skin_type),
+    foreign key (product_id) references Skincare (prod_id)
 );
 
-CREATE TABLE product_order(
-   order_id int NOT NULL,
-   prod_id int NOT NULL,
-   presc_id int,
-   price double NOT NULL,
-   count int NOT NULL,
-   PRIMARY KEY (order_id, prod_id),
-   FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-   FOREIGN KEY (prod_id) REFERENCES Product(prod_id),
-   FOREIGN KEY (presc_id) REFERENCES Prescription(presc_id)
+CREATE TABLE product_order
+(
+    order_id int    NOT NULL,
+    prod_id  int    NOT NULL,
+    presc_id int,
+    price    double NOT NULL,
+    count    int    NOT NULL,
+    PRIMARY KEY (order_id, prod_id),
+    FOREIGN KEY (order_id) REFERENCES Orders (order_id),
+    FOREIGN KEY (prod_id) REFERENCES Product (prod_id),
+    FOREIGN KEY (presc_id) REFERENCES Prescription (presc_id)
 );
 
-CREATE TABLE Payment(
-   payment_id int PRIMARY KEY AUTO_INCREMENT,
-   order_id int NOT NULL,
-   payment_date timestamp NOT NULL,
-   payment_amount decimal(10,2) NOT NULL,
-   card_number int(16) NOT NULL,
-   FOREIGN KEY (order_id) REFERENCES Orders(order_id)
+CREATE TABLE Payment
+(
+    payment_id     int PRIMARY KEY AUTO_INCREMENT,
+    order_id       int            NOT NULL,
+    payment_date   timestamp      NOT NULL,
+    payment_amount decimal(10, 2) NOT NULL,
+    card_number    int(16) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES Orders (order_id)
 );
 
 
@@ -459,3 +468,51 @@ BEGIN
 END;
 
 */
+
+-- Sample data Insertion----------------------------------------------------------------------
+
+-- Actors------------------------------------------------------------------------------------
+INSERT INTO User (user_id, email, password, phone)
+VALUES (1, 'deniz@gmail.com', 'Pass123', '532033931'),
+       (2, 'ceren@gmail.com', 'Pass321', '324323024'),
+       (3, 'dağhan@gmail.com', 'Pass321', '324324233'),
+       (4, 'aliemir@gmail.com', 'Pasd301', NULL),
+       (5, 'arda@gmail.com', 'Passwordo', '3940909090'),
+       (6, 'faruk.eczane@gmail.com', 'Eczane123', '423809444'),
+       (7, 'gonul.eczane@gmail.com', 'Eczane321', '213213122'),
+       (8, 'admin@gmail.com', 'Admin123', '312312312'),
+       (9, 'fatih.eczane@gmail.com', 'Eczo12', '31232132'),
+       (10, 'reject.rejectoğlu@gmail.com', 'rejecto', '533313231'),
+       (11, 'rejectullah.ezczane@gmail.com', 'Reject Eczo')
+;
+
+INSERT INTO Person(person_id, name, surname, tck, is_admin)
+VALUES (1, 'Deniz Mert', 'Dilaverler', 41963970444, FALSE),
+       (2, 'Ceren', 'Akyar', 218371298, FALSE),
+       (3, 'Dağhan', 'Ünal', 231231233, FALSE),
+       (4, 'Ali Emir', 'Güzey', 21312332, FALSE),
+       (5, 'Arda', 'Baktır', 123123212, FALSE),
+       (8, 'Admin', 'Adminoğlu', 12312312, TRUE),
+       (10, 'Reject', 'Rejectoğlu', 123213123, FALSE)
+;
+
+INSERT INTO Pharmacy(pharmacy_id, name, is_on_duty, diploma_path, balance, approval_status)
+VALUES (6, 'Faruk Pharmacy', TRUE, NULL, 2000, 'APPROVED'),
+       (7, 'Gönül Pharmacy', FALSE, NULL, 3000, 'APPROVED'),
+       (9, 'Fatih Pharmacy', TRUE, NULL, 0, 'PENDING'),
+       (11, 'Rejectullah Pharmacy', TRUE, NULL, 1, 'REJECTED')
+;
+
+INSERT INTO Doctor(doctor_id, speciality, approval_status)
+VALUES (2, 'Clinic Doctor', 'APPROVED'),
+       (4, 'Urologist', 'PENDING'),
+       (10, 'Cardiologist', 'REJECTED')
+;
+
+INSERT INTO Patient(patient_id, birth_date, weight, height, gender)
+VALUES (1, '2002-04-05', 78.5, 182, 'M'),
+       (3, '2002-08-23', 79, 185, 'M'),
+       (5, '2002-01-01', 82, 182, 'M')
+;
+
+-- Medicine---------------------------------------------------------------------------------
