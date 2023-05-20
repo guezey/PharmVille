@@ -12,7 +12,7 @@ CREATE TABLE Person
     person_id int PRIMARY KEY NOT NULL,
     name      varchar(255),
     surname   varchar(255),
-    tck       char(11) NOT NULL,
+    tck       char(11)        NOT NULL,
     is_admin  boolean         NOT NULL,
     FOREIGN KEY (person_id) REFERENCES User (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -32,7 +32,7 @@ CREATE TABLE Doctor
 (
     doctor_id       int PRIMARY KEY NOT NULL,
     speciality      varchar(255),
-    approval_status ENUM('APPROVED','REJECTED','PENDING') NOT NULL,
+    approval_status ENUM ('APPROVED','REJECTED','PENDING') NOT NULL,
     FOREIGN KEY (doctor_id) REFERENCES Person (person_id)
 );
 
@@ -41,9 +41,9 @@ CREATE TABLE Pharmacy
     pharmacy_id     int PRIMARY KEY NOT NULL,
     name            varchar(255)    NOT NULL,
     is_on_duty      boolean         NOT NULL,
-    diploma_path    text            DEFAULT  NULL,
+    diploma_path    text DEFAULT NULL,
     balance         decimal(10, 2)  NOT NULL,
-    approval_status ENUM('APPROVED','REJECTED','PENDING') NOT NULL,
+    approval_status ENUM ('APPROVED','REJECTED','PENDING') NOT NULL,
     FOREIGN KEY (pharmacy_id) REFERENCES User (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -54,17 +54,10 @@ CREATE TABLE Prescription
     patient_id int      NOT NULL,
     write_date datetime NOT NULL,
     due_date   datetime NOT NULL,
-    type       enum('WHITE', 'RED', 'GREEN', 'ORANGE', 'PURPLE', 'NONE') DEFAULT 'NONE',
-    status     enum('ACTIVE', 'USED', 'OVERDUE'),
+    type       enum ('WHITE', 'RED', 'GREEN', 'ORANGE', 'PURPLE', 'NONE') DEFAULT 'NONE',
+    status     enum ('ACTIVE', 'USED', 'OVERDUE'),
     FOREIGN KEY (doctor_id) REFERENCES Doctor (doctor_id),
     FOREIGN KEY (patient_id) REFERENCES Patient (patient_id)
-);
-
-
-create table MedicineType
-(
-    medicine_type varchar(255) NOT NULL,
-    primary key (medicine_type)
 );
 
 create table IntakeType
@@ -105,7 +98,7 @@ create table Product
     prod_id   int          not null auto_increment,
     name      varchar(255) not null,
     company   varchar(255),
-    image_url varchar(255) unique,
+    image_url varchar(255) unique DEFAULT NULL,
     price     double       not null,
     primary key (prod_id),
 
@@ -134,8 +127,8 @@ CREATE TABLE Orders
     pharmacy_id   int       NOT NULL,
     patient_id    int       NOT NULL,
     delivery_date datetime,
-    order_status  ENUM('ACTIVE', 'SHIPPED', 'DELIVERED', 'CANCELED') NOT NULL,
-    order_type    ENUM('CARGO', 'PICKUP') NOT NULL,
+    order_status  ENUM ('ACTIVE', 'SHIPPED', 'DELIVERED', 'CANCELED') NOT NULL,
+    order_type    ENUM ('CARGO', 'PICKUP') NOT NULL,
     shipping_firm varchar(255),
     address_id    int       NOT NULL,
     FOREIGN KEY (address_id) REFERENCES Address (address_id),
@@ -157,15 +150,13 @@ CREATE TABLE Review
 
 CREATE TABLE Medicine
 (
-    prod_id       INT          NOT NULL AUTO_INCREMENT,
-    prospectus    varchar(255),
-    amount        varchar(255),
-    presc_type    enum('WHITE', 'RED', 'GREEN', 'ORANGE', 'PURPLE', 'NONE') not null,
-    medicine_type varchar(255) NOT NULL,
-    intake_type   varchar(255) NOT NULL,
+    prod_id     INT          NOT NULL AUTO_INCREMENT,
+    prospectus  varchar(255),
+    amount      varchar(255),
+    presc_type  enum ('WHITE', 'RED', 'GREEN', 'ORANGE', 'PURPLE', 'NONE') not null,
+    intake_type varchar(255) NOT NULL,
     primary key (prod_id),
     foreign key (prod_id) references Product (prod_id) ON DELETE CASCADE,
-    foreign key (medicine_type) references MedicineType (medicine_type),
     foreign key (intake_type) references IntakeType (intake_type)
 );
 
@@ -259,22 +250,13 @@ CREATE TABLE medicine_side_effect
 
 create table medicine_age
 (
-    prod_id    int          not null,
-    group_name varchar(255) not null,
-    dosage     double,
-    unit       ENUM('ml', 'mg','drops', 'tablets', 'capsules' ),
+    prod_id        int          not null,
+    group_name     varchar(255) not null,
+    advised_dosage double,
+    unit           ENUM('ml', 'mg','drops', 'tablets', 'capsules', 'mg per kg of body-weight', 'times', 'puffs' ),
     primary key (prod_id, group_name),
     foreign key (prod_id) references Medicine (prod_id),
     foreign key (group_name) references AgeGroup (group_name)
-);
-
-create table join_medicine_type
-(
-    medicine_type varchar(255) not null,
-    prod_id       int          not null,
-    primary key (prod_id, medicine_type),
-    foreign key (medicine_type) references MedicineType (medicine_type),
-    foreign key (prod_id) references Medicine (prod_id)
 );
 
 create table ProteinPowder
@@ -516,4 +498,196 @@ VALUES (1, '2002-04-05', 78.5, 182, 'M'),
 ;
 
 -- Product --------------------------------------------------------------------------------
+INSERT INTO Product(prod_id, name, company, price)
+VALUES (1, 'Calpol', 'Bayer', 70),
+       (2, 'Nexium', 'Abdi Ibrahim', 90),
+       (3, 'Ibuprofen', 'Bayer', 110.70),
+       (4, 'Arveles', 'Bayer', 60),
+       (5, 'Majezik', 'Abdi Ibrahim', 60.90),
+       (6, 'Advil', 'Abdi Ibrahim', 62.30),
+       (7, 'Aferin', 'Eczacıbaşı', 40.20),
+       (8, 'Rennie', 'Eczacıbaşı', 50.30),
+       (9, 'Nurofen', 'Eczacıbaşı', 80.20),
+       (10, 'Paranox', 'Bayer', 30.40),
+       (11, 'Ventolin', 'Bayer', 60)
+;
 -- Medicine---------------------------------------------------------------------------------
+INSERT INTO SideEffect(effect_name, description)
+VALUES ('Nausea', 'Urge to vomit'),
+       ('Abdominal Pain', 'Pain in the Abdomen'),
+       ('Headache', 'Pain in the head'),
+       ('Diarrhea', 'Wet poop'),
+       ('Constipation', 'No Poop ;('),
+       ('Allergic Reaction', 'Medicine can cause allergic reactions on some patients'),
+       ('Heartburn', 'Burning feeling on heart'),
+       ('Dizziness', 'Dizzy feeling'),
+       ('Stomach Upset', 'Sad stomach :('),
+       ('Stomach Pain', 'Pain in the stomach'),
+       ('Increased Heart Rate', 'Heart rate go VROOOOOM!'),
+       ('Elevated blood pressure', 'Blood pressure increases'),
+       ('Restlessness', 'Inability to stay relaxed'),
+       ('Nervousness', 'Feeling of unease and anxiety')
+;
+
+INSERT INTO MedicineClass(class_name)
+VALUES ('Painkiller'),
+       ('Fever Reducer'),
+       ('Birth Control'),
+       ('Immunity Enhancer'),
+       ('Cold Medicine'),
+       ('Allergy Medication'),
+       ('Antacid'),
+       ('Inflammation Reducer'),
+       ('Asthma')
+;
+
+INSERT INTO AgeGroup(group_name, min_age, max_age)
+VALUES ('Infants', 0, 1),
+       ('Children', 1, 13),
+       ('Adolescents', 13, 18),
+       ('Adults', 18, 65),
+       ('Elderly', 65, 999);
+
+
+Insert INTO IntakeType(intake_type)
+VALUES ('Capsule'),
+       ('Tablet'),
+       ('Syrup'),
+       ('Syringe'),
+       ('Rectal'),
+       ('Eyedrop'),
+       ('Inhaler'),
+       ('Suspension')
+;
+
+INSERT INTO Medicine (prod_id, prospectus, amount, presc_type, intake_type)
+VALUES (1, 'Calpol Prospectus', '200ml', 'NONE', 'Syrup'),
+       (2, 'Nexium Prospectus', '20 Tablets', 'NONE', 'Tablet'),
+       (3, 'Ibuprofen Prospectus', '20 Tablets', 'PURPLE', 'Tablet'),
+       (4, 'Arveles Prospectus', '10 Capsules', 'GREEN', 'Capsule'),
+       (5, 'Majezik Prospectus', '15 Capsules', 'RED', 'Capsule'),
+       (6, 'Advil Prospectus', '30 Tablets', 'GREEN', 'Tablet'),
+       (7, 'Aferin Prospectus', '250ml', 'ORANGE', 'Syrup'),
+       (8, 'Rennie Prospectus', '30 Tablets', 'WHITE', 'Tablet'),
+       (9, 'Nurofen Prospectus', '250ml', 'RED', 'Suspension'),
+       (10, 'Paranox Prospectus', '200ml', 'NONE', 'Tablet'),
+       (11, 'Ventolin Prospectus', '2.5ml', 'NONE', 'Inhaler')
+;
+
+
+INSERT INTO class_join_medicine (prod_id, class_name)
+VALUES (1, 'Fever Reducer'),
+       (1, 'Painkiller'),
+       (2, 'Antacid'),
+       (3, 'Fever Reducer'),
+       (3, 'Painkiller'),
+       (4, 'Painkiller'),
+       (5, 'Painkiller'),
+       (6, 'Inflammation Reducer'),
+       (6, 'Painkiller'),
+       (7, 'Painkiller'),
+       (8, 'Antacid'),
+       (9, 'Fever Reducer'),
+       (9, 'Painkiller'),
+       (10, 'Fever Reducer'),
+       (10, 'Painkiller'),
+       (11, 'Asthma')
+;
+
+INSERT INTO medicine_age(prod_id, group_name, advised_dosage, unit)
+VALUES (1, 'Infants', 13, 'mg per kg of body-weight'),
+       (1, 'Children', 15, 'mg per kg of body-weight'),
+       (1, 'Adolescents', 750, 'mg'),
+       (1, 'Adults', 750, 'mg'),
+       (1, 'Elderly', 750, 'mg'),
+
+       (2, 'Children', 15, 'mg'),
+       (2, 'Adolescents', 30, 'mg'),
+       (2, 'Adults', 35, 'mg'),
+       (2, 'Elderly', 35, 'mg'),
+
+       (3, 'Children', 7.5, 'mg per kg of body-weight'),
+       (3, 'Adolescents', 300, 'mg'),
+       (3, 'Adults', 300, 'mg'),
+       (3, 'Elderly', 300, 'mg'),
+
+       (4, 'Children', 7.5, 'mg per kg of body-weight'),
+       (4, 'Adolescents', 300, 'mg'),
+       (4, 'Adults', 300, 'mg'),
+       (4, 'Elderly', 300, 'mg'),
+
+       (5, 'Children', 7.5, 'mg per kg of body-weight'),
+       (5, 'Adolescents', 350, 'mg'),
+       (5, 'Adults', 350, 'mg'),
+       (5, 'Elderly', 350, 'mg'),
+
+       (6, 'Children', 7.5, 'mg per kg of body-weight'),
+       (6, 'Adolescents', 300, 'mg'),
+       (6, 'Adults', 350, 'mg'),
+       (6, 'Elderly', 350, 'mg'),
+
+       (7, 'Children', 7.5, 'mg per kg of body-weight'),
+       (7, 'Adolescents', 300, 'mg'),
+       (7, 'Adults', 350, 'mg'),
+       (7, 'Elderly', 350, 'mg'),
+
+       (8, 'Adolescents', 300, 'mg'),
+       (8, 'Adults', 400, 'mg'),
+       (8, 'Elderly', 350, 'mg'),
+
+       (9, 'Adolescents', 300, 'mg'),
+       (9, 'Adults', 350, 'mg'),
+       (9, 'Elderly', 350, 'mg'),
+
+       (10, 'Children', 0.5, 'tablets'),
+       (10, 'Adolescents', 1.5, 'tablets'),
+       (10, 'Adults', 2, 'tablets'),
+       (10, 'Elderly', 2, 'tablets'),
+
+       (11, 'Children', 1, 'puffs'),
+       (11, 'Adolescents', 2, 'puffs'),
+       (11, 'Adults', 2, 'puffs'),
+       (11, 'Elderly', 2, 'puffs');
+
+INSERT INTO medicine_side_effect(prod_id, effect_name)
+VALUES (1, 'Allergic Reaction'),
+
+       (2, 'Headache'),
+       (2, 'Diarrhea'),
+       (2, 'Nausea'),
+       (2, 'Stomach Pain'),
+
+       (3, 'Stomach Upset'),
+       (3, 'Heartburn'),
+       (3, 'Nausea'),
+       (3, 'Dizziness'),
+       (3, 'Headache'),
+
+       (4, 'Nausea'),
+       (4, 'Diarrhea'),
+       (4, 'Abdominal Pain'),
+
+       (5, 'Stomach Upset'),
+       (5, 'Heartburn'),
+       (5, 'Nausea'),
+       (5, 'Headache'),
+
+       (6, 'Stomach Upset'),
+       (6, 'Heartburn'),
+       (6, 'Nausea'),
+       (6, 'Headache'),
+       (6, 'Dizziness'),
+
+       (7, 'Increased Heart Rate'),
+       (7, 'Elevated Blood Pressure'),
+       (7, 'Restlessness'),
+       (7, 'Nervousness'),
+
+       (9, 'Stomach Upset'),
+       (9, 'Heartburn'),
+       (9, 'Dizziness'),
+       (9, 'Headache'),
+
+       (11, 'Increased Heart Rate'),
+       (11, 'Headache')
+;
