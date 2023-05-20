@@ -22,8 +22,8 @@ function NavigationBar() {
                         <Nav.Link as={NavLink} to={"/"} className='color-p'>Store</Nav.Link>
                     </Nav>
                     <Container className='search'>
-                        <input type="text" class="searchTerm" placeholder="Search for pharmacy or medicine"></input>
-                        <button type="submit" class="searchButton">
+                        <input type="text" className="searchTerm" placeholder="Search for pharmacy or medicine"></input>
+                        <button type="submit" className="searchButton">
                             <i className="fa fa-search"></i>
                         </button>
                     </Container>

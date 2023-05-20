@@ -18,6 +18,7 @@ import Store from "./UserComponents/UserStoreComponents/Store";
 import PatientProfile from "./Profile/PatientProfile";
 import DoctorProfile from "./Profile/DoctorProfile";
 import Prescription from "./UserComponents/Prescription";
+import Medicine from "./UserComponents/UserStoreComponents/Medicine";
 import Cart from "./UserComponents/Cart";
 import Login from "./UserComponents/Login";
 import React, { useState, useEffect } from "react";
@@ -111,6 +112,7 @@ function App() {
           <Route path='/prescriptions' element={<Prescription />} />
           <Route path='/profile' element={<PatientProfile />} />
           <Route path='/cart' element={<Cart />} />
+          <Route path='/medicine' element={<Medicine />} />
         </Routes>
       </Router>
     );

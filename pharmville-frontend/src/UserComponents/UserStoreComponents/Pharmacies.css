@@ -3,7 +3,9 @@
   width: 200px;
   align-items: center;
   margin: 10px;
+  cursor: pointer;
 }
+
 
 .imgHolder {
     width: 150px;
