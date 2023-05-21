@@ -4,15 +4,13 @@ def to_string_tuple(values):
 class MedicineQueryBuilder:
     base_query = "SELECT * FROM full_medicine "
 
-    def __init__(self, name: str = None, side_effects: list = None,
-                 medicine_classes: list = None, intake_types: list = None, age_groups: list = None,
-                 presc_types: list = None):
-        self.name = name
-        self.side_effects = side_effects
-        self.medicine_classes = medicine_classes
-        self.intake_types = intake_types
-        self.age_groups = age_groups
-        self.presc_types = presc_types
+    def __init__(self, **kwargs):
+        self.name = kwargs.get('search_key')
+        self.side_effects = kwargs.get('side_effects')
+        self.medicine_classes = kwargs.get('medicine_classes')
+        self.intake_types = kwargs.get('intake_types')
+        self.age_groups = kwargs.get('age_groups')
+        self.presc_types = kwargs.get('presc_types')
 
     def build(self):
         query = MedicineQueryBuilder.base_query
