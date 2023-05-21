@@ -3,7 +3,7 @@ from flask_restful import Resource, reqparse
 from app import mysql
 from query_builder import MedicineQueryBuilde
 
- = reqparse.RequestParser()
+parser = reqparse.RequestParser()
 
 
 class MedicineList(Resource):

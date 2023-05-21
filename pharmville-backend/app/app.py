@@ -2,6 +2,7 @@ from flask import Flask
 from flask_mysqldb import MySQL
 from flask_restful import Api
 from conf import MysqlConfig
+from flask_restful import Resource, Api
 
 app = Flask(__name__)
 
