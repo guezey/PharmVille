@@ -1,7 +1,17 @@
-from app import  app, mysql
 import MySQLdb.cursors
+from flask_restful import Resource, reqparse
+from app import mysql
+from query_builder import MedicineQueryBuilde
+
+ = reqparse.RequestParser()
 
 
-@app.get('/medicine')
-def get_medicine():
+class MedicineList(Resource):
+    def get(self):
+
+
+        
+
+        
+
     
