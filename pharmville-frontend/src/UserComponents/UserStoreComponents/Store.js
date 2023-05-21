@@ -33,11 +33,11 @@ function Store() {
 
 
     return (
-        <div class="container">
-            <div class="column-1">
+        <div className="container">
+            <div className="column-1">
                 <Filter></Filter>
             </div>
-            <div class="column-2">
+            <div className="column-2">
                 <Pharmacies pharmacies={currentPharmacies} loading={loading} />
                 <Paginate postsPerPage={postPerPage} totalPosts={pharmacies.length} paginate={paginate} />
             </div>
