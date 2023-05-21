@@ -1,5 +1,5 @@
 import MySQLdb.cursors
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 
 from pharm_app.extensions import db
 from pharm_app.utils.query_builder import MedicineQueryBuilder

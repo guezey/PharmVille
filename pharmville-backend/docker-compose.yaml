@@ -7,7 +7,7 @@ services:
     volumes:
       - ./pharm_app:/pharm_app
     working_dir: /pharm_app
-    command: flask run --host 0.0.0.0
+    command: flask --debug run --host 0.0.0.0
   db:
     image: mysql:5.7
     environment:
