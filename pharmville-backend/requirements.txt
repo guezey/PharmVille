@@ -1,4 +1,3 @@
 Flask==2.2.2
 mysqlclient
 flask_mysqldb
-flask-restful==0.3.10
