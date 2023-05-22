@@ -1,0 +1,87 @@
+.selectionHolder {
+    background-color: #91AF9D;
+    width: 700px;
+    height: 550px;
+    border-radius: 6px;
+    margin: 60px;
+    margin: auto;
+    margin-top: 60px;
+    
+}
+
+.divPrescArranger {
+    display: flex;
+}
+
+.prescFirstCol {
+    display: flex;
+    width: 700px;
+    padding: 0;
+    margin: 0;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.prescTitle {
+    font-size: 20px;
+    color: white;
+    margin-left: 20px;
+    margin-top: 10px;
+    display: block;
+}
+
+.addMedicineBtn {
+    padding: 10px;
+    margin-right: 10px;
+    margin-left: 440px;
+    display: block;
+}
+
+.prescSecondCol {
+    width: 650px;
+    margin: auto;
+    height: 300px;
+    overflow: auto;
+}
+
+.medicineInPresc {
+    width: 630px;
+    margin: auto;
+    height: 70px;
+    background-color: #7C9485;
+    display: flex;
+    border-radius: 6px;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+.medicineContentPar {
+    font-size: 16px;
+    color: white;
+    padding: 20px;
+}
+
+.verticalLine {
+    width: 1px;
+    height: 60px;
+    margin-left: 15px;
+    margin-right: 15px;
+    background-color: white;
+    margin-top: 5px;
+  }
+
+.deleteMedicineBtn {
+    background-color: #620a0a;
+    font-size: 12px;
+    text-align: center;
+    margin: auto;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.prescThirdCol {
+    width: 650px;
+    margin: auto;
+    height: 150px;
+    margin-top: 20px;
+}

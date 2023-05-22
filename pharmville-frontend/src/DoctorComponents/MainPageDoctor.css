@@ -1,0 +1,80 @@
+.prescMainHolder {
+    background-color: #91AF9D;
+    width: 1000px;
+    height: 550px;
+    margin: auto;
+    margin-top: 40px;
+    border-radius: 6px;
+    display: flex;
+}
+
+.search-bar {
+    width: 300px;
+    margin-left: 30px;
+}
+
+.searchTitle {
+    color: white;
+    font-size: 20px;
+    padding-top: 20px;
+    margin-left: 30px;
+}
+  
+.tckInput {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    margin: 0;
+    height: 40px;
+  }
+
+  .selectTCKButtonHolder {
+    width: 330px;
+    height: 30px;
+    margin-top: 10px;
+  }
+
+  .selectTCKButton {
+    margin: auto;
+    margin-right: 0px;
+    padding: 10px;
+    display: block;
+    background-color: #7C9485;
+    color: white;
+  }
+
+.patientInfoHolder {
+    background-color: #7C9485;
+    width: 500px;
+    height: 350px;
+    border-radius: 6px;
+    display: block;
+    margin-top: 60px;
+    margin-left: 100px;
+}
+
+.generalHolderPresc {
+    display: flex;
+}
+
+.displayTCKInfoHolder {
+    margin: 5px;
+    display: flex;
+    margin-left: 30px;
+}
+
+.displayTCKInfoPar {
+    width: 100px;
+    margin-right: 5px;
+}
+
+.displayTCKInfoPar2 {
+    color: white;
+    font-size: 16px;
+}
+
+.selectTCKButtonHolder2 {
+    width: 640px;
+    height: 30px;
+    margin-top: 60px;
+  }

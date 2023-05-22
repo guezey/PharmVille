@@ -18,15 +18,13 @@ function NavbarDoctor() {
                 />{' '}PharmVille</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
-                    <Container className='search'>
-                        <input type="text" class="searchTerm" placeholder="Enter TCK to see patients"></input>
-                        <button type="submit" class="searchButton">
-                            <i className="fa fa-search"></i>
-                        </button>
-                    </Container>
+                    <Nav>
+                        <Nav.Link as={NavLink} to={"/"} className='color-p'>Prescriptions</Nav.Link>
+                    </Nav>
                     <Nav>
                         <Nav.Link as={NavLink} to={"/profile"} className='color-p'>Profile</Nav.Link>
                     </Nav>
+
                 </Navbar.Collapse>
             </Container>
         </Navbar>
