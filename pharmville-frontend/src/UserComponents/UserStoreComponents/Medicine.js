@@ -1,13 +1,63 @@
 import "./Medicine.css";
 import star from '../../images/star.png';
-const arr = [1, 2, 3, 4, 5];
+import React, { useState } from 'react';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import { useNavigate } from 'react-router-dom';
 
-function Medicine() {
-    console.log("Buraya giremedim :(");
-    console.log("Alooooooo")
+const arr = [1, 2, 3, 4, 5]; // örnek arr, her bunu satan eczane için eczaneyi sıralaaa
+
+
+
+function Medicine(props) {
+
+    // domain'den objeyi çekkk
+    // onu satan eczaneleri çekk
+
+    // TODO
 
     // burada bi şekilde medicine mı product mı öğrenmem lazım:
+    // TODO
     let isMedicine = true;
+
+
+
+    // button handler for adding toshopping cart
+    const addToCartHandler = (item) => {
+        // kullanıcının uyuşan prescriptionlarını çek
+        setShow(true);
+    }
+    
+
+    const handleClose = () => {
+        setShow(false);
+    }
+
+    // state for opening & closing the modal
+    const [show, setShow] = useState(false);
+
+    // state for selecting the prescription
+    const [selectedPresc, setSelectedPresc] = useState("");
+    const prescription = ['ID: 287578, Due:12/12/23', 'ID: 287348, Due:12/11/23', 'ID: 187348, Due:8/11/23', 'ID: 9857348, Due:09/07/23'];
+
+    // handle selected prescription:
+    const handleSelect = (event) => {
+        setSelectedPresc(event.target.value);
+    };
+
+    const navigate = useNavigate();
+    const goToReviewHandler = (item) => {
+        navigate(`/review/${item}`);
+    };
+
+    const goToPharmacyStoreHandler = (item) => {
+        navigate(`/pharmacyStore/${item}`);
+    };
+
+    // check if the item is medicine or prescription is needed, else no need to show a modal while adding to cart:
+    // TODO
+    let isModalNeeded = true;
+
     return (
         <div>
             <div className="medicineInfoHolder">
@@ -15,7 +65,7 @@ function Medicine() {
                     <div className="sectionHolder">
                         <h1 className="medicineTitle">Parol</h1>
                         <img src={"https://picsum.photos/200/200"} className="productImg"></img>
-                        <p>22 TL</p>
+                        <p style={{color: "whitesmoke"}}>22 TL</p>
                     </div>
                     <div className="sectionHolder2">
                         {isMedicine &&
@@ -35,23 +85,55 @@ function Medicine() {
             <div className="medicineInfoHolder2">
                 {arr.map(item => (
                     <div className="pharmacyInfoHolder">
-                        <p className="pharmacyTitle">Gönül Pharmacy</p>
+                        <p className="pharmacyTitle" onClick={() => goToPharmacyStoreHandler(item)}>Gönül Pharmacy</p>
                         <div className="pharmacyReviewInfo">
-                            <p className="pharmacyInfoPar">123 Reviews</p>
+                            <p className="pharmacyInfoPar" onClick={() => goToReviewHandler(item)}>123 Reviews</p>
                             <div className="starHolder">
                                 <img src={star} className="starImg"></img>
                                 <img src={star} className="starImg"></img>
                                 <img src={star} className="starImg"></img>
                                 <img src={star} className="starImg"></img>
                                 <img src={star} className="starImg"></img>
+                                <p style={{ color: "black" }}>(5.0)</p>
                             </div>
-                            <button className="addCartBtn">Add to Cart</button>
+                            <button className="addCartBtn" onClick={() => addToCartHandler(item)}>Add to Cart</button>
                         </div>
                     </div>
                 ))}
             </div>
+            {isModalNeeded && <div>
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title className="modalTitle">{arr.length > 0 ? "Select Prescription to Add Item to Cart" : "No prescription available"}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                                <Form.Label>Prescription</Form.Label>
+                                <select value={selectedPresc} onChange={handleSelect} className="prescSelectDropdown">
+                                    <option value="">Select a prescription</option>
+                                    {prescription.map((option, index) => (
+                                        <option key={index} value={option}>
+                                            {option}
+                                        </option>
+                                    ))}
+                                </select>
+                            </Form.Group>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer className="modalAligner">
+                        <button onClick={handleClose}>
+                            Cancel
+                        </button>
+                        <button onClick={handleClose}>
+                            Add to Cart
+                        </button>
+                    </Modal.Footer>
+                </Modal>
+            </div>}
+
         </div>
     );
 }
 
-export default Medicine;
+export default Medicine

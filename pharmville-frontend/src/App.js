@@ -23,6 +23,8 @@ import Cart from "./UserComponents/Cart";
 import Login from "./UserComponents/Login";
 import React, { useState, useEffect } from "react";
 import PharmacyProfile from "./Profile/PharmacyProfile";
+import Reviews from "./UserComponents/UserStoreComponents/Reviews";
+import PharmacyStorePage from "./UserComponents/UserStoreComponents/PharmacyStorePage";
 function App() {
   /**
   const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
@@ -93,7 +95,7 @@ function App() {
   */
 
   let user = "Patient";
-  if (user === "Logout" ) {
+  if (user === "Logout") {
     return (
       <Router>
         <NavbarAdmin />
@@ -108,16 +110,18 @@ function App() {
       <Router>
         <NavigationBar />
         <Routes>
-          <Route path="/" element={<Store />} />
+          <Route path="/*" element={<Store />} />
           <Route path='/prescriptions' element={<Prescription />} />
           <Route path='/profile' element={<PatientProfile />} />
           <Route path='/cart' element={<Cart />} />
-          <Route path='/medicine' element={<Medicine />} />
+          <Route path={'/medicine/:id'} element={<Medicine />} />
+          <Route path={'/review/:id'} element={<Reviews />} />
+          <Route path={'/pharmacyStore/:id'} element={<PharmacyStorePage />} />
         </Routes>
       </Router>
     );
   }
-  else if ( user === "Doctor" ) {
+  else if (user === "Doctor") {
     return (
       <Router>
         <NavbarDoctor />
@@ -128,12 +132,12 @@ function App() {
       </Router>
     );
   }
-  else if ( user === "Pharmacy" ) {
+  else if (user === "Pharmacy") {
     return (
       <Router>
         <NavbarPharmacy />
         <Routes>
-          <Route path="/" element={<PharmacyProfile />} />
+          <Route path="/*" element={<PharmacyProfile />} />
           <Route path="/products" element={<Products />} />
           <Route path="/deliveries" element={<Deliveries />} />
           <Route path="/reports" element={<SystemReports />} />
@@ -142,7 +146,7 @@ function App() {
       </Router>
     );
   }
-  else if ( user === "Admin" ) {
+  else if (user === "Admin") {
     return (
       <Router>
         <NavbarAdmin />

@@ -1,0 +1,66 @@
+.reviewPharmacyTitle {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.reviewHolder {
+    width: 1000px;
+    height: 600px;
+    margin: auto;
+    margin-top: 30px;
+    background-color: #91AF9D;
+    border-radius: 6px;
+}
+
+.pharTitleElements {
+    display: flex;
+    text-align: center;
+}
+
+.pharTitlePar {
+    font-size: 16px;
+    color: white;
+    padding-left: 10px;
+    padding-top: 23px;
+    padding-bottom: 20px;
+    text-align: center;
+}
+
+.commentsHolder {
+    width: 800px;
+    margin: 40px;
+    margin: auto;
+    height: 500px;
+    overflow: auto;
+
+}
+
+.commentHolder {
+    width: 750px;
+    background-color: aliceblue;
+    border-radius: 6px;
+    margin: auto;
+    margin: 20px;
+}
+
+.commentHeader {
+    font-size: 16px;
+    color: black;
+    margin: 10px;
+    margin-bottom: 5px;
+}
+
+.commentHeaderElements {
+    display: flex;
+}
+
+.commentBody {
+    padding: 10px;
+    text-align: left;
+    font-size: 14px;
+    color: black;
+}

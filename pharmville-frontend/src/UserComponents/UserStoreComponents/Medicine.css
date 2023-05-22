@@ -39,6 +39,7 @@
     text-align: left;
     margin-top: 15px;
     margin-left: 10px;
+    color: whitesmoke;
 }
 
 .medicineInfoHolder2 {
@@ -65,6 +66,7 @@
     color: #1E2D2F;
     font-size: 18px;
     padding: 20px;
+    cursor: pointer;
 }
 
 .pharmacyReviewInfo {
@@ -77,6 +79,8 @@
     color: #1E2D2F;
     font-size: 16px;
     padding: 20px;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .starImg {
@@ -92,4 +96,19 @@
 
 .addCartBtn {
     background-color: #91AF9D;
+}
+
+.modalTitle {
+    text-align: center;
+}
+
+.modalAligner {
+    align-items: center;
+    margin: auto;
+}
+
+.prescSelectDropdown {
+    font-size: 16px;
+    height: 40px;
+    border-radius: 6px;
 }
