@@ -1,5 +1,17 @@
-#ignore Idea configuration files
-.idea/
+ Flask related files
+/__pycache__/
+/*.pyc
+/*.pyo
+*.py[cod]
+env/
 
-#ignore pycache files
-pharm_app/__pycache__/
+# IDE and editor specific files
+.idea/
+.vscode/
+
+# Logs
+/logs/
+
+# Compiled Python files
+*.pyc
+*.pyo
