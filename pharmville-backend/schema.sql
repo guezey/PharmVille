@@ -30,7 +30,7 @@ CREATE TABLE Patient
 
 CREATE TABLE Doctor
 (
-    doctor_id       int PRIMARY KEY NOT NULL,
+    doctor_id       int PRIMARY KEY                        NOT NULL,
     speciality      varchar(255),
     approval_status ENUM ('APPROVED','REJECTED','PENDING') NOT NULL,
     FOREIGN KEY (doctor_id) REFERENCES Person (person_id)
@@ -38,11 +38,11 @@ CREATE TABLE Doctor
 
 CREATE TABLE Pharmacy
 (
-    pharmacy_id     int PRIMARY KEY NOT NULL,
-    name            varchar(255)    NOT NULL,
-    is_on_duty      boolean         NOT NULL,
+    pharmacy_id     int PRIMARY KEY                        NOT NULL,
+    name            varchar(255)                           NOT NULL,
+    is_on_duty      boolean                                NOT NULL,
     diploma_path    text DEFAULT NULL,
-    balance         decimal(10, 2)  NOT NULL,
+    balance         decimal(10, 2)                         NOT NULL,
     approval_status ENUM ('APPROVED','REJECTED','PENDING') NOT NULL,
     FOREIGN KEY (pharmacy_id) REFERENCES User (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -50,10 +50,10 @@ CREATE TABLE Pharmacy
 CREATE TABLE Prescription
 (
     presc_id   int PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    doctor_id  int      NOT NULL,
-    patient_id int      NOT NULL,
-    write_date datetime NOT NULL,
-    due_date   datetime NOT NULL,
+    doctor_id  int                            NOT NULL,
+    patient_id int                            NOT NULL,
+    write_date datetime                       NOT NULL,
+    due_date   datetime                       NOT NULL,
     type       enum ('WHITE', 'RED', 'GREEN', 'ORANGE', 'PURPLE', 'NONE') DEFAULT 'NONE',
     status     enum ('ACTIVE', 'USED', 'OVERDUE'),
     FOREIGN KEY (doctor_id) REFERENCES Doctor (doctor_id),
@@ -115,7 +115,7 @@ CREATE TABLE Address
     country         varchar(255) NOT NULL,
     address_field   varchar(255) NOT NULL,
     address_field_2 varchar(255),
-    postal_code     int(5) NOT NULL,
+    postal_code     int(5)       NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User (user_id)
 );
 
@@ -123,14 +123,14 @@ CREATE TABLE Address
 CREATE TABLE Orders
 (
     order_id      int PRIMARY KEY AUTO_INCREMENT,
-    order_date    timestamp NOT NULL,
-    pharmacy_id   int       NOT NULL,
-    patient_id    int       NOT NULL,
+    order_date    timestamp                                           NOT NULL,
+    pharmacy_id   int                                                 NOT NULL,
+    patient_id    int                                                 NOT NULL,
     delivery_date datetime,
     order_status  ENUM ('ACTIVE', 'SHIPPED', 'DELIVERED', 'CANCELED') NOT NULL,
-    order_type    ENUM ('CARGO', 'PICKUP') NOT NULL,
+    order_type    ENUM ('CARGO', 'PICKUP')                            NOT NULL,
     shipping_firm varchar(255),
-    address_id    int       NOT NULL,
+    address_id    int                                                 NOT NULL,
     FOREIGN KEY (address_id) REFERENCES Address (address_id),
     FOREIGN KEY (pharmacy_id) REFERENCES Pharmacy (pharmacy_id),
     FOREIGN KEY (patient_id) REFERENCES Patient (patient_id)
@@ -150,11 +150,11 @@ CREATE TABLE Review
 
 CREATE TABLE Medicine
 (
-    prod_id     INT          NOT NULL AUTO_INCREMENT,
+    prod_id     INT                                                        NOT NULL AUTO_INCREMENT,
     prospectus  varchar(255),
     amount      varchar(255),
     presc_type  enum ('WHITE', 'RED', 'GREEN', 'ORANGE', 'PURPLE', 'NONE') not null,
-    intake_type varchar(255) NOT NULL,
+    intake_type varchar(255)                                               NOT NULL,
     primary key (prod_id),
     foreign key (prod_id) references Product (prod_id) ON DELETE CASCADE,
     foreign key (intake_type) references IntakeType (intake_type)
@@ -185,7 +185,7 @@ CREATE TABLE DiseaseType
 CREATE TABLE Disease
 (
     disease_id   int PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    name         varchar(255) NOT NULL,
+    name         varchar(255)                   NOT NULL,
     disease_type varchar(255),
     description  text,
     FOREIGN KEY (disease_type) REFERENCES DiseaseType (disease_type)
@@ -253,7 +253,7 @@ create table medicine_age
     prod_id        int          not null,
     group_name     varchar(255) not null,
     advised_dosage double,
-    unit           ENUM('ml', 'mg','drops', 'tablets', 'capsules', 'mg per kg of body-weight', 'times', 'puffs' ),
+    unit           ENUM ('ml', 'mg','drops', 'tablets', 'capsules', 'mg per kg of body-weight', 'times', 'puffs' ),
     primary key (prod_id, group_name),
     foreign key (prod_id) references Medicine (prod_id),
     foreign key (group_name) references AgeGroup (group_name)
@@ -314,7 +314,7 @@ CREATE TABLE Payment
     order_id       int            NOT NULL,
     payment_date   timestamp      NOT NULL,
     payment_amount decimal(10, 2) NOT NULL,
-    card_number    int(16) NOT NULL,
+    card_number    int(16)        NOT NULL,
     FOREIGN KEY (order_id) REFERENCES Orders (order_id)
 );
 
@@ -690,4 +690,15 @@ VALUES (1, 'Allergic Reaction'),
 
        (11, 'Increased Heart Rate'),
        (11, 'Headache')
+;
+
+INSERT INTO pharmacy_product (pharmacy_id, prod_id, stock, description)
+VALUES (6, 1, 10, 'Incredible :)'),
+       (6, 2, 5, 'HEALTH HEALTH'),
+       (6, 3, 7, 'I use it myself'),
+
+
+       (7, 1, 6, 'I love it!!'),
+       (7, 2, 11, 'Zuum Zumm'),
+       (7, 4, 5, 'Zom Zom')
 ;
