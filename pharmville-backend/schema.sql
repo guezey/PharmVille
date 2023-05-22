@@ -538,7 +538,8 @@ VALUES ('Painkiller'),
        ('Allergy Medication'),
        ('Antacid'),
        ('Inflammation Reducer'),
-       ('Asthma')
+       ('Asthma'),
+       ('Heart Medicine')
 ;
 
 INSERT INTO AgeGroup(group_name, min_age, max_age)
