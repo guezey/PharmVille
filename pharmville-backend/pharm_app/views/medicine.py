@@ -1,7 +1,5 @@
-
 import MySQLdb.cursors
 from flask import Blueprint, request, jsonify, current_app
-
 from pharm_app.extensions import db
 from pharm_app.utils.query_builder import MedicineQueryBuilder
 
@@ -14,7 +12,9 @@ def medicine_list():
     builder = MedicineQueryBuilder(**data)
 
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = builder.build()
+    current_app.logger.info(query)
+    cursor.execute(query)
 
-    cursor.execute(builder.build())
     medicines = cursor.fetchall()
     return jsonify(medicines)
