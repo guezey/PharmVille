@@ -10,7 +10,7 @@ function MainPageDoctor() {
     // to search for TCK
     const [searchText, setSearchText] = useState('');
     // var to check if the given input is true
-    let isTCKCorrect = true;
+    let isTCKCorrect = false;
 
     // state to show warning msg
     const [showWarning, setShowWarning] = useState(false);
@@ -57,11 +57,12 @@ function MainPageDoctor() {
                             <p className="searchTitle">Select Patient</p>
                             <div className="search-bar">
                                 <input
-                                    type="text"
+                                    type="number"
                                     placeholder="Enter Patient TCK"
                                     value={searchText}
                                     onChange={(event) => setSearchText(event.target.value)}
                                     className="tckInput"
+                                    min={1}
                                 />
                             </div>
                             <div className="selectTCKButtonHolder">
