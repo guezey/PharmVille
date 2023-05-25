@@ -75,6 +75,9 @@ bp.add_url_rule('/', view_func=MedicineGroupView.as_view('medicine-group'))
 
 
 class MedicineView(MethodView):
+    def error404(self, prod_id):
+        return {"message": f"medicine with id: {prod_id} not found "}, 404
+
     def get(self, prod_id: int):
         cursor = db.connection.cursor(DictCursor)
         # fetch the base medicine
@@ -82,6 +85,9 @@ class MedicineView(MethodView):
         SELECT * FROM full_medicine WHERE prod_id = %s
         """, (prod_id,))
         medicine = cursor.fetchone()
+
+        if not medicine:
+            return self.error404(prod_id)
         # fetch and merge remaining attributes
         cursor.execute("""
             SELECT medicine_age.group_name, advised_dosage, unit FROM AgeGroup NATURAL JOIN medicine_age 
@@ -152,7 +158,7 @@ class MedicineView(MethodView):
                                """, (med_class, prod_id))
 
             db.connection.commit()
-        except Exception as e:
+        except Error as e:
             print(f"An error occurred during the update: {str(e)}")
             db.connection.rollback()
             return str(e), 400
@@ -180,4 +186,3 @@ def filter_options():
     filter_option['medicine_class'] = [med_class[0] for med_class in cursor.fetchall()]
     filter_option['units'] = ['ml', 'mg', 'drops', 'tablets', 'capsules', 'mg per kg of body-weight', 'times', 'puffs']
     return jsonify(filter_option)
-
