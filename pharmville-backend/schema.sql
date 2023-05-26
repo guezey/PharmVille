@@ -220,7 +220,6 @@ CREATE TABLE pharmacy_product
 (
     pharmacy_id int,
     prod_id     int,
-    price       decimal(6, 2),
     stock       int,
     description text,
     FOREIGN KEY (pharmacy_id) REFERENCES Pharmacy (pharmacy_id),
@@ -465,7 +464,8 @@ VALUES (1, 'deniz@gmail.com', 'Pass123', '532033931'),
        (8, 'admin@gmail.com', 'Admin123', '312312312'),
        (9, 'fatih.eczane@gmail.com', 'Eczo12', '31232132'),
        (10, 'reject.rejectoğlu@gmail.com', 'rejecto', '533313231'),
-       (11, 'rejectullah.ezczane@gmail.com', 'Reject Eczo', '531011002')
+       (11, 'rejectullah.ezczane@gmail.com', 'Reject Eczo', '5310110302'),
+       (12, 'pharmacy.pharma@gmail.com', 'pharming123', '5310110342')
 ;
 
 INSERT INTO Person(person_id, name, surname, tck, is_admin)
@@ -482,7 +482,8 @@ INSERT INTO Pharmacy(pharmacy_id, name, is_on_duty, diploma_path, balance, appro
 VALUES (6, 'Faruk Pharmacy', TRUE, NULL, 2000, 'APPROVED'),
        (7, 'Gönül Pharmacy', FALSE, NULL, 3000, 'APPROVED'),
        (9, 'Fatih Pharmacy', TRUE, NULL, 0, 'PENDING'),
-       (11, 'Rejectullah Pharmacy', TRUE, NULL, 1, 'REJECTED')
+       (11, 'Rejectullah Pharmacy', TRUE, NULL, 1, 'REJECTED'),
+       (12, 'Pharma Pharmacy', TRUE, NULL, 213213, 'APPROVED')
 ;
 
 INSERT INTO Doctor(doctor_id, speciality, approval_status)
@@ -813,3 +814,68 @@ VALUES (21, 'Dry'),
        (32, 'Oily'),
        (32, 'Combination'),
        (32, 'Sensitive');
+
+INSERT INTO pharmacy_product(pharmacy_id, prod_id, stock, description)
+VALUES (6, 2, 10, 'Great medicine'),
+       (6, 1, 4, 'Very Great medicine'),
+       (6, 3, 10, 'Pretty medicine'),
+       (6, 4, 3, 'Indeed medicine'),
+       (6, 8, 8, 'Yeeees medicine'),
+       (6, 5, 12, 'Great medicine'),
+       (6, 7, 4, 'Very Great medicine'),
+       (6, 9, 10, 'Pretty medicine'),
+       (6, 10, 0, 'Indeed medicine'),
+       (6, 11, 8, 'Yeeees medicine'),
+
+       (6, 12, 7, 'PROTEIIIN'),
+       (6, 14, 10, 'EXTRA PROTEIIIN'),
+       (6, 15, 10, 'PROTO PROTO PROTEIN'),
+
+       (6, 21, 2, 'Great product'),
+       (6, 22, 3, 'Great yees'),
+       (6, 23, 4, 'MMM great'),
+       (6, 24, 1, 'YYYYEEEESS'),
+
+       (7, 2, 10, 'Yeess medicine'),
+       (7, 1, 4, 'asdasd Great medicine'),
+       (7, 3, 3, 'Mmmmm great Pretty medicine'),
+       (7, 4, 3, 'woohooo Indeed medicine'),
+       (7, 8, 8, 'yes Yeeees medicine'),
+       (7, 5, 9, 'Indeed Great medicine'),
+       (7, 7, 4, 'yes Very Great medicine'),
+       (7, 9, 2, 'Woohooo Pretty medicine'),
+       (7, 10, 0, 'Indeed medicine'),
+       (7, 11, 8, 'Yeeees medicine'),
+       (7, 12, 4, 'medicine'),
+
+       (7, 16, 2, 'PROTEIIIN'),
+       (7, 17, 15, 'EXTRA PROTEIIIN'),
+       (7, 18, 0, 'PROTO PROTO PROTEIN'),
+
+       (7, 25, 2, 'Great product'),
+       (7, 26, 5, 'Great yees'),
+       (7, 27, 4, 'MMM great'),
+       (7, 28, 3, 'YYYYEEEESS'),
+
+
+       (12, 2, 10, 'Yeess medicine'),
+       (12, 1, 4, 'asdasd Great medicine'),
+       (12, 3, 3, 'Mmmmm great Pretty medicine'),
+       (12, 4, 3, 'woohooo Indeed medicine'),
+       (12, 8, 8, 'yes Yeeees medicine'),
+       (12, 5, 9, 'Indeed Great medicine'),
+       (12, 7, 4, 'yes Very Great medicine'),
+       (12, 9, 2, 'Woohooo Pretty medicine'),
+       (12, 10, 0, 'Indeed medicine'),
+       (12, 11, 8, 'Yeeees medicine'),
+       (12, 12, 4, 'medicine'),
+
+       (12, 19 , 2, 'PROTEIIIN'),
+       (12, 20, 3, 'EXTRA PROTEIIIN'),
+
+       (12, 29, 2, 'Great product'),
+       (12, 30, 5, 'Great yees'),
+       (12, 31, 4, 'MMM great'),
+       (12, 32, 3, 'YYYYEEEESS')
+;
+-- Orders-----------------------------------------------------------
