@@ -193,22 +193,3 @@ class PrescribeView(MethodView):
 
 
 bp.add_url_rule('/<int:patient_tck>', view_func=PrescribeView.as_view('prescribe'))
-# bp.add_url_rule('/', view_func=PrescribeView.as_view('prescribe'))
-@bp.route('/filter_options', methods=['GET'])
-def filter_options():
-    filter_option = {}
-    cursor = db.connection.cursor(DictCursor)
-    cursor.execute("""SELECT * FROM AgeGroup ORDER BY min_age """)
-    filter_option["age_groups"] = cursor.fetchall()
-
-    cursor.execute("""SELECT * FROM SideEffect ORDER BY effect_name""")
-    filter_option["side_effects"] = cursor.fetchall()
-    filter_option["presc_types"] = ["None", "White", "Red", "Green", "Purple", "Orange"]
-
-    cursor = db.connection.cursor(Cursor)
-    cursor.execute("""SELECT intake_type FROM IntakeType ORDER BY intake_type""")
-    filter_option["intake_types"] = [intake_type[0] for intake_type in cursor.fetchall()]
-    cursor.execute("""SELECT class_name FROM  MedicineClass ORDER BY class_name""")
-    filter_option['medicine_class'] = [med_class[0] for med_class in cursor.fetchall()]
-    filter_option['units'] = ['ml', 'mg', 'drops', 'tablets', 'capsules', 'mg per kg of body-weight', 'times', 'puffs']
-    return jsonify(filter_option)
