@@ -1,14 +1,16 @@
-from flask import Flask
+from flask import Flask, session, request
+from flask_session import Session
 
 from .extensions import db
 from .conf import MysqlConfig
-from .views import medicine_bp, protein_powder_bp, skincare_bp
+from .views import medicine_bp, protein_powder_bp, skincare_bp, prescribe_bp
 
 
 def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(medicine_bp)
     flask_app.register_blueprint(protein_powder_bp)
     flask_app.register_blueprint(skincare_bp)
+    flask_app.register_blueprint(prescribe_bp)
 
 
 def register_extensions(flask_app: Flask):
@@ -18,17 +20,48 @@ def register_extensions(flask_app: Flask):
 
 def create_app():
     flask_app = Flask(__name__)
+    flask_app.config["SESSION_PERMANENT"] = False
+    flask_app.config["SESSION_TYPE"] = "filesystem"
     flask_app.config.from_object(MysqlConfig)
     register_extensions(flask_app)
     return flask_app
 
 
 app = create_app()
+Session(app)
 
 
 @app.route('/')
 def hello_world():  # put application's code here
+    session['user_id'] = 2
     return 'Hello World!'
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    try:
+        # FIXME
+        session['user_id'] = request.get_json()['user_id']
+    except KeyError:
+        return 'Invalid user id', 400
+
+    return 'Logged in'
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    try:
+        session.pop('user_id')
+    except KeyError:
+        return 'Not logged in', 400
+
+    return 'Logged out'
+
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    # TODO: implement signup
+    return 'Not implemented', 501
 
 
 if __name__ == '__main__':
