@@ -3,7 +3,7 @@ from flask_session import Session
 
 from .extensions import db
 from .conf import MysqlConfig
-from .views import medicine_bp, protein_powder_bp, skincare_bp, prescribe_bp
+from .views import medicine_bp, protein_powder_bp, skincare_bp, prescribe_bp, prescriptions_bp
 
 
 def reg_blueprints(flask_app: Flask):
@@ -11,6 +11,7 @@ def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(protein_powder_bp)
     flask_app.register_blueprint(skincare_bp)
     flask_app.register_blueprint(prescribe_bp)
+    flask_app.register_blueprint(prescriptions_bp)
 
 
 def register_extensions(flask_app: Flask):
