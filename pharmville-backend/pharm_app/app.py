@@ -2,11 +2,13 @@ from flask import Flask
 
 from .extensions import db
 from .conf import MysqlConfig
-from .views import medicine_bp
+from .views import medicine_bp, protein_powder_bp, skincare_bp
 
 
 def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(medicine_bp)
+    flask_app.register_blueprint(protein_powder_bp)
+    flask_app.register_blueprint(skincare_bp)
 
 
 def register_extensions(flask_app: Flask):

@@ -262,7 +262,7 @@ create table medicine_age
 create table ProteinPowder
 (
     prod_id          int not null auto_increment,
-    weight           int,
+    weight           float,
     bcaa_percent     double,
     service_amount   double,
     arginine_percent double,
@@ -278,7 +278,7 @@ create table ProteinPowder
 create table Skincare
 (
     prod_id       int not null auto_increment,
-    volume        int,
+    volume        varchar(255),
     skincare_type varchar(255),
     primary key (prod_id),
     foreign key (prod_id) references Product (prod_id) ON DELETE CASCADE,
@@ -703,3 +703,113 @@ VALUES (6, 1, 10, 'Incredible :)'),
        (7, 2, 11, 'Zuum Zumm'),
        (7, 4, 5, 'Zom Zom')
 ;
+-- Protein Powders------------------------------------------------------------
+INSERT INTO Aroma (aroma_name)
+VALUES ('Chocolate'),
+       ('Vanilla'),
+       ('Strawberry'),
+       ('Banana'),
+       ('Cookies and Cream'),
+       ('Mint'),
+       ('Caramel')
+;
+
+INSERT INTO Product (prod_id, name, company, image_url, price)
+VALUES (12, 'Whey Protein Powder', 'Optimum Nutrition', NULL, 149.99),
+       (13, 'Plant-Based Protein Powder', 'Vega', NULL, 124.99),
+       (14, 'Casein Protein Powder', 'Dymatize', NULL, 179.99),
+       (15, 'Pea Protein Powder', 'NOW Sports', NULL, 99.99),
+       (16, 'Collagen Protein Powder', 'Vital Proteins', NULL, 149.99),
+       (17, 'ISO 100 Whey Protein', 'Dymatize', NULL, 189.99),
+       (18, 'Chocolate Peanut Butter Protein', 'MuscleTech', NULL, 149.99),
+       (19, 'Raw Organic Protein Powder', 'Garden of Life', NULL, 139.99),
+       (20, 'Mass Gainer Protein Powder', 'Optimum Nutrition', NULL, 169.99)
+;
+INSERT INTO ProteinPowder (prod_id, weight, bcaa_percent, service_amount, arginine_percent, sugar_percent,
+                           fat_percent, protein_percent, aroma_name)
+VALUES (12, 1.4, 25.0, 29, 5.0, 2.0, 1.5, 80.0, 'Chocolate'),
+       (13, 1.2, 20.0, 25, 4.0, 1.5, 1.0, 75.0, 'Vanilla'),
+       (14, 1.25, 23.0, 26, 4.5, 2.5, 2.0, 78.0, 'Strawberry'),
+       (15, 2, 22.0, 24, 3.5, 1.0, 1.2, 70.0, 'Cookies and Cream'),
+       (16, 3, 21.0, 22, 4.2, 2.2, 1.8, 73.0, 'Vanilla'),
+       (17, 4, 24.0, 21, 4.8, 2.8, 1.3, 82.0, 'Chocolate'),
+       (18, 1, 19.0, 27, 3.8, 1.3, 1.1, 77.0, 'Vanilla'),
+       (19, 0.5, 21.5, 28, 4.3, 2.3, 1.9, 79.0, 'Vanilla'),
+       (20, 1.25, 23.5, 27, 4.2, 1.8, 1.4, 74.0, 'Chocolate');
+
+-- Skincare products --------------------------------------------
+INSERT INTO SkincareType(skincare_type)
+VALUES ('Lip Balm'),
+       ('Serum'),
+       ('BB-CC Cream'),
+       ('Lotion'),
+       ('Eye Cream'),
+       ('Tonic'),
+       ('Sunscreen'),
+       ('Cream'),
+       ('Scrub'),
+       ('Cleanser'),
+       ('Mask'),
+       ('Treatment');
+
+INSERT INTO SkinTypes(skin_type)
+VALUES ('Oily'),
+       ('Dry'),
+       ('Combination'),
+       ('Sensitive'),
+       ('Normal')
+;
+
+INSERT INTO Product (prod_id, name, company, image_url, price)
+VALUES (21, 'Moisturizing Lip Balm', 'Nivea', NULL, 9.99),
+       (22, 'Vitamin C Serum', 'The Ordinary', NULL, 29.99),
+       (23, 'BB Cream', 'Maybelline', NULL, 14.99),
+       (24, 'Hydrating Lotion', 'Cetaphil', NULL, 19.99),
+       (25, 'Revitalizing Eye Cream', 'Neutrogena', NULL, 24.99),
+       (26, 'Balancing Tonic', 'Pixi', NULL, 17.99),
+       (27, 'Anti-Aging Night Cream', 'Olay', NULL, 49.99),
+       (28, 'Sunscreen SPF 50', 'La Roche-Posay', NULL, 39.99),
+       (29, 'Exfoliating Scrub', 'St. Ives', NULL, 19.99),
+       (30, 'Cleansing Oil', 'Garnier', NULL, 29.99),
+       (31, 'Sheet Mask Set', 'Tony Moly', NULL, 24.99),
+       (32, 'Acne Spot Treatment', 'Clean & Clear', NULL, 14.99);
+
+INSERT INTO Skincare (prod_id, volume, skincare_type)
+VALUES (21, '5g', 'Lip Balm'),
+       (22, '30ml', 'Serum'),
+       (23, '50ml', 'BB-CC Cream'),
+       (24, '100ml', 'Lotion'),
+       (25, '15ml', 'Eye Cream'),
+       (26, '200ml', 'Tonic'),
+       (27, '50ml', 'Cream'),
+       (28, '100ml', 'Sunscreen'),
+       (29, '150ml', 'Scrub'),
+       (30, '200ml', 'Cleanser'),
+       (31, '10-pack', 'Mask'),
+       (32, '15ml', 'Treatment');
+
+INSERT INTO applicable_skin_types (product_id, skin_type)
+VALUES (21, 'Dry'),
+       (21, 'Normal'),
+       (22, 'Combination'),
+       (22, 'Oily'),
+       (22, 'Sensitive'),
+       (23, 'Normal'),
+       (24, 'Dry'),
+       (24, 'Normal'),
+       (25, 'Combination'),
+       (25, 'Sensitive'),
+       (26, 'Combination'),
+       (26, 'Oily'),
+       (26, 'Normal'),
+       (27, 'Dry'),
+       (27, 'Normal'),
+       (28, 'Combination'),
+       (28, 'Sensitive'),
+       (29, 'Normal'),
+       (30, 'Dry'),
+       (30, 'Combination'),
+       (31, 'Normal'),
+       (32, 'Oily'),
+       (32, 'Combination'),
+       (32, 'Sensitive');
