@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 function AddProduct() {
   const [productName, setProductName] = useState("");
+  const [productCompany, setProductCompany] = useState("");
   const [productDescription, setProductDescription] = useState("");
   const [productPrice, setProductPrice] = useState("");
   const [productType, setProductType] = useState("");
@@ -12,10 +13,43 @@ function AddProduct() {
   const [aroma, setAroma] = useState("");
   const [category, setCategory] = useState("");
   const [skinType, setSkinType] = useState("");
+  const [productImage, setProductImage] = useState(null);
+  const [prospectus, setProspectus] = useState(null);
+  const [amount, setAmount] = useState("");
 
   const handleAddProduct = () => {
-    // Add the product to the system
-    console.log("Product added");
+    const productData = new FormData();
+    productData.append('name', productName);
+    productData.append('company', productCompany);
+    productData.append('description', productDescription);
+    productData.append('price', productPrice);
+    productData.append('type', productType);
+    productData.append('drugClass', drugClass);
+    productData.append('undesiredSideEffect', undesiredSideEffect);
+    productData.append('prescriptionType', prescriptionType);
+    productData.append('ageGroup', ageGroup);
+    productData.append('aroma', aroma);
+    productData.append('category', category);
+    productData.append('skinType', skinType);
+    productData.append('amount', amount);
+    if(productImage) {
+      productData.append('productImage', productImage, productImage.name);
+    }
+    if(prospectus) {
+      productData.append('prospectus', prospectus, prospectus.name);
+    }
+
+    fetch('http://localhost:5000/api/add_product', {
+      method: 'POST',
+      body: productData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   };
 
   return (
@@ -35,8 +69,8 @@ function AddProduct() {
           Company:
           <input
             type="text"
-            value={productName}
-            onChange={(e) => setProductName(e.target.value)}
+            value={productCompany}
+            onChange={(e) => setProductCompany(e.target.value)}
           />
         </label>
         <br />
@@ -61,8 +95,7 @@ function AddProduct() {
           Image:
           <input
             type="file"
-            value={ageGroup}
-            onChange={(e) => setAgeGroup(e.target.value)}
+            onChange={(e) => setProductImage(e.target.files[0])}
           />
         </label>
         <br />
@@ -94,8 +127,8 @@ function AddProduct() {
               Amount:
               <input
                 type="text"
-                value={productName}
-                onChange={(e) => setProductName(e.target.value)}
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
               />
             </label>
             <br />
@@ -130,8 +163,7 @@ function AddProduct() {
               Prospectus:
               <input
                 type="file"
-                value={ageGroup}
-                onChange={(e) => setAgeGroup(e.target.value)}
+                onChange={(e) => setProspectus(e.target.files[0])}
               />
             </label>
           </>

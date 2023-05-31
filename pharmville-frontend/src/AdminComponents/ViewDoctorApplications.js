@@ -5,36 +5,48 @@ function ViewDoctorApplications() {
 
   useEffect(() => {
     // Fetch doctor applications from the system
-    // Replace this
-    const fetchData = async () => {
-      const data = [
-        {
-          id: 1,
-          name: 'Dr. Dağhan Ünal',
-          degree: 'Doctor of Medicine',
-          status: 'pending',
-        },
-        {
-          id: 2,
-          name: 'Dr. Ceren Akyar',
-          degree: 'Doctor of Medicine',
-          status: 'pending',
-        },
-      ];
-      setDoctorApplications(data);
-    };
-
-    fetchData();
+    fetch('http://localhost:5000/api/doctor_applications', {
+      method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => setDoctorApplications(data))
+    .catch(error => console.error('Error:', error));
   }, []);
 
   const handleAccept = (id) => {
     // Accept the doctor application with the given id
-    console.log(`Doctor application ${id} accepted`);
+    fetch(`http://localhost:5000/api/doctor_applications/${id}/accept`, {
+      method: 'POST',
+    })
+    .then(response => {
+      if (response.ok) {
+        // Refresh the doctor applications
+        return fetch('http://localhost:5000/api/doctor_applications', {
+          method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => setDoctorApplications(data))
+      }
+    })
+    .catch(error => console.error('Error:', error));
   };
 
   const handleDecline = (id) => {
     // Decline the doctor application with the given id
-    console.log(`Doctor application ${id} declined`);
+    fetch(`http://localhost:5000/api/doctor_applications/${id}/decline`, {
+      method: 'POST',
+    })
+    .then(response => {
+      if (response.ok) {
+        // Refresh the doctor applications
+        return fetch('http://localhost:5000/api/doctor_applications', {
+          method: 'GET',
+        })
+        .then(response => response.json())
+        .then(data => setDoctorApplications(data))
+      }
+    })
+    .catch(error => console.error('Error:', error));
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PatientInfo from "./PatientInfo";
 import AddressList from "./AddressList";
 import PasswordChange from "./PasswordChange";
@@ -8,66 +8,27 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col } from "react-bootstrap";
 
 const PatientProfile = () => {
-  const [patientData, setPatientData] = useState({
-    name: "Dağhan",
-    surname: "Ünal",
-    email: "daghanunal20@gmail.com",
-    tcNationalId: "12345678901",
-    addresses: [
-      {
-        id: 1,
-        street: "9048",
-        city: "New York",
-        state: "NY",
-        zip: "10001",
-      },
-      {
-        id: 2,
-        street: "9048",
-        city: "Ankara",
-        state: "Çankaya",
-        zip: "06000",
-      },
-    ],
-    password: "password123",
-    medicineHistory: [
-      {
-        id: 1,
-        name: "Aspirin",
-        dose: "81 mg",
-        startDate: "2021-01-01",
-        endDate: "2021-12-31",
-      },
-      {
-        id: 2,
-        name: "Ibuprofen",
-        dose: "200 mg",
-        startDate: "2022-01-01",
-        endDate: "2022-06-30",
-      },
-    ],
-    orders: [
-      {
-        id: 1,
-        medication: "Lisinopril, Advil",
-        quantity: "1, 3",
-        dateOrdered: "2023-01-01",
-      },
-      {
-        id: 2,
-        medication: "Metformin",
-        quantity: "5",
-        dateOrdered: "2023-02-02",
-      },
-      {
-        id: 3,
-        medication: "Hardline Whey Protein",
-        quantity: "1",
-        dateOrdered: "2023-03-03",
-      },
-    ],  
-  });
+  const [patientData, setPatientData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    // Replace the URL with your Flask backend endpoint
+    fetch('http://localhost:5000/api/patient_profile')
+      .then(response => response.json())
+      .then(data => {
+        setPatientData(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+
+  if (!patientData) return <p>Error loading patient data</p>;
+  
   return (
     <Container>
       <Row>

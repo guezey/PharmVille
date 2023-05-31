@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PharmacyInfo from "./PharmacyInfo";
 import PharmacyAddress from "./PharmacyAddress";
 import PasswordChange from "./PasswordChange";
@@ -10,21 +10,26 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col } from "react-bootstrap";
 
 const PharmacyProfile = () => {
-  const [pharmacyData, setPharmacyData] = useState({
-    name: "Healthy Pharmacy",
-    onDuty: true,
-    diplomaPath: "/path/to/diploma.pdf",
-    balance: 1500,
-    approvalStatus: "Approved",
-    address: {
-      id: 1,
-      street: "456 Market St",
-      city: "New York",
-      state: "NY",
-      zip: "10002",
-    },
-    password: "password123",
-  });
+  const [pharmacyData, setPharmacyData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Replace the URL with your Flask backend endpoint for pharmacy profile
+    fetch('http://localhost:5000/api/pharmacy_profile')
+      .then(response => response.json())
+      .then(data => {
+        setPharmacyData(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+
+  if (!pharmacyData) return <p>Error loading pharmacy data</p>;
 
   return (
     <Container>

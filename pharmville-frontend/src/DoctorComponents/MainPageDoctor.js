@@ -126,7 +126,7 @@ function MainPageDoctor() {
                                     </div>
                                 </div>
                                 <div className="selectTCKButtonHolder2">
-                                    <button className="selectTCKButton" onClick={goToNextHandler}>Next >></button>
+                                    <button className="selectTCKButton" onClick={goToNextHandler}>Next </button>
                                 </div>
                             </div>
                         }

@@ -4,8 +4,22 @@ function DeleteProduct() {
   const [productId, setProductId] = useState('');
 
   const handleDeleteProduct = () => {
-    // Delete the product from the system using productId
-    console.log('Product deleted');
+    fetch(`http://localhost:5000/api/delete_product/${productId}`, {
+      method: 'DELETE',
+    })
+    .then(response => {
+      if(response.ok) {
+        return response.json();
+      }
+      throw new Error('Error in deletion');
+    })
+    .then(data => {
+      // Handle the response here
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   };
 
   return (

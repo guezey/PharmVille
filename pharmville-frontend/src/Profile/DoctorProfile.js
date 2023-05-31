@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DoctorInfo from "./DoctorInfo";
 import DoctorAddress from "./DoctorAddress";
 import PasswordChange from "./PasswordChange";
@@ -6,21 +6,26 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col } from "react-bootstrap";
 
 const DoctorProfile = () => {
-  const [doctorData, setDoctorData] = useState({
-    name: "Dağhan",
-    surname: "Ünal",
-    email: "daghanunal20@gmail.com",
-    speciality: "Cardiology",
-    approvalStatus: "Approved",
-    address: {
-      id: 1,
-      street: "123 Main St",
-      city: "New York",
-      state: "NY",
-      zip: "10001",
-    },
-    password: "password123",
-  });
+  const [doctorData, setDoctorData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Replace the URL with your Flask backend endpoint for doctor profile
+    fetch('http://localhost:5000/api/doctor_profile')
+      .then(response => response.json())
+      .then(data => {
+        setDoctorData(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+
+  if (!doctorData) return <p>Error loading doctor data</p>;
 
   return (
     <Container>
