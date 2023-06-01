@@ -7,10 +7,6 @@ from pharm_app.extensions import db
 bp = Blueprint('prescriptions', __name__, url_prefix='/prescriptions')
 
 
-def error404(patient_tck):
-    return jsonify({"message": f"Patient with TCK: {patient_tck} not found"}), 404
-
-
 class PrescriptionsView(MethodView):
     def get(self):
         cursor = db.connection.cursor(DictCursor)
@@ -64,7 +60,7 @@ class PrescriptionsView(MethodView):
                     prescription['diseases'].append(disease)
             prescriptions_with_medicines_and_diseases.append(prescription)
 
-        for prescription in prescriptions_with_medicines:
+        for prescription in prescriptions_with_medicines_and_diseases:
             cursor.execute(
                 """
                 SELECT name, surname FROM Doctor

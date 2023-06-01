@@ -7,7 +7,7 @@ from pharm_app.extensions import db
 bp = Blueprint('prescribe', __name__, url_prefix='/prescribe')
 
 
-def error404(patient_tck):
+def error_404(patient_tck):
     return jsonify({"message": f"Patient with TCK: {patient_tck} not found"}), 404
 
 
@@ -27,7 +27,7 @@ class PrescribeView(MethodView):
         patient = cursor.fetchone()
 
         if not patient:
-            return error404(patient_tck)
+            return error_404(patient_tck)
 
         return jsonify(patient)
 
@@ -55,7 +55,7 @@ class PrescribeView(MethodView):
         patient = cursor.fetchone()
 
         if not patient:
-            return error404(patient_tck)
+            return error_404(patient_tck)
 
         doctor_id = session['user_id']
 
