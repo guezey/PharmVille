@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const AddExistingMedicine = () => {
   const [searchText, setSearchText] = useState("");
   const [selectedMedicine, setSelectedMedicine] = useState(null);
   const [stock, setStock] = useState("");
+  const [medicines, setMedicines] = useState([]);
 
-  // Dummy data
-  const medicines = [
-    { id: 1, name: "Aspirin" },
-    { id: 2, name: "Ibuprofen" },
-    { id: 3, name: "Paracetamol" },
-  ];
+  useEffect(() => {
+    fetch('http://localhost:5000/api/medicines')
+      .then(response => response.json())
+      .then(data => setMedicines(data))
+      .catch(error => console.error('Error:', error));
+  }, []);
 
   const handleSearchChange = (event) => {
     setSearchText(event.target.value);
@@ -30,9 +31,26 @@ const AddExistingMedicine = () => {
       alert("Please select a medicine and enter the stock number.");
       return;
     }
-    // Implement the logic to add the selected medicine and stock number
-    console.log("Medicine:", selectedMedicine);
-    console.log("Stock:", stock);
+
+    const medicineData = {
+      medicineId: selectedMedicine.id,
+      stock: parseInt(stock),
+    };
+
+    fetch('http://localhost:5000/api/add_medicine', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(medicineData),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   };
 
   const searchResults = medicines.filter((medicine) =>

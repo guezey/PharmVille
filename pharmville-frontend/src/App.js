@@ -94,7 +94,7 @@ function App() {
   }
   */
 
-  let user = "Admin";
+  let user = "Patient";
   if (user === "Logout") {
     return (
       <Router>

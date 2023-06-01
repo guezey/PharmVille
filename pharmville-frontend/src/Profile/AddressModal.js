@@ -17,9 +17,24 @@ const AddressModal = ({ isOpen, onClose, onAddAddress }) => {
   };
 
   const handleSubmit = () => {
-    onAddAddress(newAddress);
-    setNewAddress({name: '', country: '', city: '', addressField1: '', addressField2: '', postalCode: ''});
-    onClose();
+    fetch('http://localhost:5000/api/add_address', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newAddress)
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    }).then(data => {
+      onAddAddress(newAddress);
+      setNewAddress({name: '', country: '', city: '', addressField1: '', addressField2: '', postalCode: ''});
+      onClose();
+    }).catch(error => {
+      console.error('There was a problem with the fetch operation:', error);
+    });
   };
 
   if (!isOpen) return null;
@@ -31,41 +46,41 @@ const AddressModal = ({ isOpen, onClose, onAddAddress }) => {
         <input
           type="text"
           name="name"
-          value={newAddress.street}
+          value={newAddress.name}
           onChange={handleInputChange}
           placeholder="Name"
         />
         <input
           type="text"
           name="country"
-          value={newAddress.city}
+          value={newAddress.country}
           onChange={handleInputChange}
           placeholder="Country"
         />
         <input
           type="text"
           name="city"
-          value={newAddress.state}
+          value={newAddress.city}
           onChange={handleInputChange}
           placeholder="City"
         />
         <input
           type="text"
-          name="address field 1"
-          value={newAddress.postalCode}
+          name="addressField1"
+          value={newAddress.addressField1}
           onChange={handleInputChange}
           placeholder="Address Field 1"
         />
         <input
           type="text"
-          name="address field 2"
-          value={newAddress.postalCode}
+          name="addressField2"
+          value={newAddress.addressField2}
           onChange={handleInputChange}
           placeholder="Address Field 2"
         />
         <input
           type="text"
-          name="postal code"
+          name="postalCode"
           value={newAddress.postalCode}
           onChange={handleInputChange}
           placeholder="Postal Code"

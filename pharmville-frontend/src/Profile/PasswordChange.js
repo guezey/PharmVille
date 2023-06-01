@@ -1,11 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PasswordModal from './PasswordModal';
 
 const PasswordChange = ({ setPatientData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+
+  useEffect(() => {
+    const fetchPassword = async () => {
+      let response = await fetch('http://localhost:5000/api/patientPassword');
+      let data = await response.json();
+      setCurrentPassword(data.password);
+    };
+    fetchPassword();
+  }, []);
 
   const handleChangePassword = (newPassword) => {
     setPatientData((prevState) => ({ ...prevState, password: newPassword }));
+    const updatePassword = async () => {
+      await fetch('http://localhost:5000/api/updatePatientPassword', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: newPassword }),
+      });
+    };
+    updatePassword();
   };
 
   return (
@@ -16,7 +34,7 @@ const PasswordChange = ({ setPatientData }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onChangePassword={handleChangePassword}
-        currentPassword="password123" // Replace this with the actual current password
+        currentPassword={currentPassword}
       />
     </div>
   );
