@@ -10,7 +10,7 @@ function MainPageDoctor() {
     // to search for TCK
     const [searchText, setSearchText] = useState('');
     // var to check if the given input is true
-    let isTCKCorrect = false;
+    let isTCKCorrect = true;
 
     // state to show warning msg
     const [showWarning, setShowWarning] = useState(false);
@@ -51,8 +51,6 @@ function MainPageDoctor() {
             {!showNextPage &&
                 <div className="prescMainHolder">
                     <div className="generalHolderPresc">
-
-
                         <div>
                             <p className="searchTitle">Select Patient</p>
                             <div className="search-bar">
