@@ -22,13 +22,13 @@ function Pharmacies({ pharmacies, loading }) {
         return (
                 <Row xs={4} md={4} className="g-4 medicinesHolder">
                     {pharmacies.map(pharmacy => (
-                        <Col key={pharmacy.id}>
-                                <Card className='medicineHolder' onClick={() => handleClick(pharmacy.id)}>
+                        <Col key={pharmacy.prod_id}>
+                                <Card className='medicineHolder' onClick={() => handleClick(pharmacy.prod_id)}>
                                     <Card.Img variant="top" className="imgHolder" src="https://picsum.photos/200/200" />
                                     <Card.Body>
-                                        <Card.Title>Parol</Card.Title>
+                                        <Card.Title>{pharmacy.name}</Card.Title>
                                         <Card.Text style={{ color: "rgb(30,45,47)" }}>
-                                            22 TL
+                                            {pharmacy.price} TL
                                         </Card.Text>
                                     </Card.Body>
                                 </Card>
