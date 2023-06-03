@@ -105,7 +105,7 @@ function App() {
       return <Login />;
   }
 
-  */
+  /*
 
   let user = "Patient";
   if (user === "Logout") {
@@ -169,6 +169,7 @@ function App() {
       </Router>
     );
   }
+  */
 
 
 }
