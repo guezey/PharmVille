@@ -76,4 +76,4 @@ class PrescriptionsView(MethodView):
         return jsonify(prescriptions_with_medicines_and_diseases), 200
 
 
-bp.add_url_rule('/', view_func=PrescriptionsView.as_view('prescriptions'), methods=['GET'])
+bp.add_url_rule('', view_func=PrescriptionsView.as_view('prescriptions'), methods=['GET'])

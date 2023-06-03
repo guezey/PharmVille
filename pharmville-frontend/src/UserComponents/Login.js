@@ -134,7 +134,7 @@ function Register({ onBackToLogin }) {
     setErrorMessage("");
 
     // Replace with your own backend server URL
-    const apiUrl = "https://your-backend-server.com/api/register";
+    const apiUrl = "http://your-backend-server.com/api/register";
 
     const formData = new FormData();
     formData.append("name", name);
@@ -312,7 +312,7 @@ function Register({ onBackToLogin }) {
   );
 }
 
-function Login() {
+function Login({onLogin}) {
   const [isRegistering, setIsRegistering] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -336,7 +336,7 @@ function Login() {
     e.preventDefault();
 
     // Replace with your own backend server URL
-    const apiUrl = "https://your-backend-server.com/api/login";
+    const apiUrl = "http://localhost:5000/login";
 
     const data = {
       email,
@@ -349,6 +349,7 @@ function Login() {
       const userData = response.data;
 
       if (userRole) {
+        onLogin(userRole, userData);
         localStorage.setItem("userRole", userRole);
         localStorage.setItem("userData", JSON.stringify(userData));
         // Redirect or update the state based on userRole
