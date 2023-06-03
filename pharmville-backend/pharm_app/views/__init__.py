@@ -4,3 +4,4 @@ from .skincare import bp as skincare_bp
 from .prescribe import bp as prescribe_bp
 from .prescriptions import bp as prescriptions_bp
 from .review import bp as review_bp
+from .orders import bp as orders_bp
