@@ -4,7 +4,9 @@ CREATE TABLE User
     user_id  int PRIMARY KEY AUTO_INCREMENT,
     email    varchar(255) NOT NULL,
     password char(60)     NOT NULL,
-    phone    CHAR(10)
+    phone    CHAR(10),
+    role     ENUM ('Patient', 'Doctor', 'Pharmacy', 'Admin') NOT NULL,
+    UNIQUE (email)
 );
 
 CREATE TABLE Person
@@ -13,7 +15,7 @@ CREATE TABLE Person
     name      varchar(255),
     surname   varchar(255),
     tck       char(11)        NOT NULL,
-    is_admin  boolean         NOT NULL,
+    is_admin  boolean     DEFAULT FALSE   NOT NULL,
     FOREIGN KEY (person_id) REFERENCES User (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -115,7 +117,7 @@ CREATE TABLE Address
     country         varchar(255) NOT NULL,
     address_field   varchar(255) NOT NULL,
     address_field_2 varchar(255),
-    postal_code     int(5)       NOT NULL,
+    postal_code     varchar(5)   NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User (user_id)
 );
 
@@ -123,18 +125,18 @@ CREATE TABLE Address
 CREATE TABLE Orders
 (
     order_id      int PRIMARY KEY AUTO_INCREMENT,
-    order_date    timestamp                                           NOT NULL,
-    pharmacy_id   int                                                 NOT NULL,
-    patient_id    int                                                 NOT NULL,
-    delivery_date datetime,
-    order_status  ENUM ('ACTIVE', 'SHIPPED', 'DELIVERED', 'CANCELED') NOT NULL,
-    order_type    ENUM ('CARGO', 'PICKUP')                            NOT NULL,
+    order_time    timestamp                                            NOT NULL,
+    pharmacy_id   int                                                  NOT NULL,
+    delivery_time timestamp NULL DEFAULT  NULL,
+    patient_id    int                                                  NOT NULL,
+    order_status  ENUM ('ACTIVE', 'SHIPPED', 'DELIVERED', 'CANCELED' ) NOT NULL,
     shipping_firm varchar(255),
-    address_id    int                                                 NOT NULL,
+    address_id    int DEFAULT NULL,
     FOREIGN KEY (address_id) REFERENCES Address (address_id),
     FOREIGN KEY (pharmacy_id) REFERENCES Pharmacy (pharmacy_id),
     FOREIGN KEY (patient_id) REFERENCES Patient (patient_id)
 );
+
 
 CREATE TABLE Review
 (
@@ -220,7 +222,6 @@ CREATE TABLE pharmacy_product
 (
     pharmacy_id int,
     prod_id     int,
-    price       decimal(6, 2),
     stock       int,
     description text,
     FOREIGN KEY (pharmacy_id) REFERENCES Pharmacy (pharmacy_id),
@@ -297,11 +298,11 @@ create table applicable_skin_types
 
 CREATE TABLE product_order
 (
-    order_id int    NOT NULL,
-    prod_id  int    NOT NULL,
-    presc_id int,
-    price    double NOT NULL,
-    count    int    NOT NULL,
+    order_id   int    NOT NULL,
+    prod_id    int    NOT NULL,
+    presc_id   int DEFAULT NULL,
+    unit_price double NOT NULL,
+    count      int    NOT NULL,
     PRIMARY KEY (order_id, prod_id),
     FOREIGN KEY (order_id) REFERENCES Orders (order_id),
     FOREIGN KEY (prod_id) REFERENCES Product (prod_id),
@@ -454,18 +455,20 @@ END;
 -- Sample data Insertion----------------------------------------------------------------------
 
 -- Actors------------------------------------------------------------------------------------
-INSERT INTO User (user_id, email, password, phone)
-VALUES (1, 'deniz@gmail.com', 'Pass123', '532033931'),
-       (2, 'ceren@gmail.com', 'Pass321', '324323024'),
-       (3, 'dağhan@gmail.com', 'Pass321', '324324233'),
-       (4, 'aliemir@gmail.com', 'Pasd301', NULL),
-       (5, 'arda@gmail.com', 'Passwordo', '3940909090'),
-       (6, 'faruk.eczane@gmail.com', 'Eczane123', '423809444'),
-       (7, 'gonul.eczane@gmail.com', 'Eczane321', '213213122'),
-       (8, 'admin@gmail.com', 'Admin123', '312312312'),
-       (9, 'fatih.eczane@gmail.com', 'Eczo12', '31232132'),
-       (10, 'reject.rejectoğlu@gmail.com', 'rejecto', '533313231'),
-       (11, 'rejectullah.ezczane@gmail.com', 'Reject Eczo', '531011002')
+
+INSERT INTO User (user_id, email, password, phone, role)
+VALUES (1, 'deniz@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '532033931', 'Patient'),
+       (2, 'ceren@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '324323024', 'Doctor'),
+       (3, 'dağhan@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '324324233', 'Patient'),
+       (4, 'aliemir@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', NULL, 'Doctor'),
+       (5, 'arda@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '3940909090', 'Patient'),
+       (6, 'faruk.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '423809444', 'Pharmacy'),
+       (7, 'gonul.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '213213122', 'Pharmacy'),
+       (8, 'admin@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '312312312', 'Admin'),
+       (9, 'fatih.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '31232132', 'Pharmacy'),
+       (10, 'reject.rejectoğlu@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '533313231', 'Doctor'),
+       (11, 'rejectullah.ezczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '531011002', 'Pharmacy')
+
 ;
 
 INSERT INTO Person(person_id, name, surname, tck, is_admin)
@@ -482,7 +485,8 @@ INSERT INTO Pharmacy(pharmacy_id, name, is_on_duty, diploma_path, balance, appro
 VALUES (6, 'Faruk Pharmacy', TRUE, NULL, 2000, 'APPROVED'),
        (7, 'Gönül Pharmacy', FALSE, NULL, 3000, 'APPROVED'),
        (9, 'Fatih Pharmacy', TRUE, NULL, 0, 'PENDING'),
-       (11, 'Rejectullah Pharmacy', TRUE, NULL, 1, 'REJECTED')
+       (11, 'Rejectullah Pharmacy', TRUE, NULL, 1, 'REJECTED'),
+       (12, 'Pharma Pharmacy', TRUE, NULL, 213213, 'APPROVED')
 ;
 
 INSERT INTO Doctor(doctor_id, speciality, approval_status)
@@ -495,6 +499,18 @@ INSERT INTO Patient(patient_id, birth_date, weight, height, gender)
 VALUES (1, '2002-04-05', 78.5, 182, 'M'),
        (3, '2002-08-23', 79, 185, 'M'),
        (5, '2002-01-01', 82, 182, 'M')
+;
+
+INSERT INTO Address(address_id, user_id, name, city, country, address_field, address_field_2, postal_code)
+VALUES (1, 1, 'Home', 'Istanbul', 'Turkey', 'Ümraniye Parseller Mahallesi',
+        'Abdullahazam Caddesi Aqua City1. Etap Villa 1-1', '21301'),
+       (2, 1, 'Dorm', 'Ankara', 'Turkey', 'Çankaya, Üniversiteler mahallesi',
+        'Bilkent Üniversitesi merkez kampüsü 82. yurt', '12312'),
+       (3, 3, 'MY Home', 'Ankara', 'Turkey', 'Çankaya, Çayyolu', 'Dağhanın bizi çağırdığı site', '12342'),
+       (4, 5, 'Cozy Home', 'Cehennem', 'Ahiret', 'Adolf Hitler Mahallesi', 'Cayır Cayır sokak', '89343'),
+       (5, 6, 'Pharmacy', 'Ankara', 'Turkey', 'Habudu habudu sokak', 'Habudu Habudu caddesi Faruk Pharmacy', '12332'),
+       (6, 7, 'Tükkan', 'Istanbul', 'Turkey', 'Hob hob sokak', 'Hib hob caddesi Gönül Pharmacy', '12345'),
+       (7, 12, 'My Tükkan', 'Aydın', 'Turkey', 'Zom zom sokak', 'zim Zom caddesi Pharmac Pharmacy', '23243')
 ;
 
 -- Product --------------------------------------------------------------------------------
@@ -548,7 +564,6 @@ VALUES ('Infants', 0, 1),
        ('Adolescents', 13, 18),
        ('Adults', 18, 65),
        ('Elderly', 65, 999);
-
 
 Insert INTO IntakeType(intake_type)
 VALUES ('Capsule'),
@@ -813,3 +828,135 @@ VALUES (21, 'Dry'),
        (32, 'Oily'),
        (32, 'Combination'),
        (32, 'Sensitive');
+
+INSERT INTO pharmacy_product(pharmacy_id, prod_id, stock, description)
+VALUES (6, 2, 10, 'Great medicine'),
+       (6, 1, 4, 'Very Great medicine'),
+       (6, 3, 10, 'Pretty medicine'),
+       (6, 4, 3, 'Indeed medicine'),
+       (6, 8, 8, 'Yeeees medicine'),
+       (6, 5, 12, 'Great medicine'),
+       (6, 7, 4, 'Very Great medicine'),
+       (6, 9, 10, 'Pretty medicine'),
+       (6, 10, 0, 'Indeed medicine'),
+       (6, 11, 8, 'Yeeees medicine'),
+
+       (6, 12, 7, 'PROTEIIIN'),
+       (6, 14, 10, 'EXTRA PROTEIIIN'),
+       (6, 15, 10, 'PROTO PROTO PROTEIN'),
+
+       (6, 21, 2, 'Great product'),
+       (6, 22, 3, 'Great yees'),
+       (6, 23, 4, 'MMM great'),
+       (6, 24, 1, 'YYYYEEEESS'),
+
+       (7, 2, 10, 'Yeess medicine'),
+       (7, 1, 4, 'asdasd Great medicine'),
+       (7, 3, 3, 'Mmmmm great Pretty medicine'),
+       (7, 4, 3, 'woohooo Indeed medicine'),
+       (7, 8, 8, 'yes Yeeees medicine'),
+       (7, 5, 9, 'Indeed Great medicine'),
+       (7, 6, 3, 'Yes its medicine'),
+       (7, 7, 4, 'yes Very Great medicine'),
+       (7, 9, 2, 'Woohooo Pretty medicine'),
+       (7, 10, 0, 'Indeed medicine'),
+       (7, 11, 8, 'Yeeees medicine'),
+       (7, 12, 4, 'medicine'),
+
+       (7, 16, 2, 'PROTEIIIN'),
+       (7, 17, 15, 'EXTRA PROTEIIIN'),
+       (7, 18, 0, 'PROTO PROTO PROTEIN'),
+
+       (7, 25, 2, 'Great product'),
+       (7, 26, 5, 'Great yees'),
+       (7, 27, 4, 'MMM great'),
+       (7, 28, 3, 'YYYYEEEESS'),
+
+
+       (12, 2, 10, 'Yeess medicine'),
+       (12, 1, 4, 'asdasd Great medicine'),
+       (12, 3, 3, 'Mmmmm great Pretty medicine'),
+       (12, 4, 3, 'woohooo Indeed medicine'),
+       (12, 8, 8, 'yes Yeeees medicine'),
+       (12, 5, 9, 'Indeed Great medicine'),
+       (12, 7, 4, 'yes Very Great medicine'),
+       (12, 9, 2, 'Woohooo Pretty medicine'),
+       (12, 10, 0, 'Indeed medicine'),
+       (12, 11, 8, 'Yeeees medicine'),
+       (12, 12, 4, 'medicine'),
+
+       (12, 19, 2, 'PROTEIIIN'),
+       (12, 20, 3, 'EXTRA PROTEIIIN'),
+
+       (12, 29, 2, 'Great product'),
+       (12, 30, 5, 'Great yees'),
+       (12, 31, 4, 'MMM great'),
+       (12, 32, 3, 'YYYYEEEESS');
+
+
+
+-- Orders-----------------------------------------------------------
+INSERT INTO Orders(order_id, order_time, pharmacy_id, patient_id, delivery_time, order_status,
+                   shipping_firm, address_id)
+VALUES (1, '2023-05-25 15:30:00', 6, 1, '2023-05-27 21:30:00', 'SHIPPED', 'MNG', 1),
+       (6, '2023-05-23 15:25:00', 6, 1, '2023-05-24 15:30:00', 'DELIVERED', 'Yurtiçi', 2),
+       (2, '2023-05-24 23:00:00', 7, 3, '2023-05-22 12:23:00', 'SHIPPED', NULL, NULL),
+       (3, '2023-05-24 12:00:00', 12, 3, '2023-05-23 12:30:00', 'ACTIVE', NULL, 3),
+       (4, '2023-05-25 11:00:00', 12, 5, '2023-05-24 12:30:00', 'DELIVERED', 'Homdom Kargo', 4),
+       (5, '2023-05-25 10:00:00', 12, 5, '2023-05-24 12:12:12', 'DELIVERED', 'MNG', 4),
+       (7, '2023-05-25 10:00:00', 12, 5, '2023-05-24 12:12:12', 'DELIVERED', 'MNG', 4)
+;
+INSERT INTO product_order(order_id, prod_id, presc_id, unit_price, count)
+VALUES (1, 1, NULL, 87.33, 2),
+       (1, 3, NULL, 81.22, 3),
+       (1, 21, NULL, 200.22, 1),
+       (1, 22, NULL, 200.21, 2),
+       (1, 12, NULL, 222.33, 1),
+
+       (6, 4, NULL, 94.22, 3),
+       (6, 7, NULL, 90.31, 2),
+       (6, 3, NULL, 92.22, 2),
+       (6, 23, NULL, 31, 3),
+
+       (2, 5, NULL, 32, 4),
+       (2, 8, NULL, 34.12, 3),
+       (2, 6, NULL, 35.12, 1),
+       (2, 16, NULL, 31.32, 2),
+       (2, 17, NULL, 12.32, 2),
+       (2, 25, NULL, 25.22, 2),
+       (2, 26, NULL, 23.35, 1),
+
+       (3, 3, NULL, 31.34, 2),
+       (3, 2, NULL, 30.22, 1),
+       (3, 8, NULL, 30.22, 3),
+       (3, 19, NULL, 60.22, 2),
+       (3, 20, NULL, 56.54, 1),
+       (3, 30, NULL, 32.21, 2),
+       (3, 31, NULL, 31.23, 3),
+
+       (4, 9, NULL, 31.22, 3),
+       (4, 11, NULL, 45.22, 2),
+       (4, 2, NULL, 44.23, 1),
+       (4, 4, NULL, 44.23, 3),
+       (4, 20, NULL, 33.33, 2),
+       (4, 31, NULL, 59.21, 2),
+       (4, 32, NULL, 61.25, 3),
+
+       (5, 3, NULL, 45.89, 2),
+       (5, 4, NULL, 49.95, 2),
+       (5, 6, NULL, 55.52, 1),
+       (5, 8, NULL, 45.22, 2),
+       (5, 10, NULL, 59.22, 1),
+       (5, 19, NULL, 65.31, 2),
+       (5, 20, NULL, 78.22, 1),
+       (5, 30, NULL, 54.22, 1),
+       (5, 31, NULL, 59.22, 2),
+
+       (7, 4, NULL, 55.22, 2)
+;
+
+
+INSERT INTO Review(review_id, rating, title, body, order_id)
+VALUES (1, 4, 'Great Pharmacy', 'My order arrived a little late but no damages', 6),
+       (3, 5, 'Inceredible Service', 'I recieved my order just in a day and it was in great condition', 4),
+       (2, 1, 'Disastorous', 'I recieved my package 1 week late and the they sent the wrong medicine', 5);

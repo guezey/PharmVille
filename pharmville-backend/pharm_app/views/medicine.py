@@ -36,6 +36,8 @@ class MedicineGroupView(MethodView):
         cursor.execute(query)
 
         medicines = cursor.fetchall()
+        for medicine in medicines:
+            medicine["prod_type"] = "Medicine"
         return jsonify(medicines)
 
     def post(self):
@@ -96,7 +98,8 @@ class MedicineView(MethodView):
         medicine["age_groups"] = cursor.fetchall()
 
         cursor.execute("""
-            SELECT pharmacy_id, name FROM Pharmacy NATURAL JOIN pharmacy_product
+            SELECT DISTINCT (pharmacy_id), name,total_reviews, avg_rating  
+            FROM Pharmacy NATURAL JOIN pharmacy_product NATURAL JOIN pharmacy_ratings
                 WHERE prod_id = %s 
         """, (prod_id,))
         medicine['pharmacies'] = cursor.fetchall()

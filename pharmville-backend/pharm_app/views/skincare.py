@@ -33,6 +33,8 @@ class SkincareGroupView(MethodView):
         cursor.execute(query)
 
         skincare = cursor.fetchall()
+        for skincare_prod in skincare :
+            skincare_prod["prod_type"] = "Skincare"
         return jsonify(skincare)
 
     def post(self):
