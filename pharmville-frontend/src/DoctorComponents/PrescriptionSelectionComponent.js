@@ -57,6 +57,7 @@ function PrescriptionSelectionComponent() {
 
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(false);
+<<<<<<< Updated upstream
 
     useEffect(() => {
         const fetchDisease = async () => {
@@ -177,7 +178,47 @@ function PrescriptionSelectionComponent() {
             })
     }, [selectedDrugClass, selectedPrescriptionType, selectedUndesiredEffects, selectedAge, selectedIntake]);
 
+=======
+>>>>>>> Stashed changes
 
+    useEffect(() => {
+        const fetchDisease = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get("http://localhost:5000/prescribe");
+                const newData = res.data;
+
+                let uniqueOptions = [];
+                console.log(options.length);
+                if (options.length == 0) {
+                    for (let i = 0; i < newData.length; i++) {
+                        let bool = true;
+                        for (let j = 0; j < options.length; j++) {
+                            if (newData[i].name == options[j].value) {
+                                bool = false;
+                                break
+                            }
+                        }
+                        if (bool) {
+                            uniqueOptions.push({ value: newData[i].name, label: newData[i].name });
+                        }
+                    }
+                }
+
+                setOptions((prevOptions) => [...uniqueOptions]);
+            } catch (error) {
+                // Handle error
+                console.error(error);
+            }
+            setLoading(false);
+        };
+
+        fetchDisease();
+    }, []);
+
+
+
+    console.log(options);
     // state for selected disease causes arr:
     const [selectedCauses, setSelectedCauses] = useState([]);
 
