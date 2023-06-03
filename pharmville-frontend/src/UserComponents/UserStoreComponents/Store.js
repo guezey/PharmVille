@@ -7,7 +7,6 @@ import Filter from './Filter';
 
 function Store() {
     const [pharmacies, setPharmacies] = useState([]);
-    const [loading, setLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(1);
     const [postPerPage, setPostPerPage] = useState(8);
 
@@ -119,10 +118,12 @@ function Store() {
         setSelectedSkinType(null);
     };
 
-    
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(false);
 
     // fetch medicine data:
     useEffect(() => {
+        setIsLoading(true);
         fetch('http://localhost:5000/' + selectedProductType, {
             method: 'PUT',
             headers: {
@@ -145,9 +146,13 @@ function Store() {
             .then(response => response.json())
             .then(data => {
                 setPharmacies(data);
+                setIsLoading(false);
+                setError(false);
             })
             .catch(error => {
                 console.log(error);
+                setIsLoading(false);
+                setError(true);
             })
     }, [selectedProductType, selectedDrugClass, selectedPrescriptionType, selectedUndesiredEffects, selectedAge, selectedIntake, minPrice, maxPrice, selectedAroma, selectedSkinType, selectedSkinCare]);
 
@@ -173,7 +178,7 @@ function Store() {
                 ></Filter>
             </div>
             <div className="column-2">
-                <Pharmacies pharmacies={currentPharmacies} loading={loading} />
+                <Pharmacies pharmacies={currentPharmacies} loading={isLoading} error={error} />
                 <Paginate postsPerPage={postPerPage} totalPosts={pharmacies.length} paginate={paginate} />
             </div>
         </div>

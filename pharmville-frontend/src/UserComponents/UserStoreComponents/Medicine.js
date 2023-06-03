@@ -1,6 +1,6 @@
 import "./Medicine.css";
 import star from '../../images/star.png';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,32 @@ const arr = [1, 2, 3, 4, 5]; // örnek arr, her bunu satan eczane için eczaneyi
 function Medicine(props) {
 
     // domain'den objeyi çekkk
+    const currentURL = window.location.pathname;
+    const parts = currentURL.split('medicine/'); // Split the pathname by '/'
+    // set-id:
+    const id = parts[parts.length - 1]; // Get the last part of the pathname
+    console.log(id);
+
+     // fetch medicine data:
+     useEffect(() => {
+        fetch('http://localhost:5000/', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                //medicine_classes: selectedDrugClass,
+            }) // Empty body
+        })
+
+            .then(response => response.json())
+            .then(data => {
+                //setPharmacies(data);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }, []);
     // onu satan eczaneleri çekk
 
     // TODO
@@ -27,7 +53,7 @@ function Medicine(props) {
         // kullanıcının uyuşan prescriptionlarını çek
         setShow(true);
     }
-    
+
 
     const handleClose = () => {
         setShow(false);
@@ -65,7 +91,7 @@ function Medicine(props) {
                     <div className="sectionHolder">
                         <h1 className="medicineTitle">Parol</h1>
                         <img src={"https://picsum.photos/200/200"} className="productImg"></img>
-                        <p style={{color: "whitesmoke"}}>22 TL</p>
+                        <p style={{ color: "whitesmoke" }}>22 TL</p>
                     </div>
                     <div className="sectionHolder2">
                         {isMedicine &&
@@ -79,6 +105,14 @@ function Medicine(props) {
                                 <p className="productInfoPar"><strong>Medicine Type:</strong> Tablet</p>
                             </div>
                         }
+                        {!isMedicine &&
+                            <div>
+                                <p className="productInfoPar"><strong>Company:</strong> Atabay</p>
+                                <p className="productInfoPar"><strong>Prescription Type:</strong> None</p>
+                                <p className="productInfoPar"><strong>Age Group:</strong> Adolescents, Adults</p>
+                                <p className="productInfoPar"><strong>Intake Method:</strong> Oral</p>
+                                <p className="productInfoPar"><strong>Medicine Type:</strong> Tablet</p>
+                            </div>}
                     </div>
                 </div>
             </div>

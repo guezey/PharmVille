@@ -1,6 +1,6 @@
 import "./MainPageDoctor.css";
 import searchIcon from '../images/search-icon.png';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import PrescriptionSelectionComponent from "./PrescriptionSelectionComponent";
 
@@ -10,10 +10,32 @@ function MainPageDoctor() {
     // to search for TCK
     const [searchText, setSearchText] = useState('');
     // var to check if the given input is true
-    let isTCKCorrect = true;
+
+    const [isTCKCorrect, setIsTCKCorrect] = useState(false);
 
     // state to show warning msg
     const [showWarning, setShowWarning] = useState(false);
+
+    // error handler for TCK search
+    const [error, setError] = useState(false);
+
+    // state to show patient info
+    const [patientInfo, setPatientInfo] = useState([]);
+
+    const fetchPatientData = () => {
+        fetch('http://localhost:5000/prescribe/' + searchText)
+            .then(response => response.json())
+            .then(data => {
+                setIsTCKCorrect(true);
+                setPatientInfo(data);
+                console.log(data)
+            })
+            .catch(error => {
+                //setIsTCKCorrect(false);
+            });
+        console.log("BURAYA GELİYON MU")
+        console.log(patientInfo)
+    };
 
     // state to show patient info
     const [showPatientInfo, setShowPatientInfo] = useState(false);
@@ -24,20 +46,23 @@ function MainPageDoctor() {
     const searchTCKHandler = () => {
         // Process search operation with searchText
         console.log(searchText);
-
         // check if TCK is correct
-
-        // if TCK is not correct:
-        if (!isTCKCorrect) {
+        // check if searcText is 11 digits:
+        setIsTCKCorrect(searchText.length === 11);
+        console.log(searchText.length === 11);
+    };
+    useEffect(() => {
+        // Add an effect to monitor changes in isTCKCorrect
+        if (isTCKCorrect) {
+            console.log("isTCKCorrect is true");
+            fetchPatientData();
+            setShowPatientInfo(true);
+            // Fetch patient data or perform any other actions
+        }
+        else {
             setShowWarning(true);
         }
-        else // if correct:
-        {
-            console.log("TCK is: ")
-            console.log(searchText);
-            setShowPatientInfo(true);
-        }
-    };
+    }, [isTCKCorrect]);
 
     const goToNextHandler = () => {
         // go to next page:
@@ -131,10 +156,10 @@ function MainPageDoctor() {
                     </div>
                 </div>
             }
-            {showNextPage && 
-            <div>
-                <PrescriptionSelectionComponent />
-            </div>
+            {showNextPage &&
+                <div>
+                    <PrescriptionSelectionComponent />
+                </div>
             }
         </div>
     );
