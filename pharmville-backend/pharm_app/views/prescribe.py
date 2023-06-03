@@ -132,5 +132,5 @@ class PrescribeView(MethodView):
         return jsonify({"message": "Prescription successfully added."}), 202
 
 
-bp.add_url_rule('/<int:patient_tck>', view_func=PrescribeView.as_view('prescribe-patient'), methods=['GET', 'POST'])
-bp.add_url_rule('/', view_func=PrescribeView.as_view('prescribe-general'), methods=['GET'])
+bp.add_url_rule('<int:patient_tck>', view_func=PrescribeView.as_view('prescribe-patient'), methods=['GET', 'POST'])
+bp.add_url_rule('', view_func=PrescribeView.as_view('prescribe-general'), methods=['GET'])

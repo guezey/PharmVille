@@ -33,6 +33,7 @@ def create_app():
 app = create_app()
 Session(app)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+app.config["CORS_HEADERS"] = ["Content-Type", "Authorization"]
 
 
 @app.route('/')

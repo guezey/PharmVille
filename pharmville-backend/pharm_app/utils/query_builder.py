@@ -9,6 +9,8 @@ class BaseQueryBuilder:
     def __init__(self, **kwargs):
         self.ordering = kwargs.get("ordering")
         self.order_type = kwargs.get("order_type")
+        self.min_price = kwargs.get('min_price')
+        self.max_price = kwargs.get('max_range')
 
     def _apply_ordering(self):
         order_str = ""
@@ -25,6 +27,18 @@ class BaseQueryBuilder:
             else:
                 raise ValueError(f"'ordering' must be 'ASC' or 'DESC' current value: {self.ordering}")
         return order_str
+
+    def _apply_price_range(self):
+        price_predicate = ""
+        # validate fields
+
+        if self.min_price and self.max_price:
+            price_predicate = f" price BETWEEN {self.min_price} AND {self.max_price} "
+        elif self.min_price:
+            price_predicate = f" price >= {self.min_price} "
+        elif self.max_price:
+            price_predicate = f" price <= {self.max_price} "
+        return price_predicate
 
 
 class MedicineQueryBuilder(BaseQueryBuilder):
@@ -74,6 +88,10 @@ class MedicineQueryBuilder(BaseQueryBuilder):
                  HAVING COUNT(DISTINCT class_name) = {len(self.medicine_classes)})
             """)
 
+        price_predicate = self._apply_price_range()
+        if price_predicate != "":
+            predicates.append(price_predicate)
+
         if len(predicates) != 0:
             query += "WHERE "
             query += " AND ".join(predicates)
@@ -99,6 +117,9 @@ class ProteinPowderQueryBuilder(BaseQueryBuilder):
 
         if self.aromas and len(self.aromas) > 0:
             predicates.append(f""" aroma_name IN ({to_string_tuple(self.aromas)}) """)
+        price_predicate = self._apply_price_range()
+        if price_predicate != "":
+            predicates.append(price_predicate)
 
         if len(predicates) != 0:
             query += " WHERE "
@@ -132,6 +153,10 @@ class SkincareQueryBuilder(BaseQueryBuilder):
                     (SELECT product_id FROM applicable_skin_types 
                         WHERE skin_type IN ({to_string_tuple(self.skin_types)}) ) 
                 """)
+
+        price_predicate = self._apply_price_range()
+        if price_predicate != "":
+            predicates.append(price_predicate)
 
         if len(predicates) != 0:
             query += " WHERE "
