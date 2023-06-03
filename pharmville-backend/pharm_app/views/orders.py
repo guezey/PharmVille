@@ -44,11 +44,19 @@ class PrescribeView(MethodView):
 
                 cursor.execute(
                     """
-                    SELECT COUNT(*) AS count FROM pharmacy_product WHERE prod_id = %s AND pharmacy_id = %s
+                    SELECT prod_id FROM Product WHERE name = %s
                     """,
-                    (med['prod_id'], pharmacy['pharmacy_id'])
+                    (med['name'],)
                 )
-                count = cursor.fetchone()['count']
+                med_id = cursor.fetchone()['prod_id']
+
+                cursor.execute(
+                    """
+                    SELECT stock FROM pharmacy_product WHERE prod_id = %s AND pharmacy_id = %s
+                    """,
+                    (med_id, pharmacy['pharmacy_id'])
+                )
+                count = cursor.fetchone()['stock']
                 if count < med['count']:
                     return jsonify({"message": f"Product {med['prod_id']} is not available"}), 400
 
