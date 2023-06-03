@@ -115,7 +115,7 @@ CREATE TABLE Address
     country         varchar(255) NOT NULL,
     address_field   varchar(255) NOT NULL,
     address_field_2 varchar(255),
-    postal_code     int(5)       NOT NULL,
+    postal_code     varchar(5)   NOT NULL,
     FOREIGN KEY (user_id) REFERENCES User (user_id)
 );
 
@@ -123,18 +123,18 @@ CREATE TABLE Address
 CREATE TABLE Orders
 (
     order_id      int PRIMARY KEY AUTO_INCREMENT,
-    order_date    timestamp                                           NOT NULL,
-    pharmacy_id   int                                                 NOT NULL,
-    patient_id    int                                                 NOT NULL,
-    delivery_date datetime,
-    order_status  ENUM ('ACTIVE', 'SHIPPED', 'DELIVERED', 'CANCELED') NOT NULL,
-    order_type    ENUM ('CARGO', 'PICKUP')                            NOT NULL,
+    order_time    timestamp                                            NOT NULL,
+    pharmacy_id   int                                                  NOT NULL,
+    delivery_time timestamp NULL DEFAULT  NULL,
+    patient_id    int                                                  NOT NULL,
+    order_status  ENUM ('ACTIVE', 'SHIPPED', 'DELIVERED', 'CANCELED' ) NOT NULL,
     shipping_firm varchar(255),
-    address_id    int                                                 NOT NULL,
+    address_id    int DEFAULT NULL,
     FOREIGN KEY (address_id) REFERENCES Address (address_id),
     FOREIGN KEY (pharmacy_id) REFERENCES Pharmacy (pharmacy_id),
     FOREIGN KEY (patient_id) REFERENCES Patient (patient_id)
 );
+
 
 CREATE TABLE Review
 (
@@ -296,11 +296,11 @@ create table applicable_skin_types
 
 CREATE TABLE product_order
 (
-    order_id int    NOT NULL,
-    prod_id  int    NOT NULL,
-    presc_id int,
-    price    double NOT NULL,
-    count    int    NOT NULL,
+    order_id   int    NOT NULL,
+    prod_id    int    NOT NULL,
+    presc_id   int DEFAULT NULL,
+    unit_price double NOT NULL,
+    count      int    NOT NULL,
     PRIMARY KEY (order_id, prod_id),
     FOREIGN KEY (order_id) REFERENCES Orders (order_id),
     FOREIGN KEY (prod_id) REFERENCES Product (prod_id),
@@ -498,6 +498,18 @@ VALUES (1, '2002-04-05', 78.5, 182, 'M'),
        (5, '2002-01-01', 82, 182, 'M')
 ;
 
+INSERT INTO Address(address_id, user_id, name, city, country, address_field, address_field_2, postal_code)
+VALUES (1, 1, 'Home', 'Istanbul', 'Turkey', 'Ümraniye Parseller Mahallesi',
+        'Abdullahazam Caddesi Aqua City1. Etap Villa 1-1', '21301'),
+       (2, 1, 'Dorm', 'Ankara', 'Turkey', 'Çankaya, Üniversiteler mahallesi',
+        'Bilkent Üniversitesi merkez kampüsü 82. yurt', '12312'),
+       (3, 3, 'MY Home', 'Ankara', 'Turkey', 'Çankaya, Çayyolu', 'Dağhanın bizi çağırdığı site', '12342'),
+       (4, 5, 'Cozy Home', 'Cehennem', 'Ahiret', 'Adolf Hitler Mahallesi', 'Cayır Cayır sokak', '89343'),
+       (5, 6, 'Pharmacy', 'Ankara', 'Turkey', 'Habudu habudu sokak', 'Habudu Habudu caddesi Faruk Pharmacy', '12332'),
+       (6, 7, 'Tükkan', 'Istanbul', 'Turkey', 'Hob hob sokak', 'Hib hob caddesi Gönül Pharmacy', '12345'),
+       (7, 12, 'My Tükkan', 'Aydın', 'Turkey', 'Zom zom sokak', 'zim Zom caddesi Pharmac Pharmacy', '23243')
+;
+
 -- Product --------------------------------------------------------------------------------
 INSERT INTO Product(prod_id, name, company, price)
 VALUES (1, 'Calpol', 'Bayer', 70),
@@ -549,7 +561,6 @@ VALUES ('Infants', 0, 1),
        ('Adolescents', 13, 18),
        ('Adults', 18, 65),
        ('Elderly', 65, 999);
-
 
 Insert INTO IntakeType(intake_type)
 VALUES ('Capsule'),
@@ -842,6 +853,7 @@ VALUES (6, 2, 10, 'Great medicine'),
        (7, 4, 3, 'woohooo Indeed medicine'),
        (7, 8, 8, 'yes Yeeees medicine'),
        (7, 5, 9, 'Indeed Great medicine'),
+       (7, 6, 3, 'Yes its medicine'),
        (7, 7, 4, 'yes Very Great medicine'),
        (7, 9, 2, 'Woohooo Pretty medicine'),
        (7, 10, 0, 'Indeed medicine'),
@@ -870,12 +882,78 @@ VALUES (6, 2, 10, 'Great medicine'),
        (12, 11, 8, 'Yeeees medicine'),
        (12, 12, 4, 'medicine'),
 
-       (12, 19 , 2, 'PROTEIIIN'),
+       (12, 19, 2, 'PROTEIIIN'),
        (12, 20, 3, 'EXTRA PROTEIIIN'),
 
        (12, 29, 2, 'Great product'),
        (12, 30, 5, 'Great yees'),
        (12, 31, 4, 'MMM great'),
-       (12, 32, 3, 'YYYYEEEESS')
-;
+       (12, 32, 3, 'YYYYEEEESS');
+
+
+
 -- Orders-----------------------------------------------------------
+INSERT INTO Orders(order_id, order_time, pharmacy_id, patient_id, delivery_time, order_status,
+                   shipping_firm, address_id)
+VALUES (1, '2023-05-25 15:30:00', 6, 1, '2023-05-27 21:30:00', 'SHIPPED', 'MNG', 1),
+       (6, '2023-05-23 15:25:00', 6, 1, '2023-05-24 15:30:00', 'DELIVERED', 'Yurtiçi', 2),
+       (2, '2023-05-24 23:00:00', 7, 3, '2023-05-22 12:23:00', 'SHIPPED', NULL, NULL),
+       (3, '2023-05-24 12:00:00', 12, 3, '2023-05-23 12:30:00', 'ACTIVE', NULL, 3),
+       (4, '2023-05-25 11:00:00', 12, 5, '2023-05-24 12:30:00', 'DELIVERED', 'Homdom Kargo', 4),
+       (5, '2023-05-25 10:00:00', 12, 5, '2023-05-24 12:12:12', 'DELIVERED', 'MNG', 4),
+       (7, '2023-05-25 10:00:00', 12, 5, '2023-05-24 12:12:12', 'DELIVERED', 'MNG', 4)
+;
+INSERT INTO product_order(order_id, prod_id, presc_id, unit_price, count)
+VALUES (1, 1, NULL, 87.33, 2),
+       (1, 3, NULL, 81.22, 3),
+       (1, 21, NULL, 200.22, 1),
+       (1, 22, NULL, 200.21, 2),
+       (1, 12, NULL, 222.33, 1),
+
+       (6, 4, NULL, 94.22, 3),
+       (6, 7, NULL, 90.31, 2),
+       (6, 3, NULL, 92.22, 2),
+       (6, 23, NULL, 31, 3),
+
+       (2, 5, NULL, 32, 4),
+       (2, 8, NULL, 34.12, 3),
+       (2, 6, NULL, 35.12, 1),
+       (2, 16, NULL, 31.32, 2),
+       (2, 17, NULL, 12.32, 2),
+       (2, 25, NULL, 25.22, 2),
+       (2, 26, NULL, 23.35, 1),
+
+       (3, 3, NULL, 31.34, 2),
+       (3, 2, NULL, 30.22, 1),
+       (3, 8, NULL, 30.22, 3),
+       (3, 19, NULL, 60.22, 2),
+       (3, 20, NULL, 56.54, 1),
+       (3, 30, NULL, 32.21, 2),
+       (3, 31, NULL, 31.23, 3),
+
+       (4, 9, NULL, 31.22, 3),
+       (4, 11, NULL, 45.22, 2),
+       (4, 2, NULL, 44.23, 1),
+       (4, 4, NULL, 44.23, 3),
+       (4, 20, NULL, 33.33, 2),
+       (4, 31, NULL, 59.21, 2),
+       (4, 32, NULL, 61.25, 3),
+
+       (5, 3, NULL, 45.89, 2),
+       (5, 4, NULL, 49.95, 2),
+       (5, 6, NULL, 55.52, 1),
+       (5, 8, NULL, 45.22, 2),
+       (5, 10, NULL, 59.22, 1),
+       (5, 19, NULL, 65.31, 2),
+       (5, 20, NULL, 78.22, 1),
+       (5, 30, NULL, 54.22, 1),
+       (5, 31, NULL, 59.22, 2),
+
+       (7, 4, NULL, 55.22, 2)
+;
+
+
+INSERT INTO Review(review_id, rating, title, body, order_id)
+VALUES (1, 4, 'Great Pharmacy', 'My order arrived a little late but no damages', 6),
+       (3, 5, 'Inceredible Service', 'I recieved my order just in a day and it was in great condition', 4),
+       (2, 1, 'Disastorous', 'I recieved my package 1 week late and the they sent the wrong medicine', 5);
