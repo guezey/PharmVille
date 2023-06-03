@@ -10,7 +10,7 @@ class BaseQueryBuilder:
         self.ordering = kwargs.get("ordering")
         self.order_type = kwargs.get("order_type")
         self.min_price = kwargs.get('min_price')
-        self.max_price = kwargs.get('max_range')
+        self.max_price = kwargs.get('max_price')
 
     def _apply_ordering(self):
         order_str = ""

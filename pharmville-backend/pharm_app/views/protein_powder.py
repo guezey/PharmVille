@@ -38,6 +38,8 @@ class ProteinPowderGroupView(MethodView):
         cursor.execute(query)
 
         protein_powders = cursor.fetchall()
+        for protein_powder in protein_powders:
+            protein_powder["prod_type"] = "ProteinPowder"
         return jsonify(protein_powders)
 
     def post(self):
@@ -86,13 +88,14 @@ class ProteinPowderView(MethodView):
         # fetch and merge remaining attributes
 
         cursor.execute("""
-            SELECT pharmacy_id, name FROM Pharmacy NATURAL JOIN pharmacy_product
+            SELECT DISTINCT (pharmacy_id), name,total_reviews, avg_rating  
+            FROM Pharmacy NATURAL JOIN pharmacy_product NATURAL  JOIN pharmacy_ratings
                 WHERE prod_id = %s 
         """, (prod_id,))
         pharmacy = cursor.fetchone()
 
         protein_powder['pharmacy'] = pharmacy if pharmacy else {}
-
+        protein_powder['prod_type'] = "ProteinPowder"
         return jsonify(protein_powder)
 
     def put(self, prod_id: int):

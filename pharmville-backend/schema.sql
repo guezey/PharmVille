@@ -2,8 +2,8 @@
 CREATE TABLE User
 (
     user_id  int PRIMARY KEY AUTO_INCREMENT,
-    email    varchar(255) NOT NULL,
-    password char(60)     NOT NULL,
+    email    varchar(255)                                    NOT NULL,
+    password char(60)                                        NOT NULL,
     phone    CHAR(10),
     role     ENUM ('Patient', 'Doctor', 'Pharmacy', 'Admin') NOT NULL,
     UNIQUE (email)
@@ -11,11 +11,11 @@ CREATE TABLE User
 
 CREATE TABLE Person
 (
-    person_id int PRIMARY KEY NOT NULL,
+    person_id int PRIMARY KEY       NOT NULL,
     name      varchar(255),
     surname   varchar(255),
-    tck       char(11)        NOT NULL,
-    is_admin  boolean     DEFAULT FALSE   NOT NULL,
+    tck       char(11)              NOT NULL,
+    is_admin  boolean DEFAULT FALSE NOT NULL,
     FOREIGN KEY (person_id) REFERENCES User (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -127,11 +127,11 @@ CREATE TABLE Orders
     order_id      int PRIMARY KEY AUTO_INCREMENT,
     order_time    timestamp                                            NOT NULL,
     pharmacy_id   int                                                  NOT NULL,
-    delivery_time timestamp NULL DEFAULT  NULL,
+    delivery_time timestamp                                            NULL DEFAULT NULL,
     patient_id    int                                                  NOT NULL,
     order_status  ENUM ('ACTIVE', 'SHIPPED', 'DELIVERED', 'CANCELED' ) NOT NULL,
     shipping_firm varchar(255),
-    address_id    int DEFAULT NULL,
+    address_id    int                                                       DEFAULT NULL,
     FOREIGN KEY (address_id) REFERENCES Address (address_id),
     FOREIGN KEY (pharmacy_id) REFERENCES Pharmacy (pharmacy_id),
     FOREIGN KEY (patient_id) REFERENCES Patient (patient_id)
@@ -323,19 +323,21 @@ CREATE TABLE Payment
 -- VIEWS-------------------------------------------------------------------------
 
 CREATE VIEW pharmacy_reviews AS
-(
-SELECT review_id, title, body, rating, pharmacy_id, name, order_id
-FROM Review
-         NATURAL JOIN Orders
-         Natural JOIN Pharmacy
-    );
+SELECT Pharmacy.pharmacy_id, Pharmacy.name, Review.review_id, Review.rating, Review.title, Review.body
+FROM Pharmacy
+         JOIN Orders ON Orders.pharmacy_id = Pharmacy.pharmacy_id
+         JOIN Review ON Review.order_id = Orders.order_id;
 
 CREATE VIEW pharmacy_ratings AS
-(
-SELECT pharmacy_id, COUNT(*) AS total_reviews, AVG(rating) AS avg_rating
-FROM pharmacy_reviews
-GROUP BY pharmacy_id
-    );
+SELECT p.pharmacy_id,
+       IFNULL(r.total_reviews, 0) AS total_reviews,
+       IFNULL(r.avg_rating, 0)    AS avg_rating
+FROM Pharmacy p
+         LEFT JOIN (SELECT pharmacy_id,
+                           COUNT(*)    AS total_reviews,
+                           AVG(rating) AS avg_rating
+                    FROM pharmacy_reviews
+                    GROUP BY pharmacy_id) r ON p.pharmacy_id = r.pharmacy_id;
 
 
 CREATE view full_medicine AS
@@ -462,13 +464,19 @@ VALUES (1, 'deniz@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNP
        (3, 'dağhan@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '324324233', 'Patient'),
        (4, 'aliemir@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', NULL, 'Doctor'),
        (5, 'arda@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '3940909090', 'Patient'),
-       (6, 'faruk.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '423809444', 'Pharmacy'),
-       (7, 'gonul.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '213213122', 'Pharmacy'),
+       (6, 'faruk.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '423809444',
+        'Pharmacy'),
+       (7, 'gonul.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '213213122',
+        'Pharmacy'),
        (8, 'admin@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '312312312', 'Admin'),
-       (9, 'fatih.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '31232132', 'Pharmacy'),
-       (10, 'reject.rejectoğlu@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '533313231', 'Doctor'),
-       (11, 'rejectullah.ezczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '531011002', 'Pharmacy')
-
+       (9, 'fatih.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '31232132',
+        'Pharmacy'),
+       (10, 'reject.rejectoğlu@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '533313231',
+        'Doctor'),
+       (11, 'rejectullah.ezczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe',
+        '531011002', 'Pharmacy'),
+       (12, 'pharmapharmacy.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe',
+        '531011003', 'Pharmacy')
 ;
 
 INSERT INTO Person(person_id, name, surname, tck, is_admin)
@@ -892,7 +900,6 @@ VALUES (6, 2, 10, 'Great medicine'),
        (12, 30, 5, 'Great yees'),
        (12, 31, 4, 'MMM great'),
        (12, 32, 3, 'YYYYEEEESS');
-
 
 
 -- Orders-----------------------------------------------------------

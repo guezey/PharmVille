@@ -3,7 +3,7 @@ import "./Filter.css";
 import upArr from '../../images/up-arrow-icon.png';
 import downArr from '../../images/down-arrow-icon.png';
 
-function Filter() {
+function Filter(props) {
   const [selectedProductType, setSelectedProductType] = useState('medicine');
   const [selectedClasses, setSelectedClasses] = useState([]);
   const [showProductTypeOptions, setShowProductTypeOptions] = useState(true);
@@ -12,15 +12,15 @@ function Filter() {
   const [showPrescType, setShowPrescType] = useState(false);
   const [showAgeGroup, setShowAgeGroup] = useState(false);
   const [showIntake, setShowIntake] = useState(false);
-  //const [showMedicineType, setShowMedicineType] = useState(false);
   const [showAroma, setShowAroma] = useState(false);
   const [showSCareCat, setShowSCareCat] = useState(false);
   const [showSkinType, setShowSkinType] = useState(false);
+  const [showPrice, setShowPrice] = useState(false);
 
-  // state for fetching drug classes:
+  // state for fetching drug filter options:
   const [filterOptions, setFilterOptions] = useState([]);
 
-  // fetch drug classes:
+  // fetch drug filter options:
   useEffect(() => {
     fetch('http://localhost:5000/medicine/filter_options')
 
@@ -33,7 +33,39 @@ function Filter() {
       })
   }, []);
 
-  
+  // state for fetching skincare filter options:
+  const [skincareFilterOptions, setSkincareFilterOptions] = useState([]);
+
+  // fetch skincare filter options:
+  useEffect(() => {
+    fetch('http://localhost:5000/skincare/filter_options')
+
+      .then(response => response.json())
+      .then(data => {
+        setSkincareFilterOptions(data);
+      })
+
+      .catch(error => {
+        console.log(error);
+      })
+  }, []);
+
+  // state for fetching protein powder filter options:
+  const [proteinPowderFilterOptions, setProteinPowderFilterOptions] = useState([]);
+
+  // fetch protein powder filter options:
+  useEffect(() => {
+    fetch('http://localhost:5000/protein-powder/filter_options')
+
+      .then(response => response.json())
+      .then(data => {
+        setProteinPowderFilterOptions(data);
+      })
+
+      .catch(error => {
+        console.log(error);
+      })
+  }, []);
 
   // state for fetching undesired side effects:
   const [undesiredSideEffects, setUndesiredSideEffects] = useState([]);
@@ -44,84 +76,211 @@ function Filter() {
 
   const handleProductTypeChange = (event) => {
     setSelectedProductType(event.target.value)
-    console.log(selectedProductType)
   };
+
+  useEffect(() => {
+    props.onData(selectedProductType); // Call the callback function with the updated array
+  }, [selectedProductType, props.onData]);
 
   const handleDrugClassClick = () => {
     setShowClassesOptions(!showClassesOptions)
   }
+  const [drugClass, setDrugClass] = useState([]);
 
-  const handleDrugClassChange = () => {
-    console.log("değiştim")
+  const handleDrugClassChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setDrugClass([...drugClass, value]); // Add the value to the array
+    } else {
+      setDrugClass(drugClass.filter(option => option !== value)); // Remove the value from the array
+    }
+    console.log(drugClass)
   };
+
+  useEffect(() => {
+    props.onDrugSelection(drugClass); // Call the callback function with the updated array
+  }, [drugClass, props.onDrugSelection]);
 
   const handleUndSideEffClick = () => {
     setShowUndesiredSideEffect(!showUndesiredSideEffects)
   }
 
-  const handleUndSideEffChange = () => {
-    console.log("und side eff değişti");
+  const [undesiredEff, setUndesiredEff] = useState([]);
+  const handleUndSideEffChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setUndesiredEff([...undesiredEff, value]); // Add the value to the array
+    } else {
+      setUndesiredEff(undesiredEff.filter(option => option !== value)); // Remove the value from the array
+    }
   }
+
+  useEffect(() => {
+    props.onEffectSelection(undesiredEff); // Call the callback function with the updated array
+  }, [undesiredEff, props.onEffectSelection]);
 
   // prescription type:
   const handlePrescTypeClick = () => {
     setShowPrescType(!showPrescType)
   }
 
-  const handlePrescTypeChange = () => {
-    console.log("presc type değişti");
+  const [prescType, setPrescType] = useState([]);
+  const handlePrescTypeChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setPrescType([...prescType, value]); // Add the value to the array
+    } else {
+      setPrescType(prescType.filter(option => option !== value)); // Remove the value from the array
+    }
   }
+  useEffect(() => {
+    props.onPrescSelection(prescType); // Call the callback function with the updated array
+  }, [prescType, props.onPrescSelection]);
+
 
   // age group:
   const handleAgeGroupClick = () => {
     setShowAgeGroup(!showAgeGroup)
   }
+  // state for age group:
+  const [ageGroups, setAgeGroups] = useState([]);
 
-  const handleAgeGroupChange = () => {
-    console.log("age group değişti");
+  const handleAgeGroupChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setAgeGroups([...ageGroups, value]); // Add the value to the array
+    } else {
+      setAgeGroups(ageGroups.filter(option => option !== value)); // Remove the value from the array
+    }
   }
+  useEffect(() => {
+    props.onAgeSelection(ageGroups); // Call the callback function with the updated array
+  }, [ageGroups, props.onAgeSelection]);
 
   // intake method:
+  // state for intake method:
+  const [intakeMethod, setIntakeMethod] = useState([]);
+
   const handleIntakeClick = () => {
     setShowIntake(!showIntake)
   }
 
-  const handleIntakeChange = () => {
-    console.log("intake değişti");
+  const handleIntakeChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setIntakeMethod([...intakeMethod, value]); // Add the value to the array
+    } else {
+      setIntakeMethod(intakeMethod.filter(option => option !== value)); // Remove the value from the array
+    }
   }
-/*
-  // medicine type:
-  const handleMedicineTypeClick = () => {
-    setShowMedicineType(!showMedicineType)
-  }
-  */
+  useEffect(() => {
+    props.onIntakeSelection(intakeMethod); // Call the callback function with the updated array
+  }, [intakeMethod, props.onIntakeSelection]);
 
   // aroma
   const handleAromaClick = () => {
     setShowAroma(!showAroma)
   }
 
-  const handleAromaChange = () => {
-    console.log("aroma değişti");
+  // state for aroma:
+  const [aroma, setAroma] = useState([]);
+
+  const handleAromaChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setAroma([...aroma, value]); // Add the value to the array
+    } else {
+      setAroma(aroma.filter(option => option !== value)); // Remove the value from the array
+    }
   }
+  useEffect(() => {
+    props.onAromaSelection(aroma); // Call the callback function with the updated array
+  }, [aroma, props.onAromaSelection]);
 
   // skin care type
   const handleScareClick = () => {
     setShowSCareCat(!showSCareCat)
   }
 
-  const handleScareChange = () => {
-    console.log("skin care category değişti");
+  // state for skin care type:
+  const [skinCareType, setSkinCareType] = useState([]);
+  const handleScareChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setSkinCareType([...skinCareType, value]); // Add the value to the array
+    } else {
+      setSkinCareType(skinCareType.filter(option => option !== value)); // Remove the value from the array
+    }
   }
+  useEffect(() => {
+    props.onSkinCareSelection(skinCareType); // Call the callback function with the updated array
+  }, [skinCareType, props.onSkinCareSelection]);
 
   // skin type
   const handleSkinTypeClick = () => {
     setShowSkinType(!showSkinType)
   }
+  // state for skin type:
+  const [skinType, setSkinType] = useState([]);
 
-  const handleSkinTypeChange = () => {
-    console.log("skin type category değişti");
+  const handleSkinTypeChange = (event) => {
+    const { value, checked } = event.target;
+    if (checked) {
+      setSkinType([...skinType, value]); // Add the value to the array
+    } else {
+      setSkinType(skinType.filter(option => option !== value)); // Remove the value from the array
+    }
   }
+  useEffect(() => {
+    props.onSkinTypeSelection(skinType); // Call the callback function with the updated array
+  }, [skinType, props.onSkinTypeSelection]);
+
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(Number.MAX_SAFE_INTEGER);
+
+  const handleMinPriceChange = (event) => {
+    const value = event.target.value;
+    console.log(value)
+    if (value === null || value === '') {
+      setMinPrice(0);
+    } else if (value < 0) {
+      setMinPrice(1);
+    } else if (value > maxPrice) {
+      setMinPrice(maxPrice);
+    } else {
+      setMinPrice(value);
+    }
+  };
+  useEffect(() => {
+    props.onMinChange(minPrice); // Call the callback function with the updated value
+  }, [minPrice, props.onMinChange]);
+
+
+  const handleMaxPriceChange = (event) => {
+    console.log("AAAAAAAAAAA")
+    console.log(event.target.value)
+    const value = parseInt(event.target.value, 10); // Convert value to an integer
+
+    if (isNaN(value)) {
+      setMaxPrice(Number.MAX_SAFE_INTEGER);
+    } else if (value < 0) {
+      setMaxPrice(1);
+    } else if (value < minPrice) {
+      setMaxPrice(minPrice);
+    } else {
+      setMaxPrice(value);
+    }
+  };
+  useEffect(() => {
+    props.onMaxChange(maxPrice); // Call the callback function with the updated array
+  }, [maxPrice, props.onMaxChange]);
+
+
+
+  const handlePriceClick = () => {
+    setShowPrice(!showPrice);
+  }
+
 
   return (
     <div className='filterHolder'>
@@ -141,10 +300,10 @@ function Filter() {
               <label className='buttonLabel'>Medicine</label>
             </div>
             <div className='buttonElements'>
-              <input type="radio" value="ppowder" onChange={handleProductTypeChange} id="type2" name="type" checked={selectedProductType === "ppowder"} />
+              <input type="radio" value="protein-powder" onChange={handleProductTypeChange} id="type2" name="type" checked={selectedProductType === "protein-powder"} />
               <label className='buttonLabel'>Protein Powder</label></div>
             <div className='buttonElements'>
-              <input type="radio" value="scare" onChange={handleProductTypeChange} id="type3" name="type" checked={selectedProductType === "scare"} />
+              <input type="radio" value="skincare" onChange={handleProductTypeChange} id="type3" name="type" checked={selectedProductType === "skincare"} />
               <label className='buttonLabel'>Skin Care Products</label></div>
           </div>
         }
@@ -185,7 +344,7 @@ function Filter() {
           {showUndesiredSideEffects && (
             <div className='radio-buttons'>
               {filterOptions.side_effects.map((item, index) =>
-                <div className='buttonElements'>
+                <div className='buttonElements' key={index}>
                   <input type="checkbox" value={item.effect_name} onChange={handleUndSideEffChange} name="class" />
                   <label className='buttonLabel'>{item.effect_name}</label>
                 </div>)}
@@ -230,7 +389,7 @@ function Filter() {
             <div className='radio-buttons'>
               {filterOptions.age_groups.map((item, index) =>
                 <div className='buttonElements'>
-                  <input type="checkbox" value={item.gorup_name} onChange={handleAgeGroupChange} name="class" />
+                  <input type="checkbox" value={item.group_name} onChange={handleAgeGroupChange} name="class" />
                   <label className='buttonLabel'>{item.group_name}</label>
                 </div>)}
             </div>
@@ -260,7 +419,7 @@ function Filter() {
         </div>
       }
 
-      {selectedProductType === "ppowder" &&
+      {selectedProductType === "protein-powder" &&
         <div className='genComp'>
           <a onClick={handleAromaClick}>
             <div className='filterComponent'>
@@ -272,36 +431,17 @@ function Filter() {
           <hr></hr>
           {showAroma && (
             <div className='radio-buttons'>
-              <div className='buttonElements'>
-                <input type="checkbox" value="chocolate" onChange={handleAromaChange} name="class" />
-                <label className='buttonLabel'>Chocolate</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="cookie" onChange={handleAromaChange} name="class" />
-                <label className='buttonLabel'>Cookie</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="mocha" onChange={handleAromaChange} name="class" />
-                <label className='buttonLabel'>Mocha</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="banana" onChange={handleAromaChange} name="class" />
-                <label className='buttonLabel'>Banana</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="strawberry" onChange={handleAromaChange} name="class" />
-                <label className='buttonLabel'>Strawberry</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="vanilla" onChange={handleAromaChange} name="class" />
-                <label className='buttonLabel'>Vanilla</label>
-              </div>
+              {proteinPowderFilterOptions.aromas.map((item, index) =>
+                <div className='buttonElements' key={index}>
+                  <input type="checkbox" value={item} onChange={handleAromaChange} name="class" />
+                  <label className='buttonLabel'>{item}</label>
+                </div>)}
             </div>
           )}
         </div>
       }
 
-      {selectedProductType === "scare" &&
+      {selectedProductType === "skincare" &&
         <div className='genComp'>
           <a onClick={handleScareClick}>
             <div className='filterComponent'>
@@ -313,36 +453,17 @@ function Filter() {
           <hr></hr>
           {showSCareCat && (
             <div className='radio-buttons'>
-              <div className='buttonElements'>
-                <input type="checkbox" value="lipbalm" onChange={handleScareChange} name="class" />
-                <label className='buttonLabel'>Lip Balm</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="serum" onChange={handleScareChange} name="class" />
-                <label className='buttonLabel'>Serum</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="bbcccream" onChange={handleScareChange} name="class" />
-                <label className='buttonLabel'>BB-CC Cream</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="lotion" onChange={handleScareChange} name="class" />
-                <label className='buttonLabel'>Lotion</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="eyecream" onChange={handleScareChange} name="class" />
-                <label className='buttonLabel'>Eye Cream</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="tonic" onChange={handleScareChange} name="class" />
-                <label className='buttonLabel'>Tonic</label>
-              </div>
+              {skincareFilterOptions.skincare_types.map((item, index) =>
+                <div className='buttonElements' key={index}>
+                  <input type="checkbox" value={item} onChange={handleScareChange} name="class" />
+                  <label className='buttonLabel'>{item}</label>
+                </div>)}
             </div>
           )}
         </div>
       }
 
-      {selectedProductType === "scare" &&
+      {selectedProductType === "skincare" &&
         <div className='genComp'>
           <a onClick={handleSkinTypeClick}>
             <div className='filterComponent'>
@@ -354,34 +475,58 @@ function Filter() {
           <hr></hr>
           {showSkinType && (
             <div className='radio-buttons'>
-              <div className='buttonElements'>
-                <input type="checkbox" value="lipbalm" onChange={handleSkinTypeChange} name="class" />
-                <label className='buttonLabel'>Lip Balm</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="serum" onChange={handleSkinTypeChange} name="class" />
-                <label className='buttonLabel'>Serum</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="bbcccream" onChange={handleSkinTypeChange} name="class" />
-                <label className='buttonLabel'>BB-CC Cream</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="lotion" onChange={handleSkinTypeChange} name="class" />
-                <label className='buttonLabel'>Lotion</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="eyecream" onChange={handleSkinTypeChange} name="class" />
-                <label className='buttonLabel'>Eye Cream</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="tonic" onChange={handleSkinTypeChange} name="class" />
-                <label className='buttonLabel'>Tonic</label>
-              </div>
+              {skincareFilterOptions.skin_types.map((item, index) =>
+                <div className='buttonElements' key={item}>
+                  <input type="checkbox" value={item} onChange={handleSkinTypeChange} name="class" />
+                  <label className='buttonLabel'>{item}</label>
+                </div>
+              )}
             </div>
           )}
         </div>
       }
+      <div className='genComp'>
+        <a onClick={handlePriceClick}>
+          <div className='filterComponent'>
+            <label className='filterLabel'>Price</label>
+            {showPrice && <img src={upArr} className='arrowSize'></img>}
+            {!showPrice && <img src={downArr} className='arrowSize'></img>}
+          </div>
+        </a>
+        <hr></hr>
+        {showPrice && (
+          <div className='radio-buttons'>
+            <div className="price-filter-container">
+              <label className="price-filter-label">
+                Min Price:
+              </label>
+              <label className="price-filter-label">
+                Max Price:
+
+              </label>
+            </div>
+            <div className="price-filter-container">
+              <input
+                type="number"
+                value={minPrice}
+                onChange={handleMinPriceChange}
+                className="price-filter-input"
+              />
+              <input
+                type="number"
+                value={maxPrice}
+                onChange={() => handleMaxPriceChange()}
+                className="price-filter-input"
+              />
+            </div>
+            <div>
+              <button className="price-filter-button" onClick={() => { handleMaxPriceChange(); handleMinPriceChange(); }}>Search Price</button>
+            </div>
+          </div>
+        )}
+      </div>
+
+
 
     </div>
   );

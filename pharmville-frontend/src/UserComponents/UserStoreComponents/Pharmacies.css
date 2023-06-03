@@ -4,6 +4,7 @@
   align-items: center;
   margin: 10px;
   cursor: pointer;
+  max-height: 300px;
 }
 
 
@@ -21,7 +22,6 @@
   margin: 0;
 }
 
-/* Set the width of the first column to 200px and the background color to gray */
 .column-1 {
 
   text-align: left;
@@ -30,7 +30,6 @@
   margin-left: 0;
 }
 
-/* Set the width of the second column to the remaining space and the background color to white */
 .column-2 {
   flex: 1;
   margin: 20px;

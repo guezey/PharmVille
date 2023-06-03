@@ -81,3 +81,39 @@ input[type='radio']:checked:after {
     visibility: visible;
     border: 2px solid white;
 }
+
+.price-filter-container {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    justify-content: space-between;
+  }
+  
+  .price-filter-label {
+    margin-right: 10px;
+  }
+  
+  .price-filter-input {
+    width: 80px;
+    padding: 20px;
+  }
+  
+  .price-filter-button {
+    padding: 5px 10px;
+    background-color: #91AF9D;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-left: 60px;
+  }
+  
+  .price-filter-button:hover {
+    background-color: #718278;
+  }
+  
+  .price-filter-button:focus {
+    outline: none;
+  }
+
+
+  
