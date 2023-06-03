@@ -67,13 +67,7 @@ function PrescriptionSelectionComponent() {
 
     // FETCH MEDICINE:
     // şimdilik pseudo:
-    const listOfMedicineArr = [
-        { id: 1, name: "parol" },
-        { id: 2, name: "marol" },
-        { id: 3, name: "nexium" },
-        { id: 4, name: "ibuprofen" },
-        { id: 5, name: "zaşgkmglkm" },
-    ]
+    const [listOfMedicineArr, setListOfMedicineArr] = useState([]);
 
     // selected medicine (from dropdown):
     const [selectedMedicine, setSelectedMedicine] = useState("");
@@ -186,6 +180,90 @@ function PrescriptionSelectionComponent() {
         setShowSuitableMedWarning(false);
     }
 
+    // state for which drug class will be selected:
+    const [selectedDrugClass, setSelectedDrugClass] = useState([]);
+
+    // state for selected undesired effects:
+    const [selectedUndesiredEffects, setSelectedUndesiredEffects] = useState([]);
+
+    // state for selected prescription type:
+    const [selectedPrescriptionType, setSelectedPrescriptionType] = useState([]);
+
+    // state for age group:
+    const [selectedAge, setSelectedAge] = useState([]);
+
+    // state for intake method:
+    const [selectedIntake, setSelectedIntake] = useState([]);
+
+    const handleDrugClassSelection = (data) => {
+        // Update the information in the parent component
+        setSelectedDrugClass(data);
+    };
+
+    const handleUndesiredEffects = (data) => {
+        // Update the information in the parent component
+        if (data.length > 0)
+            setSelectedUndesiredEffects(data);
+        else
+            setSelectedUndesiredEffects(null);
+    };
+
+    const handlePrescriptionType = (data) => {
+        // Update the information in the parent component
+        if (data.length > 0)
+            setSelectedPrescriptionType(data);
+        else
+            setSelectedPrescriptionType(null);
+    };
+
+    const handleAgeSelection = (data) => {
+        // Update the information in the parent component
+        if (data.length > 0)
+            setSelectedAge(data);
+        else
+            setSelectedAge(null);
+    };
+
+    const handleIntakeSelection = (data) => {
+        if (data.length > 0)
+            setSelectedIntake(data);
+        else
+            setSelectedIntake(null);
+    }
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(false);
+
+    // fetch medicine data:
+    useEffect(() => {
+        setIsLoading(true);
+        fetch('http://localhost:5000/', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                side_effects: selectedUndesiredEffects,
+                presc_types: selectedPrescriptionType,
+                age_groups: selectedAge,
+                intake_types: selectedIntake,
+            }) // Empty body
+        })
+
+            .then(response => response.json())
+            .then(data => {
+                setListOfMedicineArr(data);
+                setIsLoading(false);
+                setError(false);
+            })
+            .catch(error => {
+                console.log(error);
+                setIsLoading(false);
+                setError(true);
+            })
+    }, [selectedDrugClass, selectedPrescriptionType, selectedUndesiredEffects, selectedAge, selectedIntake]);
+
+
     // en baba function:
     // submits the medicine array (the prescription),
     // also, the prescription cause
@@ -214,7 +292,7 @@ function PrescriptionSelectionComponent() {
                 // Reset the success message state
                 setIsSubmitted(false);
                 // Navigate to the desired page
-                
+
                 window.location.reload();
             }, 800); // Wait for 2 seconds (adjust as needed)
         }
@@ -282,7 +360,10 @@ function PrescriptionSelectionComponent() {
                 {showAddMedicine &&
                     <div className="selectionHolder">
                         <div className="medicineSelectionDiv">
-                            <PrescriptionFilter />
+                            <PrescriptionFilter onDrugSelection={handleDrugClassSelection}
+                                onEffectSelection={handleUndesiredEffects} onPrescSelection={handlePrescriptionType}
+                                onAgeSelection={handleAgeSelection} onIntakeSelection={handleIntakeSelection}
+                            />
                             <div className="medicineSearcherBox">
                                 <h1 className="prescTitle">Selected drug: {selectedMedicine}</h1>
                                 <Dropdown onSelect={onDropdownMedicineSelect}>
