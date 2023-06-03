@@ -4,7 +4,10 @@ from MySQLdb.cursors import DictCursor
 from flask_cors import CORS
 from .extensions import db
 from .conf import MysqlConfig
-from .views import medicine_bp, protein_powder_bp, skincare_bp, prescribe_bp, prescriptions_bp
+
+from .views import (medicine_bp, protein_powder_bp, skincare_bp,
+                    prescribe_bp, prescriptions_bp, review_bp, orders_bp
+                    )
 import bcrypt
 
 
@@ -14,6 +17,8 @@ def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(skincare_bp)
     flask_app.register_blueprint(prescribe_bp)
     flask_app.register_blueprint(prescriptions_bp)
+    flask_app.register_blueprint(review_bp)
+    flask_app.register_blueprint(orders_bp)
 
 
 def register_extensions(flask_app: Flask):
