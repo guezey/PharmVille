@@ -92,7 +92,7 @@ class ProteinPowderView(MethodView):
         pharmacy = cursor.fetchone()
 
         protein_powder['pharmacy'] = pharmacy if pharmacy else {}
-
+        protein_powder['prod_type'] = "ProteinPowder"
         return jsonify(protein_powder)
 
     def put(self, prod_id: int):
