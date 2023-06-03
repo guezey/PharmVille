@@ -57,7 +57,6 @@ function PrescriptionSelectionComponent() {
 
     const [options, setOptions] = useState([]);
     const [loading, setLoading] = useState(false);
-<<<<<<< Updated upstream
 
     useEffect(() => {
         const fetchDisease = async () => {
@@ -178,8 +177,6 @@ function PrescriptionSelectionComponent() {
             })
     }, [selectedDrugClass, selectedPrescriptionType, selectedUndesiredEffects, selectedAge, selectedIntake]);
 
-=======
->>>>>>> Stashed changes
 
     useEffect(() => {
         const fetchDisease = async () => {
