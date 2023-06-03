@@ -38,6 +38,8 @@ class ProteinPowderGroupView(MethodView):
         cursor.execute(query)
 
         protein_powders = cursor.fetchall()
+        for protein_powder in protein_powders:
+            protein_powder["prod_type"] = "ProteinPowder"
         return jsonify(protein_powders)
 
     def post(self):

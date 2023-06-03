@@ -36,6 +36,8 @@ class MedicineGroupView(MethodView):
         cursor.execute(query)
 
         medicines = cursor.fetchall()
+        for medicine in medicines:
+            medicine["prod_type"] = "Medicine"
         return jsonify(medicines)
 
     def post(self):
