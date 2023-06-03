@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import PrescriptionItem from './PrescriptionItem';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
 function Prescription() {
   const [prescriptions, setPrescriptions] = useState([]);

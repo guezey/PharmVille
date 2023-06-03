@@ -20,7 +20,6 @@ function NavbarPharmacy() {
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="me-auto">
                         <Nav.Link as={NavLink} to={"/"} className='color-p'>My Store</Nav.Link>
-                        <Nav.Link as={NavLink} to={"/products"} className='color-p'>Products</Nav.Link>
                         <Nav.Link as={NavLink} to={"/deliveries"} className='color-p'>Deliveries</Nav.Link>
                         <Nav.Link as={NavLink} to={"/reports"} className='color-p'>System Reports</Nav.Link>
                     </Nav>

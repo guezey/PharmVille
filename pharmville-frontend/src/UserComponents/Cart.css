@@ -1,0 +1,233 @@
+.cartitemDiv {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    border-top: #1E2D2F solid 2px;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
+.cartDiv {
+    background-color: aliceblue;
+    margin: auto;
+    margin-top: 50px;
+    border-radius: 6px;
+    width: 800px;
+    height: 400px;
+    overflow: auto;
+    border-style: solid;
+    border-color: #1E2D2F;
+    border-width: 2px;
+}
+
+.cartTitle {
+    font-size: 16px;
+    color: #1E2D2F;
+    text-align: left;
+    padding: 10px;
+    border-bottom: #1E2D2F solid 2px;
+}
+
+.cartItemSection {
+   display: flex;
+   width: 110px;
+   margin: 10px;
+   padding: 10px;
+}
+
+.cartImg {
+    height: 90px;
+}
+
+.binIcon {
+    height: 20px;
+    width: 20px;
+    margin-left: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.decreaseBtn {
+    height: 40px;
+    width: 40px;
+    margin-left: 10px;
+    margin-right: 5px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.incrementBtn {
+    height: 40px;
+    width: 40px;
+    margin-left: 5px;
+    margin-right: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.quantityShow {
+    height: 40px;
+    width: 60px;
+    margin-left: 0px;
+    margin-top: 14px;
+    padding: 0px;
+    margin-bottom: 0px;
+    text-align: center;
+    font-size: 20px;
+    margin-right: 0px;
+}
+
+.cartInfo {
+    font-size: 16px;
+    color: #1E2D2F;
+    padding: 18px;
+    text-align: center;
+}
+
+.generalHolder {
+    display: flex;
+    margin: auto;
+}
+
+.cartPriceInfoHolder {
+    background-color: aliceblue;
+    margin: auto;
+    margin-top: 50px;
+    border-radius: 6px;
+    width: 260px;
+    height: 260px;
+    margin-right: 200px;
+    overflow: auto;
+    border-style: solid;
+    border-color: #1E2D2F;
+    border-width: 2px;
+}
+
+.cartPriceTitle {
+    font-size: 20px;
+    color: #1E2D2F;
+    text-align: left;
+    padding: 10px;
+    border-bottom: #1E2D2F solid 2px;
+    text-align: center;
+}
+
+.cartPriceInfo {
+    font-size: 16px;
+    color: #1E2D2F;
+    padding: 13px;
+    text-align: center;
+}
+
+.cartProceedBtn {
+    background-color: #1E2D2F;
+    color: aliceblue;
+    border-radius: 6px;
+    width: 260px;
+    height: 40px;
+    margin: auto;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    border-style: solid;
+    border-color: #1E2D2F;
+    border-width: 2px;
+    cursor: pointer;
+}
+
+.cartAdressHolder {
+    background-color: aliceblue;
+    margin: auto;
+    margin-top: 50px;
+    border-radius: 6px;
+    width: 1000px;
+    height: 400px;
+    border-style: solid;
+    border-color: #1E2D2F;
+    border-width: 2px;
+    display: flex;
+}
+
+.cartAdrrDivider {
+    width: 500px;
+    overflow: auto;
+    border-right: #1E2D2F solid 2px;
+}
+
+.addressInfoHolder {
+    display: block;
+    margin: auto;
+    overflow: auto;
+    height: 200px;
+}
+
+.addressInfo {
+    font-size: 16px;
+    background-color: #1E2D2F;
+    color: aliceblue;
+    padding: 13px;
+    text-align: center;
+   
+    margin: auto;
+    margin-top: 15px;
+    width: 250px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.addAddrBtn {
+    font-size: 16px;
+    background-color: #1E2D2F;
+    color: aliceblue;
+    padding: 13px;
+    text-align: center;
+    align-items: left;
+    margin-top: 50px;
+    width: 100px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.cartPaymentHolder {
+    background-color: #7C9485;
+    margin: auto;
+    margin-top: 30px;
+    border-radius: 0px;
+    width: 450px;
+    height: 250px;
+    display: block;
+}
+
+.cartCardLabel {
+    padding: 6px;
+    color: whitesmoke;
+}
+
+.inputField {
+    margin: auto;
+    width: 400px;
+    border-radius: 6px;
+}
+
+.cvvField {
+    margin: auto;
+    width: 100px;
+    border-radius: 6px;
+}
+
+.inputsHolder {
+    justify-content: space-between;
+    padding: 4px;
+}
+
+.payBtn {
+    width: 100px;
+    height: 40px;
+    margin-left: 380px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #91AF9D;
+  }

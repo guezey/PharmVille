@@ -1,0 +1,102 @@
+.deliveriesTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.deliveriesHolder {
+    width: 450px;
+    max-height: 300px;
+    margin: auto;
+    margin-left: 180px;
+    overflow: auto;
+    border-radius: 6px;
+    background-color: #91AF9D;
+}
+
+.deliveriesHolder2 {
+    width: 450px;
+    max-height: 250px;
+    margin: auto;
+    overflow: auto;
+    margin-left: 180px;
+    border-radius: 6px;
+    background-color: #91AF9D;
+}
+
+.deliveriesRow {
+    display: flex;
+    border-bottom: whitesmoke solid 2px;
+}
+
+.pFirstOne {
+    font-size: 16px;
+    color: whitesmoke;
+    padding: 4px;
+    border-right: whitesmoke solid 2px;
+    width: 150px;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.pSecondOne {
+    font-size: 16px;
+    color: whitesmoke;
+    padding: 4px;
+    width: 150px;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.deliveryDetailsHolder {
+    width: 450px;
+    max-height: 500px;
+    margin-top: 50px;
+    margin: auto;
+    border-radius: 6px;
+    background-color: #91AF9D;
+}
+
+.deliveryDetailsTitle {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    color: whitesmoke;
+    padding: 10px;
+    margin-bottom: 0;
+    border-bottom: whitesmoke solid 2px;
+}
+
+.generalHolder {
+    display: flex;
+    justify-content: space-around;
+}
+
+.deliveryDetailInfo {
+    font-size: 16px;
+    color: whitesmoke;
+    padding: 4px;
+    text-align: left;
+    margin-bottom: 0;
+    margin-left: 20px;
+}
+
+.deliveryDetailInfoHolder {
+    max-height: 200px;
+    overflow: auto;
+}
+
+.deliveryDetailsTitle2 {
+    font-size: 16px;
+    text-align: left;
+    font-weight: bold;
+    color: whitesmoke;
+    padding: 10px;
+    margin-bottom: 0;
+    border-bottom: whitesmoke solid 2px;
+    border-top: whitesmoke solid 2px;
+}
+
+
