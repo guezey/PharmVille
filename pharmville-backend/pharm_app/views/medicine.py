@@ -26,7 +26,7 @@ def parse_medicine_props(data):
 
 
 class MedicineGroupView(MethodView):
-    def get(self):
+    def put(self):
         data = request.get_json()
         builder = MedicineQueryBuilder(**data)
 

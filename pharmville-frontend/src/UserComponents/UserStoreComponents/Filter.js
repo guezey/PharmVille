@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./Filter.css";
 import upArr from '../../images/up-arrow-icon.png';
 import downArr from '../../images/down-arrow-icon.png';
@@ -12,10 +12,31 @@ function Filter() {
   const [showPrescType, setShowPrescType] = useState(false);
   const [showAgeGroup, setShowAgeGroup] = useState(false);
   const [showIntake, setShowIntake] = useState(false);
-  const [showMedicineType, setShowMedicineType] = useState(false);
+  //const [showMedicineType, setShowMedicineType] = useState(false);
   const [showAroma, setShowAroma] = useState(false);
   const [showSCareCat, setShowSCareCat] = useState(false);
   const [showSkinType, setShowSkinType] = useState(false);
+
+  // state for fetching drug classes:
+  const [filterOptions, setFilterOptions] = useState([]);
+
+  // fetch drug classes:
+  useEffect(() => {
+    fetch('http://localhost:5000/medicine/filter_options')
+
+      .then(response => response.json())
+      .then(data => {
+        setFilterOptions(data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }, []);
+
+  
+
+  // state for fetching undesired side effects:
+  const [undesiredSideEffects, setUndesiredSideEffects] = useState([]);
 
   const handleProductTypeClick = () => {
     setShowProductTypeOptions(!showProductTypeOptions)
@@ -68,15 +89,12 @@ function Filter() {
   const handleIntakeChange = () => {
     console.log("intake değişti");
   }
-
+/*
   // medicine type:
   const handleMedicineTypeClick = () => {
     setShowMedicineType(!showMedicineType)
   }
-
-  const handleMedicineTypeChange = () => {
-    console.log("medicine type değişti");
-  }
+  */
 
   // aroma
   const handleAromaClick = () => {
@@ -96,8 +114,8 @@ function Filter() {
     console.log("skin care category değişti");
   }
 
-   // skin type
-   const handleSkinTypeClick = () => {
+  // skin type
+  const handleSkinTypeClick = () => {
     setShowSkinType(!showSkinType)
   }
 
@@ -143,24 +161,13 @@ function Filter() {
           <hr></hr>
           {showClassesOptions && (
             <div className='radio-buttons'>
-              <div className='buttonElements'>
-                <input type="checkbox" value="feverReducer" onChange={handleDrugClassChange} name="class" />
-                <label className='buttonLabel'>Fever Reducer</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="painkiller" onChange={handleDrugClassChange} name="class" />
-                <label className='buttonLabel'>Painkiller</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="therapeutic" onChange={handleDrugClassChange} name="class" />
-                <label className='buttonLabel'>Therapeutic</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="hormonal" onChange={handleDrugClassChange} name="class" />
-                <label className='buttonLabel'>Hormonal</label>
-              </div>
+              {filterOptions.medicine_class.map((item, index) =>
+                <div className='buttonElements' key={index}>
+                  <input type="checkbox" value={item} onChange={handleDrugClassChange} name="class" />
+                  <label className='buttonLabel'>{item}</label>
+                </div>
+              )}
             </div>
-
           )}
         </div>
       }
@@ -177,14 +184,11 @@ function Filter() {
           <hr></hr>
           {showUndesiredSideEffects && (
             <div className='radio-buttons'>
-              <div className='buttonElements'>
-                <input type="checkbox" value="fever" onChange={handleUndSideEffChange} name="class" />
-                <label className='buttonLabel'>Fever</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="fatigue" onChange={handleUndSideEffChange} name="class" />
-                <label className='buttonLabel'>Fatigue</label>
-              </div>
+              {filterOptions.side_effects.map((item, index) =>
+                <div className='buttonElements'>
+                  <input type="checkbox" value={item.effect_name} onChange={handleUndSideEffChange} name="class" />
+                  <label className='buttonLabel'>{item.effect_name}</label>
+                </div>)}
             </div>
           )}
         </div>
@@ -202,14 +206,11 @@ function Filter() {
           <hr></hr>
           {showPrescType && (
             <div className='radio-buttons'>
-              <div className='buttonElements'>
-                <input type="checkbox" value="red" onChange={handlePrescTypeChange} name="class" />
-                <label className='buttonLabel'>Fever</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="normal" onChange={handlePrescTypeChange} name="class" />
-                <label className='buttonLabel'>Fatigue</label>
-              </div>
+              {filterOptions.presc_types.map((item, index) =>
+                <div className='buttonElements'>
+                  <input type="checkbox" value={item} onChange={handlePrescTypeChange} name="class" />
+                  <label className='buttonLabel'>{item}</label>
+                </div>)}
             </div>
           )}
         </div>
@@ -227,10 +228,11 @@ function Filter() {
           <hr></hr>
           {showAgeGroup && (
             <div className='radio-buttons'>
-              <div className='buttonElements'>
-                <input type="checkbox" value="neonates" onChange={handleAgeGroupChange} name="class" />
-                <label className='buttonLabel'>Neonates</label>
-              </div>
+              {filterOptions.age_groups.map((item, index) =>
+                <div className='buttonElements'>
+                  <input type="checkbox" value={item.gorup_name} onChange={handleAgeGroupChange} name="class" />
+                  <label className='buttonLabel'>{item.group_name}</label>
+                </div>)}
             </div>
           )}
         </div>
@@ -248,39 +250,11 @@ function Filter() {
           <hr></hr>
           {showIntake && (
             <div className='radio-buttons'>
-              <div className='buttonElements'>
-                <input type="checkbox" value="oral" onChange={handleIntakeChange} name="class" />
-                <label className='buttonLabel'>Oral</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="injection" onChange={handleIntakeChange} name="class" />
-                <label className='buttonLabel'>Injection</label>
-              </div>
-            </div>
-          )}
-        </div>
-      }
-
-      {selectedProductType === "medicine" &&
-        <div className='genComp'>
-          <a onClick={handleMedicineTypeClick}>
-            <div className='filterComponent'>
-              <label className='filterLabel'>Medicine Type</label>
-              {showMedicineType && <img src={upArr} className='arrowSize'></img>}
-              {!showMedicineType && <img src={downArr} className='arrowSize'></img>}
-            </div>
-          </a>
-          <hr></hr>
-          {showMedicineType && (
-            <div className='radio-buttons'>
-              <div className='buttonElements'>
-                <input type="checkbox" value="tablet" onChange={handleMedicineTypeChange} name="class" />
-                <label className='buttonLabel'>Tablet</label>
-              </div>
-              <div className='buttonElements'>
-                <input type="checkbox" value="syrup" onChange={handleIntakeChange} name="class" />
-                <label className='buttonLabel'>Syrup</label>
-              </div>
+              {filterOptions.intake_types.map((item, index) =>
+                <div className='buttonElements'>
+                  <input type="checkbox" value={item} onChange={handleIntakeChange} name="class" />
+                  <label className='buttonLabel'>{item}</label>
+                </div>)}
             </div>
           )}
         </div>

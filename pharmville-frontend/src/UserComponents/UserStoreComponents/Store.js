@@ -11,16 +11,27 @@ function Store() {
     const [currentPage, setCurrentPage] = useState(1);
     const [postPerPage, setPostPerPage] = useState(8);
 
+    // fetch pharmacies:
+
+
     useEffect(() => {
-        const fetchPharmacy = async () => {
-            setLoading(true);
-            const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
-            setPharmacies(res.data);
-            setLoading(false);
-        }
-        fetchPharmacy();
-    }, [])
-    console.log(pharmacies)
+        fetch('http://localhost:5000/medicine', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({}) // Empty body
+        })
+
+            .then(response => response.json())
+            .then(data => {
+                setPharmacies(data);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }, []);
+
     // burada top ratinge göre sırala
     // get current posts:
     const indexOfLastPost = currentPage * postPerPage;
