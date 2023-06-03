@@ -4,7 +4,9 @@ CREATE TABLE User
     user_id  int PRIMARY KEY AUTO_INCREMENT,
     email    varchar(255) NOT NULL,
     password char(60)     NOT NULL,
-    phone    CHAR(10)
+    phone    CHAR(10),
+    role     ENUM ('Patient', 'Doctor', 'Pharmacy', 'Admin') NOT NULL,
+    UNIQUE (email)
 );
 
 CREATE TABLE Person
@@ -454,18 +456,18 @@ END;
 -- Sample data Insertion----------------------------------------------------------------------
 
 -- Actors------------------------------------------------------------------------------------
-INSERT INTO User (user_id, email, password, phone)
-VALUES (1, 'deniz@gmail.com', 'Pass123', '532033931'),
-       (2, 'ceren@gmail.com', 'Pass321', '324323024'),
-       (3, 'dağhan@gmail.com', 'Pass321', '324324233'),
-       (4, 'aliemir@gmail.com', 'Pasd301', NULL),
-       (5, 'arda@gmail.com', 'Passwordo', '3940909090'),
-       (6, 'faruk.eczane@gmail.com', 'Eczane123', '423809444'),
-       (7, 'gonul.eczane@gmail.com', 'Eczane321', '213213122'),
-       (8, 'admin@gmail.com', 'Admin123', '312312312'),
-       (9, 'fatih.eczane@gmail.com', 'Eczo12', '31232132'),
-       (10, 'reject.rejectoğlu@gmail.com', 'rejecto', '533313231'),
-       (11, 'rejectullah.ezczane@gmail.com', 'Reject Eczo', '531011002')
+INSERT INTO User (user_id, email, password, phone, role)
+VALUES (1, 'deniz@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '532033931', 'Patient'),
+       (2, 'ceren@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '324323024', 'Doctor'),
+       (3, 'dağhan@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '324324233', 'Patient'),
+       (4, 'aliemir@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', NULL, 'Doctor'),
+       (5, 'arda@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '3940909090', 'Patient'),
+       (6, 'faruk.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '423809444', 'Pharmacy'),
+       (7, 'gonul.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '213213122', 'Pharmacy'),
+       (8, 'admin@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '312312312', 'Admin'),
+       (9, 'fatih.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '31232132', 'Pharmacy'),
+       (10, 'reject.rejectoğlu@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '533313231', 'Doctor'),
+       (11, 'rejectullah.ezczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '531011002', 'Pharmacy')
 ;
 
 INSERT INTO Person(person_id, name, surname, tck, is_admin)
