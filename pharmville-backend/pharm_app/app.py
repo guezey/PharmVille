@@ -82,8 +82,49 @@ def logout():
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    # TODO: implement signup
-    return 'Not implemented', 501
+    try:
+        data = request.get_json()
+        hashed = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
+        cursor = db.connection.cursor(DictCursor)
+        cursor.execute("SELECT * FROM User WHERE email=%s", (data['email'],))
+        result = cursor.fetchone()
+
+        if result is None:
+            cursor.execute("INSERT INTO User (email, password, role) VALUES (%s, %s, %s)",
+                                   (data['email'], hashed, data['role'])
+                           )
+            cursor.execute("SELECT user_id FROM User WHERE email=%s", (data['email'],))
+            user_id = cursor.fetchone()['user_id']
+            if data['role'] == 'Doctor':
+                cursor.execute("INSERT INTO Person (person_id, name, surname, tck) VALUES (%s, %s, %s, %s)",
+                                   (user_id, data['name'], data['surname'], data['tcKimlikNo'])
+                               )
+                cursor.execute("INSERT INTO Doctor (doctor_id, speciality, approval_status) VALUES (%s, %s)",
+                                   (user_id, data['speciality'], 'PENDING')
+                               )
+            elif data['role'] == 'Patient':
+                cursor.execute("INSERT INTO Person (person_id, name, surname, tck) VALUES (%s, %s, %s, %s)",
+                                   (user_id, data['name'], data['surname'], data['tcKimlikNo'])
+                               )
+                cursor.execute("INSERT INTO Patient (patient_id) VALUES (%s)",
+                                   (user_id,)
+                               )
+            elif data['role'] == 'pharmacist':
+                cursor.execute("INSERT INTO Pharmacy (pharmacy_id, name, is_on_duty, diploma_path, balance, approval_status) VALUES (%s, %s, %s, %s, %s, %s)",
+                                   (user_id, data['name'], 0, data['degreeFile'], 0, 'PENDING')
+                               )
+            else:
+                db.connection.rollback()
+                return jsonify({"message": "Invalid role"}), 400
+
+            db.connection.commit()
+            return jsonify({"message": "Signed up"}), 200
+        else:
+            db.connection.rollback()
+            return jsonify({"message": "An Email already exists"}), 400
+    except KeyError:
+        db.connection.rollback()
+        return 'Invalid username or password', 400
 
 
 if __name__ == '__main__':
