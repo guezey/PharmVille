@@ -27,7 +27,7 @@ def _parse_protein_powder_props(data):
 
 
 class ProteinPowderGroupView(MethodView):
-    def get(self):
+    def put(self):
         data = request.get_json()
         current_app.logger.info(data)
         builder = ProteinPowderQueryBuilder(**data)
@@ -68,7 +68,7 @@ class ProteinPowderGroupView(MethodView):
         return {'message': f"Protein powder with id: {pk} was added"}, 202
 
 
-bp.add_url_rule('/', view_func=ProteinPowderGroupView.as_view('protein-powder-group'))
+bp.add_url_rule('', view_func=ProteinPowderGroupView.as_view('protein-powder-group'))
 
 
 class ProteinPowderView(MethodView):
@@ -128,7 +128,7 @@ class ProteinPowderView(MethodView):
         return f"Update on product: {prod_id} was successful", 202
 
 
-bp.add_url_rule('/<int:prod_id>', view_func=ProteinPowderView.as_view('protein-powder'))
+bp.add_url_rule('<int:prod_id>', view_func=ProteinPowderView.as_view('protein-powder'))
 
 
 @bp.route('/filter_options', methods=['GET'])

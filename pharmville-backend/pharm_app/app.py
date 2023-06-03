@@ -30,7 +30,7 @@ def create_app():
 
 app = create_app()
 Session(app)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "localhost:5000/"}})
 
 
 @app.route('/')

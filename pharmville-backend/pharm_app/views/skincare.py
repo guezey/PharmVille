@@ -22,7 +22,7 @@ def _parse_skincare_props(data):
 
 
 class SkincareGroupView(MethodView):
-    def get(self):
+    def put(self):
         data = request.get_json()
         current_app.logger.info(data)
         builder = SkincareQueryBuilder(**data)
@@ -62,7 +62,7 @@ class SkincareGroupView(MethodView):
         return {'message': f"Skincare product with id: {pk} was added"}, 202
 
 
-bp.add_url_rule('/', view_func=SkincareGroupView.as_view('skincare-group'))
+bp.add_url_rule('', view_func=SkincareGroupView.as_view('skincare-group'))
 
 
 class SkincareView(MethodView):
@@ -121,7 +121,7 @@ class SkincareView(MethodView):
         return f"Update on product: {prod_id} was successful", 202
 
 
-bp.add_url_rule('/<int:prod_id>', view_func=SkincareView.as_view('skincare'))
+bp.add_url_rule('<int:prod_id>', view_func=SkincareView.as_view('skincare'))
 
 
 @bp.route('/filter_options', methods=['GET'])

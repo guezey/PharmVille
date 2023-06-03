@@ -71,7 +71,7 @@ class MedicineGroupView(MethodView):
         return f"Medicine successfully inserted with pk:{pk}", 201
 
 
-bp.add_url_rule('/', view_func=MedicineGroupView.as_view('medicine-group'))
+bp.add_url_rule('', view_func=MedicineGroupView.as_view('medicine-group'))
 
 
 class MedicineView(MethodView):
@@ -165,7 +165,7 @@ class MedicineView(MethodView):
         return f"Update on product: {prod_id} was successful", 202
 
 
-bp.add_url_rule('/<int:prod_id>', view_func=MedicineView.as_view('medicine'))
+bp.add_url_rule('<int:prod_id>', view_func=MedicineView.as_view('medicine'))
 
 
 @bp.route('/filter_options', methods=['GET'])
