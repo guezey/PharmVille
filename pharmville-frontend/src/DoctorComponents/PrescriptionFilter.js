@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./PrescriptionFilter.css";
 import upArr from '../images/up-arrow-icon.png';
 import downArr from '../images/down-arrow-icon.png';
@@ -10,6 +10,27 @@ function PrescriptionFilter() {
     const [showAgeGroup, setShowAgeGroup] = useState(false);
     const [showIntake, setShowIntake] = useState(false);
     const [showMedicineType, setShowMedicineType] = useState(false);
+
+    // state for fetching drug classes:
+    const [filterOptions, setFilterOptions] = useState([]);
+
+    // fetch drug classes:
+    useEffect(() => {
+        fetch('http://localhost:5000/medicine/filter_options')
+
+            .then(response => response.json())
+            .then(data => {
+                setFilterOptions(data);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }, []);
+
+
+
+    // state for fetching undesired side effects:
+    const [undesiredSideEffects, setUndesiredSideEffects] = useState([]);
 
     const handleDrugClassClick = () => {
         setShowClassesOptions(!showClassesOptions)
@@ -52,15 +73,6 @@ function PrescriptionFilter() {
 
     const handleIntakeChange = () => {
         console.log("intake değişti");
-    }
-
-    // medicine type:
-    const handleMedicineTypeClick = () => {
-        setShowMedicineType(!showMedicineType)
-    }
-
-    const handleMedicineTypeChange = () => {
-        console.log("medicine type değişti");
     }
 
     return (
@@ -176,28 +188,6 @@ function PrescriptionFilter() {
                         <div className='buttonElements'>
                             <input type="checkbox" value="injection" onChange={handleIntakeChange} name="class" />
                             <label className='buttonLabel'>Injection</label>
-                        </div>
-                    </div>
-                )}
-            </div>
-            <div className='genComp'>
-                <a onClick={handleMedicineTypeClick}>
-                    <div className='filterComponent'>
-                        <label className='filterLabel'>Medicine Type</label>
-                        {showMedicineType && <img src={upArr} className='arrowSize'></img>}
-                        {!showMedicineType && <img src={downArr} className='arrowSize'></img>}
-                    </div>
-                </a>
-                <hr></hr>
-                {showMedicineType && (
-                    <div className='radio-buttons'>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="tablet" onChange={handleMedicineTypeChange} name="class" />
-                            <label className='buttonLabel'>Tablet</label>
-                        </div>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="syrup" onChange={handleIntakeChange} name="class" />
-                            <label className='buttonLabel'>Syrup</label>
                         </div>
                     </div>
                 )}

@@ -6,7 +6,6 @@ import MainPageDoctor from "./DoctorComponents/MainPageDoctor";
 import NavbarPharmacy from "./PharmacyComponents/NavbarPharmacy";
 import Deliveries from "./PharmacyComponents/Deliveries";
 import SystemReports from "./PharmacyComponents/SystemReports";
-import Products from "./PharmacyComponents/Products";
 import MyShop from "./PharmacyComponents/MyShop";
 import NavbarAdmin from "./AdminComponents/NavbarAdmin";
 import MainPageAdmin from "./AdminComponents/MainPageAdmin";
@@ -84,7 +83,6 @@ function App() {
           <NavbarPharmacy />
           <Routes>
             <Route path="/*" element={<PharmacyProfile />} />
-            <Route path="/products" element={<Products />} />
             <Route path="/deliveries" element={<Deliveries />} />
             <Route path="/reports" element={<SystemReports />} />
             <Route path='/profile' element={<DoctorProfile />} />

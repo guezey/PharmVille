@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import PrescriptionFilter from "./PrescriptionFilter";
 import Modal from 'react-bootstrap/Modal';
 import Alert from 'react-bootstrap/Alert';
+import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
 const CustomMenu = React.forwardRef(
@@ -44,7 +45,7 @@ function PrescriptionSelectionComponent() {
     const [showAddMedicine, setShowAddMedicine] = useState(false);
 
     // state for added medicine array
-    const [medicineArr, setMedicineArr] = useState([1, 2, 1, 1, 1, 1]);
+    const [medicineArr, setMedicineArr] = useState([]);
 
     const addMedicineHandler = () => {
         setShowAddMedicine(true);
@@ -56,12 +57,47 @@ function PrescriptionSelectionComponent() {
         setMedicineArr(updatedItems);
     };
 
-    // fetch disease causes arr:
-    // TODO (şimdilik pseudo arr)
-    const options = [{ value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },];
+    const [options, setOptions] = useState([]);
+    const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        const fetchDisease = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get("http://localhost:5000/prescribe");
+                const newData = res.data;
+
+                let uniqueOptions = [];
+                console.log(options.length);
+                if (options.length == 0) {
+                    for (let i = 0; i < newData.length; i++) {
+                        let bool = true;
+                        for (let j = 0; j < options.length; j++) {
+                            if (newData[i].name == options[j].value) {
+                                bool = false;
+                                break
+                            }
+                        }
+                        if (bool) {
+                            uniqueOptions.push({ value: newData[i].name, label: newData[i].name });
+                        }
+                    }
+                }
+
+                setOptions((prevOptions) => [...uniqueOptions]);
+            } catch (error) {
+                // Handle error
+                console.error(error);
+            }
+            setLoading(false);
+        };
+
+        fetchDisease();
+    }, []);
+
+
+
+    console.log(options);
     // state for selected disease causes arr:
     const [selectedCauses, setSelectedCauses] = useState([]);
 
@@ -214,7 +250,7 @@ function PrescriptionSelectionComponent() {
                 // Reset the success message state
                 setIsSubmitted(false);
                 // Navigate to the desired page
-                
+
                 window.location.reload();
             }, 800); // Wait for 2 seconds (adjust as needed)
         }

@@ -106,13 +106,13 @@ function MainPageDoctor() {
                         {showPatientInfo &&
                             <div>
                                 <div className="patientInfoHolder">
-                                    <p className="searchTitle">Information of 33350035325</p>
+                                    <p className="searchTitle">Information of {searchText}</p>
                                     <div className="displayTCKInfoHolder">
                                         <div className="displayTCKInfoPar">
                                             <p className="displayTCKInfoPar2">Name:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">Ceren Akyar</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.name}  {patientInfo.surname}</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -120,7 +120,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Age:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">21 (Adult)</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.age}</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -128,7 +128,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Weight:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">49 kg</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.weight} kg</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -136,7 +136,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Height:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">155 cm</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.height} cm</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -144,7 +144,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Gender:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">Female</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.gender}</p>
                                         </div>
                                     </div>
                                 </div>
