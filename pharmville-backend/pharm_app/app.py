@@ -3,7 +3,10 @@ from flask_session import Session
 from flask_cors import CORS
 from .extensions import db
 from .conf import MysqlConfig
-from .views import medicine_bp, protein_powder_bp, skincare_bp, prescribe_bp, prescriptions_bp, review_bp
+from .views import (medicine_bp, protein_powder_bp, skincare_bp,
+                    prescribe_bp, prescriptions_bp, review_bp
+                    )
+
 
 def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(medicine_bp)
@@ -32,7 +35,6 @@ app = create_app()
 Session(app)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 app.config["CORS_HEADERS"] = ["Content-Type", "Authorization"]
-
 
 
 @app.route('/')
