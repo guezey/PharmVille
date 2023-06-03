@@ -26,9 +26,16 @@ import PharmacyProfile from "./Profile/PharmacyProfile";
 import Reviews from "./UserComponents/UserStoreComponents/Reviews";
 import PharmacyStorePage from "./UserComponents/UserStoreComponents/PharmacyStorePage";
 function App() {
-  /**
+
   const [userRole, setUserRole] = useState(localStorage.getItem("userRole"));
   const [userData, setUserData] = useState(localStorage.getItem("userData"));
+
+  const handleLogin = (role, data) => {
+    setUserRole(role);
+    setUserData(data);
+    localStorage.setItem("userRole", role);
+    localStorage.setItem("userData", JSON.stringify(data));
+  };
 
   useEffect(() => {
     const onStorageChange = (e) => {
@@ -42,28 +49,32 @@ function App() {
   }, []);
 
   if (!userRole) {
-    return <Login />;
+    return <Login onLogin={handleLogin} />;
   }
 
   switch (userRole) {
     case "Patient":
       return (
-        <Router>
-          <NavigationBar />
-          <Routes>
-            <Route path="/" element={<Store />} />
-            <Route path='/prescriptions' element={<Prescription />} />
-            <Route path='/profile' element={<Profile />} />
-            <Route path='/cart' element={<Cart />} />
-          </Routes>
-        </Router>
-      );
+      <Router>
+        <NavigationBar />
+        <Routes>
+          <Route path="/*" element={<Store />} />
+          <Route path='/prescriptions' element={<Prescription />} />
+          <Route path='/profile' element={<PatientProfile />} />
+          <Route path='/cart' element={<Cart />} />
+          <Route path={'/medicine/:id'} element={<Medicine />} />
+          <Route path={'/review/:id'} element={<Reviews />} />
+          <Route path={'/pharmacyStore/:id'} element={<PharmacyStorePage />} />
+        </Routes>
+      </Router>
+    );
     case "Doctor":
       return (
         <Router>
           <NavbarDoctor />
           <Routes>
             <Route path="/" element={<MainPageDoctor />} />
+            <Route path='/profile' element={<DoctorProfile />} />
           </Routes>
         </Router>
       );
@@ -72,10 +83,11 @@ function App() {
         <Router>
           <NavbarPharmacy />
           <Routes>
-            <Route path="/" element={<MyShop />} />
+            <Route path="/*" element={<PharmacyProfile />} />
             <Route path="/products" element={<Products />} />
             <Route path="/deliveries" element={<Deliveries />} />
             <Route path="/reports" element={<SystemReports />} />
+            <Route path='/profile' element={<DoctorProfile />} />
           </Routes>
         </Router>
       );
@@ -92,6 +104,7 @@ function App() {
       console.error("Invalid user role.");
       return <Login />;
   }
+
   */
 
   let user = "Patient";
@@ -156,6 +169,7 @@ function App() {
       </Router>
     );
   }
+
 
 }
 
