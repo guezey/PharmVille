@@ -89,6 +89,7 @@ class SkincareView(MethodView):
         cursor.execute("""SELECT skin_type  FROM applicable_skin_types
                 WHERE product_id = %s""", (prod_id,))
         skincare['applicable_skin_types'] = [skin_type[0] for skin_type in cursor.fetchall()]
+        skincare['prod_type'] = "Skincare"
         return jsonify(skincare)
 
     def put(self, prod_id: int):
