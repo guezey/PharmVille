@@ -7,7 +7,7 @@ from pharm_app.extensions import db
 bp = Blueprint('orders', __name__, url_prefix='/orders')
 
 
-class PrescribeView(MethodView):
+class OrdersView(MethodView):
     def get(self):
         return jsonify({"message": "Orders"}), 200
 
@@ -100,5 +100,5 @@ class PrescribeView(MethodView):
         return jsonify({"message": "Order created"}), 201
 
 
-bp.add_url_rule('', view_func=PrescribeView.as_view('orders'), methods=['GET', 'POST'])
+bp.add_url_rule('', view_func=OrdersView.as_view('orders'), methods=['GET', 'POST'])
 
