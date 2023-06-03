@@ -4,8 +4,16 @@ import Navbar from 'react-bootstrap/Navbar';
 import pharmvilleLogo from '../images/pharmville.png';
 import '../UserComponents/NavigationBar.css';
 import { NavLink } from "react-router-dom";
+import Logout from '../UserComponents/Logout';
 
 function NavbarDoctor() {
+
+    const handleLogout = () => {
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userData");
+        window.location.reload(); // To force an immediate refresh of the page.
+      };
+    
     return (
         <Navbar className="color-nav" collapseOnSelect expand="lg" variant='dark'>
             <Container>
@@ -23,6 +31,7 @@ function NavbarDoctor() {
                     </Nav>
                     <Nav>
                         <Nav.Link as={NavLink} to={"/profile"} className='color-p'>Profile</Nav.Link>
+                        <Logout onLogout={handleLogout} />
                     </Nav>
 
                 </Navbar.Collapse>
