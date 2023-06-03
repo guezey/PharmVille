@@ -8,7 +8,7 @@ function Prescription() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/prescriptions');
+        const response = await fetch('http://localhost:5000/prescriptions');
         if (!response.ok) {
           throw new Error('Something went wrong!');
         }

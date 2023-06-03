@@ -93,24 +93,24 @@ function Register({ onBackToLogin }) {
     e.preventDefault();
 
     if (
-      !name ||
+      (!name ||
       !surname ||
       !tcKimlikNo ||
       !email ||
       !password ||
       !confirmPassword ||
-      !role
+      !role) && role !== "Pharmacy"
     ) {
       setErrorMessage("All fields are required.");
       return;
     }
 
-    if (!/^\d+$/.test(tcKimlikNo)) {
+    if (!/^\d+$/.test(tcKimlikNo) && role !== "Pharmacy") {
       setErrorMessage("TC Kimlik No must only contain numbers.");
       return;
     }
 
-    if (tcKimlikNo.length !== 11) {
+    if (tcKimlikNo.length !== 11 && role !== "Pharmacy") {
       setErrorMessage("TC Kimlik No must be exactly 11 digits.");
       return;
     }
@@ -133,35 +133,26 @@ function Register({ onBackToLogin }) {
     // Clear error message if form is valid
     setErrorMessage("");
 
-    // Replace with your own backend server URL
-    const apiUrl = "https://your-backend-server.com/api/register";
+    const apiUrl = "http://localhost:5000/signup";
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("surname", surname);
-    formData.append("tcKimlikNo", tcKimlikNo);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("role", role);
-
-    if (degreeFile) {
-      formData.append("degreeFile", degreeFile);
-    }
-
-    if (licenseFile) {
-      formData.append("licenseFile", licenseFile);
-    }
+    const data = {
+      name,
+      surname,
+      tcKimlikNo,
+      email,
+      password,
+      role,
+    };
 
     try {
-      await axios.post(apiUrl, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      // Registration successful, navigate to login
+      // Note: You should not manually set the "Content-Type" to "application/json" when sending FormData.
+      // This is because files can't be sent as JSON, so the fetch/axios API will automatically set the "Content-Type" to "multipart/form-data" when you send a FormData object.
+      const response = await axios.post(apiUrl, data);
+
+      // After successful registration, navigate back to login
       onBackToLogin();
     } catch (error) {
-      // Handle errors while storing data in the database
+      // Handle errors while registering
       setErrorMessage("An error occurred while registering. Please try again.");
     }
   };
@@ -207,6 +198,7 @@ function Register({ onBackToLogin }) {
             />
           )}
           {role === "Pharmacy" && (
+            <div>
             <FormFileInput
               wrapperClass="mb-4"
               label="Upload Pharmacy License"
@@ -214,6 +206,17 @@ function Register({ onBackToLogin }) {
               onChange={handleLicenseFileChange}
               fileName={licenseFile && licenseFile.name}
             />
+            <label htmlFor="formName" className="form-label">
+              Name
+            </label>
+            <input
+              className="form-control"
+              id="formName"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            </div>
           )}
           {role !== "Pharmacy" && (
           <div className="mb-4">
@@ -312,7 +315,7 @@ function Register({ onBackToLogin }) {
   );
 }
 
-function Login() {
+function Login({onLogin}) {
   const [isRegistering, setIsRegistering] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -336,7 +339,7 @@ function Login() {
     e.preventDefault();
 
     // Replace with your own backend server URL
-    const apiUrl = "https://your-backend-server.com/api/login";
+    const apiUrl = "http://localhost:5000/login";
 
     const data = {
       email,
@@ -349,6 +352,7 @@ function Login() {
       const userData = response.data;
 
       if (userRole) {
+        onLogin(userRole, userData);
         localStorage.setItem("userRole", userRole);
         localStorage.setItem("userData", JSON.stringify(userData));
         // Redirect or update the state based on userRole
