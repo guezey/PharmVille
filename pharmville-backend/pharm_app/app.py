@@ -1,6 +1,6 @@
 from flask import Flask, session, request
 from flask_session import Session
-
+from flask_cors import CORS
 from .extensions import db
 from .conf import MysqlConfig
 from .views import medicine_bp, protein_powder_bp, skincare_bp, prescribe_bp, prescriptions_bp
@@ -30,6 +30,7 @@ def create_app():
 
 app = create_app()
 Session(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route('/')

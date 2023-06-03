@@ -4,6 +4,7 @@
 /*.pyo
 *.py[cod]
 env/
+flask_session/
 
 # IDE and editor specific files
 .idea/
