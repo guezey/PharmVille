@@ -88,7 +88,8 @@ class ProteinPowderView(MethodView):
         # fetch and merge remaining attributes
 
         cursor.execute("""
-            SELECT pharmacy_id, name FROM Pharmacy NATURAL JOIN pharmacy_product
+            SELECT DISTINCT (pharmacy_id), name,total_reviews, avg_rating  
+            FROM Pharmacy NATURAL JOIN pharmacy_product NATURAL  JOIN pharmacy_ratings
                 WHERE prod_id = %s 
         """, (prod_id,))
         pharmacy = cursor.fetchone()
