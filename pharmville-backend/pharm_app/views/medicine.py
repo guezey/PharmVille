@@ -26,7 +26,7 @@ def parse_medicine_props(data):
 
 
 class MedicineGroupView(MethodView):
-    def get(self):
+    def put(self):
         data = request.get_json()
         builder = MedicineQueryBuilder(**data)
 
@@ -71,7 +71,7 @@ class MedicineGroupView(MethodView):
         return f"Medicine successfully inserted with pk:{pk}", 201
 
 
-bp.add_url_rule('/', view_func=MedicineGroupView.as_view('medicine-group'))
+bp.add_url_rule('', view_func=MedicineGroupView.as_view('medicine-group'))
 
 
 class MedicineView(MethodView):
