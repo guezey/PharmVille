@@ -3,3 +3,4 @@ mysqlclient
 flask_mysqldb
 flask_session
 flask_cors
+bcrypt
