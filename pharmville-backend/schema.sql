@@ -15,7 +15,7 @@ CREATE TABLE Person
     name      varchar(255),
     surname   varchar(255),
     tck       char(11)        NOT NULL,
-    is_admin  boolean         NOT NULL,
+    is_admin  boolean     DEFAULT FALSE   NOT NULL,
     FOREIGN KEY (person_id) REFERENCES User (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

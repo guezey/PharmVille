@@ -96,11 +96,11 @@ def signup():
             cursor.execute("SELECT user_id FROM User WHERE email=%s", (data['email'],))
             user_id = cursor.fetchone()['user_id']
             if data['role'] == 'Doctor':
-                cursor.execute("INSERT INTO Person (person_id, name, surname, tck) VALUES (%s, %s, %s, %s)",
-                                   (user_id, data['name'], data['surname'], data['tcKimlikNo'])
+                cursor.execute("INSERT INTO Person (person_id, name, surname, tck, is_admin) VALUES (%s, %s, %s, %s, %s)",
+                                   (user_id, data['name'], data['surname'], data['tcKimlikNo'], False)
                                )
-                cursor.execute("INSERT INTO Doctor (doctor_id, speciality, approval_status) VALUES (%s, %s)",
-                                   (user_id, data['speciality'], 'PENDING')
+                cursor.execute("INSERT INTO Doctor (doctor_id, speciality, approval_status) VALUES (%s, %s, %s)",
+                                   (user_id, None, 'PENDING')
                                )
             elif data['role'] == 'Patient':
                 cursor.execute("INSERT INTO Person (person_id, name, surname, tck) VALUES (%s, %s, %s, %s)",
@@ -109,9 +109,9 @@ def signup():
                 cursor.execute("INSERT INTO Patient (patient_id) VALUES (%s)",
                                    (user_id,)
                                )
-            elif data['role'] == 'pharmacist':
+            elif data['role'] == 'Pharmacy':
                 cursor.execute("INSERT INTO Pharmacy (pharmacy_id, name, is_on_duty, diploma_path, balance, approval_status) VALUES (%s, %s, %s, %s, %s, %s)",
-                                   (user_id, data['name'], 0, data['degreeFile'], 0, 'PENDING')
+                                   (user_id, data['name'], False, None, 0, 'PENDING')
                                )
             else:
                 db.connection.rollback()
