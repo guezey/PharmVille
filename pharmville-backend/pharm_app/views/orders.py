@@ -33,14 +33,32 @@ class PrescribeView(MethodView):
             for med in data['medicines']:
                 cursor.execute(
                     """
-                    SELECT NOW() < (SELECT due_date FROM Prescription WHERE presc_id = %s) AS is_valid
+                    SELECT NOW() > (SELECT due_date FROM Prescription WHERE presc_id = %s) AS is_expired
                     """,
                     (med['prescription_id'],)
                 )
-                is_presc_valid = cursor.fetchone()['is_valid']
+                is_presc_expired = cursor.fetchone()['is_expired']
 
-                if not is_presc_valid:
-                    return jsonify({"message": f"Prescription {med['prescription_id']} is not valid"}), 400
+                if is_presc_expired:
+                    cursor.execute(
+                        """
+                        UPDATE Prescription SET status = 'OVERDUE' WHERE presc_id = %s
+                        """,
+                        (med['prescription_id'],)
+                    )
+                    db.connection.commit()
+                    return jsonify({"message": f"Prescription {med['prescription_id']} is expired"}), 400
+
+                cursor.execute(
+                    """
+                    SELECT status FROM Prescription WHERE presc_id = %s
+                    """,
+                    (med['prescription_id'],)
+                )
+                presc_status = cursor.fetchone()['status']
+
+                if presc_status == 'USED':
+                    return jsonify({"message": f"Prescription {med['prescription_id']} is already used"}), 400
 
                 cursor.execute(
                     """
@@ -89,6 +107,13 @@ class PrescribeView(MethodView):
                     VALUES (%s, %s, %s, %s, %s)
                     """,
                     (order_id, med_id, med['prescription_id'], med['price'], med['count'])
+                )
+
+                cursor.execute(
+                    """
+                    UPDATE Prescription SET status = 'USED' WHERE presc_id = %s
+                    """,
+                    (med['prescription_id'],)
                 )
 
             cursor.execute(
