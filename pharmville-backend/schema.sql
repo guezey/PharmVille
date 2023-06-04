@@ -112,7 +112,7 @@ CREATE TABLE Address
 (
     address_id      int PRIMARY KEY AUTO_INCREMENT,
     user_id         int          NOT NULL,
-    name            varchar(255) NOT NULL,
+    name            varchar(255) DEFAULT  NULL,
     city            varchar(255) NOT NULL,
     country         varchar(255) NOT NULL,
     address_field   varchar(255) NOT NULL,

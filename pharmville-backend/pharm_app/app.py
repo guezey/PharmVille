@@ -129,9 +129,9 @@ def signup():
                 )
                 pharmacy_id = cursor.lastrowid
                 cursor.execute(
-                    """INSERT INTO Address(address_id, name, city, country, address_field, address_field_2, postal_code) 
+                    """INSERT INTO Address(address_id, city, country, address_field, address_field_2, postal_code) 
                         VALUES  (%s,%s,%s,%s,%s,%s,%s)""",
-                    (pharmacy_id, data['name'], data['city'], data['country'], data['address'], data['address2'],
+                    (pharmacy_id, data['city'], data['country'], data['address'], data['address2'],
                      data['postalCode'])
                 )
             else:
