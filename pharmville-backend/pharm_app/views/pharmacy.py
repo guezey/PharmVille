@@ -9,6 +9,7 @@ bp = Blueprint('pharmacy', __name__, url_prefix='/pharmacy')
 @bp.route('/orders', methods=['GET'])
 def get_orders ():
     cursor = db.connection.cursor(DictCursor)
+    # FIXME: pharmacy_id should be fetched from session
     pharmacy = 6
 
     try:
