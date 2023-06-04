@@ -69,27 +69,14 @@ class PrescribeView(MethodView):
         doctor_id = session['user_id']
 
         data = request.get_json()
-        prescription = {
-            'patient_id': patient['person_id'],
-            'doctor_id': doctor_id,
-            'write_date': data['write_date'],
-            'due_date': data['due_date'],
-            'type': data['type'],
-            'status': data['status'],
-            'medicines': data['medicines'] if 'medicines' in data else None,
-            'diseases': data['diseases'] if 'diseases' in data else None
-        }
 
         cursor.execute(
             """
             INSERT INTO Prescription(patient_id, doctor_id, write_date, due_date, type, status)
             VALUES (%s, %s, NOW(), DATE_ADD(NOW(), INTERVAL 72 HOUR), %s, 'ACTIVE')
             """,
-            (
-                prescription['patient_id'], prescription['doctor_id'],
-                prescription['type'], prescription['status'])
+            (patient_tck, session['user_id'], data['type'])
         )
-        # FIXME: (optional) critical section
         cursor.execute(
             """
             SELECT LAST_INSERT_ID() AS id FROM Prescription
@@ -100,9 +87,9 @@ class PrescribeView(MethodView):
             for medicine in data['medicines']:
                 cursor.execute(
                     """
-                    SELECT prod_id FROM Product NATURAL JOIN Medicine WHERE name = %s AND company = %s AND amount = %s                
+                    SELECT prod_id FROM Product NATURAL JOIN Medicine WHERE name = %s AND amount = %s                
                     """,
-                    (medicine['name'], medicine['company'], medicine['amount'])
+                    (medicine['name'], medicine['dosage_amount'])
                 )
                 med_id = cursor.fetchone()['prod_id']
 
@@ -111,7 +98,7 @@ class PrescribeView(MethodView):
                     INSERT INTO medicine_presc(presc_id, med_id, dosage, description)
                     VALUES (%s, %s, %s, %s)
                     """,
-                    (prescription_id, med_id, medicine['dosage'], medicine['description'])
+                    (prescription_id, med_id, medicine['dosage_type'], medicine['medicine_desc'])
                 )
 
             for disease in data['diseases']:
@@ -119,7 +106,7 @@ class PrescribeView(MethodView):
                     """
                     SELECT disease_id FROM Disease WHERE name = %s   
                     """,
-                    (disease['name'],)
+                    (disease['value'],)
                 )
                 disease_id = cursor.fetchone()['disease_id']
 
