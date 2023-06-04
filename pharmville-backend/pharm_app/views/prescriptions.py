@@ -18,6 +18,7 @@ class PrescriptionsView(MethodView):
                 UPDATE Prescription
                 SET status = 'OVERDUE'
                 WHERE status = 'ACTIVE' AND due_date < CURDATE() AND patient_id = %s
+                ORDER BY IF(status = 'ACTIVE', 1, 2), due_date
                 """,
                 (patient,)
             )
@@ -38,6 +39,7 @@ class PrescriptionsView(MethodView):
             """
             SELECT * FROM medicine_presc
             INNER JOIN Medicine ON medicine_presc.med_id = Medicine.prod_id
+            INNER JOIN Product ON Medicine.prod_id = Product.prod_id
             WHERE presc_id IN (
                 SELECT presc_id FROM Prescription WHERE patient_id = %s
             )
@@ -87,7 +89,7 @@ class PrescriptionsView(MethodView):
             prescription['doctor'] = doctor
             prescription.pop('doctor_id')
 
-        return jsonify(prescriptions_with_medicines_and_diseases), 200
+        return jsonify({"prescriptions": prescriptions_with_medicines_and_diseases}), 200
 
 
 bp.add_url_rule('', view_func=PrescriptionsView.as_view('prescriptions'), methods=['GET'])
