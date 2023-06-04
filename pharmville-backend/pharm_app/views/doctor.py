@@ -14,8 +14,8 @@ class DoctorVie(MethodView):
 
         cursor.execute("""SELECT email, name, surname, speciality, approval_status
                 FROM Doctor 
-                NATURAL JOIN Person 
-                NATURAL JOIN User 
+                JOIN Person  ON Doctor.doctor_id = Person.person_id
+                JOIN User  ON Person.person_id = User.user_id
                 WHERE user_id = %s""", (user_id,))
         doctor = cursor.fetchone()
         return jsonify(doctor), 200
