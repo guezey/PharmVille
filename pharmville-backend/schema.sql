@@ -313,9 +313,12 @@ CREATE TABLE Payment
 (
     payment_id     int PRIMARY KEY AUTO_INCREMENT,
     order_id       int            NOT NULL,
-    payment_date   timestamp      NOT NULL,
+    payment_time   timestamp      NOT NULL,
     payment_amount decimal(10, 2) NOT NULL,
-    card_number    int(16)        NOT NULL,
+    card_number    char(16)       NOT NULL,
+    card_holder    varchar(255)   NOT NULL,
+    card_cvv       char(3)        NOT NULL,
+    expiry_date    varchar(255)   NOT NULL,
     FOREIGN KEY (order_id) REFERENCES Orders (order_id)
 );
 
@@ -1040,3 +1043,18 @@ VALUES ('Cancer', 'Neoplastic'),
        ('Dyspareunia', 'Mental'),
        ('Dysuria', 'Mental'),
        ('Dysmenorrhea', 'Mental');
+
+INSERT INTO Prescription(doctor_id, patient_id, write_date, due_date, type, status)
+VALUES (2, 1, '2023-01-01', '2023-01-12', 'WHITE', 'ACTIVE'),
+       (2, 1, '2023-01-01', '2023-01-12', 'RED', 'ACTIVE'),
+       (2, 1, '2023-01-01', '2023-01-12', 'PURPLE', 'OVERDUE');
+
+INSERT INTO presc_disease(presc_id, disease_id)
+VALUES (1, 1),
+       (1, 2),
+       (1, 3);
+
+INSERT INTO medicine_presc(presc_id, med_id, dosage, description)
+VALUES (1, 1, '1 pill', 'Take once a day'),
+       (1, 2, '2 pills', 'Take once a day'),
+       (1, 3, '3 pills', 'Take once a day');

@@ -44,13 +44,21 @@ class PrescribeView(MethodView):
 
                 cursor.execute(
                     """
-                    SELECT COUNT(*) AS count FROM pharmacy_product WHERE prod_id = %s AND pharmacy_id = %s
+                    SELECT prod_id FROM Product WHERE name=%s
                     """,
-                    (med['prod_id'], pharmacy['pharmacy_id'])
+                    (med['name'],)
                 )
-                count = cursor.fetchone()['count']
+                med_id = cursor.fetchone()['prod_id']
+
+                cursor.execute(
+                    """
+                    SELECT stock FROM pharmacy_product WHERE prod_id = %s AND pharmacy_id = %s
+                    """,
+                    (med_id, pharmacy['pharmacy_id'])
+                )
+                count = cursor.fetchone()['stock']
                 if count < med['count']:
-                    return jsonify({"message": f"Product {med['prod_id']} is not available"}), 400
+                    return jsonify({"message": f"Product {med_id} is not available at {data['pharmacy_name']}"}), 400
 
             cursor.execute(
                 """
@@ -83,13 +91,30 @@ class PrescribeView(MethodView):
                     (order_id, med_id, med['prescription_id'], med['price'], med['count'])
                 )
 
+            cursor.execute(
+                """
+                SELECT SUM(unit_price * count) AS total_price FROM product_order WHERE order_id = %s
+                """,
+                (order_id,)
+            )
+
+            total_price = cursor.fetchone()['total_price']
+
+            cursor.execute(
+                """
+                INSERT INTO Payment (order_id, payment_time, payment_amount, card_number, card_holder, card_cvv, expiry_date)
+                VALUES (%s, NOW(), %s, %s, %s, %s, %s)
+                """,
+                (order_id, total_price, data['card_number'], data['card_holder'], data['cvv'], data['exp'])
+            )
+
         except Error as e:
             print(e)
             db.connection.rollback()
-            return jsonify({"message": "Order could not be created"}), 400
+            return jsonify({"message": "Order could not be created. No payment done."}), 500
 
         db.connection.commit()
-        return jsonify({"message": "Order created"}), 201
+        return jsonify({"message": "Order created, Payment done."}), 201
 
 
 bp.add_url_rule('', view_func=PrescribeView.as_view('orders'), methods=['GET', 'POST'])
