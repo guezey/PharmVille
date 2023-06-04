@@ -52,79 +52,81 @@ class PrescribeView(MethodView):
 
         return jsonify({"patient": patient, "allowed_medicines": allowed_medicines}), 200
 
-    def post(self, patient_tck: int):
-        cursor = db.connection.cursor(DictCursor)
+@bp.route('/<string:patient_tck>', methods=['POST'])
+def post(patient_tck: str):
+    cursor = db.connection.cursor(DictCursor)
 
-        cursor.execute(
-            """
-            SELECT person_id FROM Person WHERE tck = %s
-            """,
-            (patient_tck,)
-        )
-        patient = cursor.fetchone()
+    cursor.execute(
+        """
+        SELECT person_id FROM Person WHERE tck = %s
+        """,
+        (patient_tck,)
+    )
+    patient = cursor.fetchone()
 
-        if not patient:
-            return error_404(patient_tck)
+    if not patient:
+        return error_404(patient_tck)
 
-        doctor_id = session['user_id']
+    doctor_id = session['user_id']
 
-        data = request.get_json()
+    data = request.get_json()
 
-        cursor.execute(
-            """
-            INSERT INTO Prescription(patient_id, doctor_id, write_date, due_date, type, status)
-            VALUES (%s, %s, NOW(), DATE_ADD(NOW(), INTERVAL 72 HOUR), %s, 'ACTIVE')
-            """,
-            (patient["person_id"], doctor_id, data['type'].upper())
-        )
-        cursor.execute(
-            """
-            SELECT LAST_INSERT_ID() AS id FROM Prescription
-            """
-        )
-        prescription_id = cursor.fetchone()['id']
-        try:
-            for medicine in data['medicines']:
-                cursor.execute(
-                    """
-                    SELECT prod_id FROM Product WHERE name = %s           
-                    """,
-                    (medicine['name'])
-                )
-                med_id = cursor.fetchone()['prod_id']
+    cursor.execute(
+        """
+        INSERT INTO Prescription(patient_id, doctor_id, write_date, due_date, type, status)
+        VALUES (%s, %s, NOW(), DATE_ADD(NOW(), INTERVAL 72 HOUR), %s, 'ACTIVE')
+        """,
+        (patient["person_id"], doctor_id, data['type'].upper())
+    )
 
-                cursor.execute(
-                    """
-                    INSERT INTO medicine_presc(presc_id, med_id, count, dosage, description)
-                    VALUES (%s, %s, %s, %s, %s)
-                    """,
-                    (prescription_id, med_id, medicine['count'], medicine['dosage_type'], medicine['medicine_desc'])
-                )
+    cursor.execute(
+        """
+        SELECT LAST_INSERT_ID() AS id FROM Prescription
+        """
+    )
+    prescription_id = cursor.fetchone()['id']
+    try:
+        for medicine in data['medicines']:
+            cursor.execute(
+                """
+                SELECT prod_id FROM Product WHERE name = %s           
+                """,
+                (medicine['name'],)
+            )
+            med_id = cursor.fetchone()['prod_id']
+            cursor.execute(
+                """
+                INSERT INTO medicine_presc(presc_id, med_id, box_count, dosage, description)
+                VALUES (%s, %s, %s, %s, %s)
+                """,
+                (int(prescription_id), int(med_id), int(medicine['count']), medicine['dosage_type'],
+                 medicine['medicine_desc'])
+            )
 
-            for disease in data['diseases']:
-                cursor.execute(
-                    """
-                    SELECT disease_id FROM Disease WHERE name = %s   
-                    """,
-                    (disease['value'],)
-                )
-                disease_id = cursor.fetchone()['disease_id']
+        for disease in data['diseases']:
+            cursor.execute(
+                """
+                SELECT disease_id FROM Disease WHERE name = %s   
+                """,
+                (disease['value'],)
+            )
+            disease_id = cursor.fetchone()['disease_id']
 
-                cursor.execute(
-                    """
-                    INSERT INTO presc_disease(presc_id, disease_id)
-                    VALUES (%s, %s)
-                    """,
-                    (prescription_id, disease_id)
-                )
-        except Error as e:
-            print(e)
-            db.connection.rollback()
-            current_app.logger.error(str(e)) 
-            return jsonify({"message": str(e)}), 500
-            
-        db.connection.commit()
-        return jsonify({"message": "Prescription successfully added."}), 202
+            cursor.execute(
+                """
+                INSERT INTO presc_disease(presc_id, disease_id)
+                VALUES (%s, %s)
+                """,
+                (prescription_id, disease_id)
+            )
+    except Error as e:
+        print(e)
+        db.connection.rollback()
+        current_app.logger.error(str(e))
+        return jsonify({"message": str(e)}), 500
+
+    db.connection.commit()
+    return jsonify({"message": "Prescription successfully added."}), 202
 
 @bp.route('/', methods=['GET'])
 def get_diseases():
@@ -139,4 +141,4 @@ def get_diseases():
 
     return jsonify(diseases)
 
-bp.add_url_rule('<int:patient_tck>', view_func=PrescribeView.as_view('prescribe-patient'), methods=['GET', 'POST'])
+bp.add_url_rule('<int:patient_tck>', view_func=PrescribeView.as_view('prescribe-patient'), methods=['GET'])

@@ -233,7 +233,7 @@ CREATE TABLE medicine_presc
     med_id      int NOT NULL,
     presc_id    int NOT NULL,
     dosage      varchar(255),
-    count       int,
+    box_count   int,
     description text,
     PRIMARY KEY (med_id, presc_id),
     FOREIGN KEY (med_id) REFERENCES Medicine (prod_id),
@@ -1043,7 +1043,7 @@ VALUES (1, 1),
        (1, 2),
        (1, 3);
 
-INSERT INTO medicine_presc(presc_id, med_id, dosage, count, description)
+INSERT INTO medicine_presc(presc_id, med_id, dosage, box_count, description)
 VALUES (1, 1, '1 pill', 3, 'Take once a day'),
        (1, 2, '2 pills', 3, 'Take once a day'),
        (1, 3, '3 pills', 3, 'Take once a day');
