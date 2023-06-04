@@ -79,36 +79,34 @@ def update_order_status():
     try:
         cursor.execute(
             """
-            SELECT order_status FROM Orders
+            UPDATE Orders
+            SET order_status = %s
             WHERE order_id = %s
             """,
-            (data['order_id'],)
+            (data['order_status'], data['order_id'])
         )
-        status = cursor.fetchone()['order_status']
-
-        if status == 'ACTIVE':
+        if data['order_status'] == 'DELIVERED':
             cursor.execute(
                 """
                 UPDATE Orders
-                SET order_status = %s
+                SET delivery_time = NOW()
                 WHERE order_id = %s
                 """,
-                ('SHIPPED', data['order_id'])
+                (data['order_id'],)
             )
-        elif status == 'SHIPPED':
+
             cursor.execute(
                 """
-                UPDATE Orders
-                SET order_status = %s
-                WHERE order_id = %s
+                UPDATE Pharmacy
+                SET balance = balance + (SELECT SUM(unit_price * count) FROM Product NATURAL JOIN product_order WHERE order_id = %s)
+                WHERE pharmacy_id = (SELECT pharmacy_id FROM Orders WHERE order_id = %s)
                 """,
-                ('DELIVERED', data['order_id'])
+                (data['order_id'], data['order_id'])
             )
-        else:
-            return jsonify({'error': 'Order status cannot be updated'}), 400
-
-        db.connection.commit()
     except Error as e:
+        db.connection.rollback()
         return jsonify({'error': str(e)}), 500
+
+    db.connection.commit()
 
     return jsonify({'message': 'Order status updated successfully'}), 200
