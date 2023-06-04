@@ -95,6 +95,12 @@ function Deliveries() {
                                     </p>
                                 </div>
                             )}
+                            {nonCompDeliveries.active_orders.length === 0 &&
+                                <div className='deliveriesRow'>
+                                    <p className='pFirstOne'>No Orders</p>
+                                    <p className='pFirstOne'>-</p>
+                                    <p className='pSecondOne'>-</p>
+                                    </div>}
                         </div>
                         <h1 className='deliveriesTitle'>Completed Orders</h1>
                         <div className='deliveriesHolder2'>
@@ -114,6 +120,13 @@ function Deliveries() {
                                     </p>
                                 </div>
                             )}
+                            {nonCompDeliveries.shipped_and_delivered_orders.length === 0 &&
+                                <div className='deliveriesRow'>
+                                    <p className='pFirstOne'>No Orders</p>
+                                    <p className='pFirstOne'>-</p>
+                                    <p className='pFirstOne'>-</p>
+                                    <p className='pSecondOne'>-</p>
+                                    </div>}
                         </div>
                     </div>
                     {showNewDeliveryForm && selectedOrder != null && selectedOrder.length !== 0 &&

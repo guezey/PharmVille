@@ -212,6 +212,8 @@ function PrescriptionSelectionComponent(props) {
     // fetch if medicine is suitable:
     useEffect(() => {
         console.log(selectedMedicine);
+        const allowedMedicines = props.medicineDosageArr.map((medicine) => medicine.name);
+        setIsSuitable(allowedMedicines.includes(selectedMedicine));
     }, [selectedMedicine]);
 
 
@@ -227,6 +229,7 @@ function PrescriptionSelectionComponent(props) {
 
         else if (isSuitable === false) {
             // TODO check if medicine is suitable!  
+            //medicineNames.find((medicine) => medicine === name)
             setShowSuitableMedWarning(true)
         }
         else // if correct
@@ -286,9 +289,17 @@ function PrescriptionSelectionComponent(props) {
     const [isDosageSuitable, setIsDosageSuitable] = useState(false);
     // fetch if dosage is suitable:
     useEffect(() => {
-        console.log(selectedMedicine);
-        //setIsDosageSuitable(true);
-    }, [medicineDesc]);
+        const medicine = props.medicineDosageArr.find((medicine) => medicine.name === selectedMedicine);
+        let dosage;
+        let unit;
+        if (medicine) {
+            dosage = medicine.advised_dosage;
+            unit = medicine.unit;
+        }
+        console.log(dosageAmount, dosageType, dosage, unit);
+        console.log(dosageAmount == dosage);
+        setIsDosageSuitable(dosageAmount == dosage);
+    }, [dosageAmount, dosageType]);
 
     // warnings for dosage amount page:
     const [showIsDosageEnteredWarning, setIsDosageEnteredWarning] = useState(false);
@@ -301,13 +312,15 @@ function PrescriptionSelectionComponent(props) {
         if (dosageAmount === "" || dosageType === "")
             setIsDosageEnteredWarning(true);
         else if (!isDosageSuitable) {
+            console.log("dosage is not suitable");
+
             setShowSuitableDosageWarning(true);
         }
         else {
             // if full:
             setShowAddMedicine(false);
             setGoToDosage(false);
-            setMedicineArr([...medicineArr, 31]);
+            setMedicineArr([...medicineArr, { name: selectedMedicine, dosageAmount: dosageAmount, dosageType: dosageType, medicineDesc: medicineDesc, medicineQty: medicineQty }]);
         }
     }
 
@@ -324,7 +337,7 @@ function PrescriptionSelectionComponent(props) {
     }
 
     const handleDosageWarning2Close = () => {
-        setShowSuitableMedWarning(false);
+        setShowSuitableDosageWarning(false);
     }
 
     // en baba function:
@@ -334,12 +347,22 @@ function PrescriptionSelectionComponent(props) {
     // warnings for submit state:
     const [showCauseEmptyWarning, setCauseEmptyWarning] = useState(false);
 
-    const navigate = useNavigate();
+    const [submitWarning, setSubmitWarning] = useState(false);
+    const [submitMsg, setsubmitMsg] = useState("");
+
+    const handleSubmitClose = () => {
+        setSubmitWarning(false);
+    }
 
     const submitPrescriptionHandler = () => {
         // check if presc cause is empty:
         if (selectedCauses.length <= 0)
             setCauseEmptyWarning(true);
+        else if (medicineArr.length <= 0)
+        {
+            setSubmitWarning(true);
+            setsubmitMsg("Please add at least one medicine to the prescription");
+        }
         else {
             setCauseEmptyWarning(false);
             setShowAddMedicine(false)
@@ -419,6 +442,14 @@ function PrescriptionSelectionComponent(props) {
                             </button>
                         </Modal.Footer>
                     </Modal>
+                    <Modal show={submitWarning} onHide={handleSubmitClose}>
+                        <Modal.Body>{submitMsg}</Modal.Body>
+                        <Modal.Footer>
+                            <button onClick={handleSubmitClose}>
+                                Close
+                            </button>
+                        </Modal.Footer>
+                    </Modal>
                 </div>
 
                 {showAddMedicine &&
@@ -460,7 +491,6 @@ function PrescriptionSelectionComponent(props) {
                         </Modal>
 
                         <Modal show={showSuitableMedWarning} onHide={handleCloseSuitableWarning}>
-
                             <Modal.Body>Selected drug is not suitable for this specific age group!</Modal.Body>
                             <Modal.Footer>
                                 <button onClick={handleCloseSuitableWarning}>

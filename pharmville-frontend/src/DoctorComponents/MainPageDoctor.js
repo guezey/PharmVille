@@ -128,7 +128,7 @@ function MainPageDoctor() {
                         </div>
                         <Modal show={showWarning} onHide={handleClose}>
                             <Modal.Header closeButton>
-                                <Modal.Title>Incorrect TCK Entry</Modal.Title>
+                                <Modal.Title>About TCK Entry</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>For security, please enter the full TCK number of the patient and check the validity of the TCK</Modal.Body>
                             <Modal.Footer>
@@ -138,7 +138,7 @@ function MainPageDoctor() {
                             </Modal.Footer>
                         </Modal>
 
-                        {showPatientInfo && error === false &&
+                        {showPatientInfo && error === false && patientInfo.length !== 0 &&
                             <div>
                                 <div className="patientInfoHolder">
                                     <p className="searchTitle">Information of {searchText}</p>
@@ -147,7 +147,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Name:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">{patientInfo.name}  {patientInfo.surname}</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.patient.name}  {patientInfo.patient.surname}</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -155,7 +155,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Age:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">{patientInfo.age}</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.patient.age}</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -163,7 +163,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Weight:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">{patientInfo.weight} kg</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.patient.weight} kg</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -171,7 +171,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Height:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">{patientInfo.height} cm</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.patient.height} cm</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -179,7 +179,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Gender:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">{patientInfo.gender}</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.patient.gender}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -193,7 +193,7 @@ function MainPageDoctor() {
             }
             {showNextPage &&
                 <div>
-                    <PrescriptionSelectionComponent TCK={searchText}/>
+                    <PrescriptionSelectionComponent TCK={searchText} medicineDosageArr={patientInfo.allowed_medicines}/>
                 </div>
             }
         </div>
