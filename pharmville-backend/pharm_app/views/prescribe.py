@@ -30,20 +30,27 @@ class PrescribeView(MethodView):
         if not patient:
             return error_404(patient_tck)
 
-        return jsonify(patient)
+        cursor.execute(
+            """
+            SELECT group_name FROM AgeGroup
+            WHERE %s BETWEEN min_age AND max_age
+            """,
+            (patient['age'],)
+        )
 
-    @bp.route('/', methods=['GET'])
-    def get_diseases():
-        cursor = db.connection.cursor(DictCursor)
+        patient['age_group'] = cursor.fetchone()['group_name']
 
         cursor.execute(
             """
-            SELECT * FROM Disease
-            """
+            SELECT advised_dosage, unit, name FROM medicine_age
+            NATURAL JOIN Product
+            WHERE group_name = %s
+            """,
+            (patient['age_group'],)
         )
-        diseases = cursor.fetchall()
+        allowed_medicines = cursor.fetchall()
 
-        return jsonify(diseases)
+        return jsonify({"patient": patient, "allowed_medicines": allowed_medicines}), 200
 
     def post(self, patient_tck: int):
         cursor = db.connection.cursor(DictCursor)
@@ -132,5 +139,17 @@ class PrescribeView(MethodView):
         db.connection.commit()
         return jsonify({"message": "Prescription successfully added."}), 202
 
+@bp.route('/', methods=['GET'])
+def get_diseases():
+    cursor = db.connection.cursor(DictCursor)
+
+    cursor.execute(
+        """
+        SELECT * FROM Disease
+        """
+    )
+    diseases = cursor.fetchall()
+
+    return jsonify(diseases)
 
 bp.add_url_rule('<int:patient_tck>', view_func=PrescribeView.as_view('prescribe-patient'), methods=['GET', 'POST'])
