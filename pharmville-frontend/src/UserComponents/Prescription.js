@@ -4,7 +4,7 @@ import PrescriptionItem from './PrescriptionItem';
 
 function Prescription() {
   const [prescriptions, setPrescriptions] = useState([]);
-
+  /** 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -22,7 +22,8 @@ function Prescription() {
 
     fetchData();
   }, []);
-
+  */
+ 
   return (
     <Container className='prescHolder'>
       <div>

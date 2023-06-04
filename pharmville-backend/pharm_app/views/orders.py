@@ -1,15 +1,47 @@
 from MySQLdb.cursors import DictCursor
 from MySQLdb import Error
+
 from flask import Blueprint, request, jsonify, session
+
 from flask.views import MethodView
 from pharm_app.extensions import db
 
 bp = Blueprint('orders', __name__, url_prefix='/orders')
 
 
-class PrescribeView(MethodView):
+class OrdersView(MethodView):
     def get(self):
-        return jsonify({"message": "Orders"}), 200
+        user_id = session['user_id']
+        cursor = db.connection.cursor(DictCursor)
+
+        cursor.execute(""" SELECT * FROM Orders 
+            WHERE  patient_id = %s
+                ORDER BY IF(order_status = 'DELIVERED', 1, 2), order_time DESC
+        """, (user_id,))
+        orders = cursor.fetchall()
+
+        for order in orders:
+            cursor.execute("""
+                SELECT prod_id, unit_price, count, presc_id, name  
+                FROM Product  NATURAL JOIN  product_order
+                    WHERE order_id = %s
+            """, (order['order_id'],))
+            order['products'] = cursor.fetchall()
+
+            cursor.execute("""
+                SELECT review_id, rating,title, body FROM Review
+                    WHERE order_id = %s
+            """, (order['order_id'],))
+            order['review'] = cursor.fetchone()
+
+            cursor.execute(""" SELECT SUM(unit_price * count) AS total_price 
+            FROM product_order WHERE order_id = %s""", (order['order_id'],))
+            order['total_price'] = cursor.fetchone()['total_price']
+
+            cursor.execute("""SELECT * FROM Payment WHERE order_id = %s""", (order['order_id'],))
+            order['payment'] = cursor.fetchone()
+
+        return jsonify(orders)
 
     # Purchase order
     def post(self):
@@ -63,6 +95,14 @@ class PrescribeView(MethodView):
                 cursor.execute(
                     """
                     SELECT prod_id FROM Product WHERE name=%s
+                    """,
+                    (med['name'],)
+                )
+                med_id = cursor.fetchone()['prod_id']
+
+                cursor.execute(
+                    """
+                    SELECT prod_id FROM Product WHERE name = %s
                     """,
                     (med['name'],)
                 )
@@ -142,5 +182,4 @@ class PrescribeView(MethodView):
         return jsonify({"message": "Order created, Payment done."}), 201
 
 
-bp.add_url_rule('', view_func=PrescribeView.as_view('orders'), methods=['GET', 'POST'])
-
+bp.add_url_rule('', view_func=OrdersView.as_view('orders'), methods=['GET', 'POST'])

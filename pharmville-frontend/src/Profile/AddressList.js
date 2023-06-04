@@ -26,7 +26,7 @@ const AddressList = ({ addresses, setPatientData }) => {
       <ul style={{color:"black"}} class="addressUL">
         {addresses.map((address) => (
           <li key={address.id}>
-            {address.street}, {address.city}, {address.state} {address.zip}
+            {address.name}: {address.address_field}, {address.address_field_2}, {address.city} {address.country} {address.postal_code}
             <button onClick={() => handleDeleteAddress(address.id)}>Delete</button>
           </li>
         ))}
