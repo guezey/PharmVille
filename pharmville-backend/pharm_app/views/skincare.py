@@ -33,6 +33,8 @@ class SkincareGroupView(MethodView):
         cursor.execute(query)
 
         skincare = cursor.fetchall()
+        for skincare_prod in skincare :
+            skincare_prod["prod_type"] = "Skincare"
         return jsonify(skincare)
 
     def post(self):
@@ -79,7 +81,8 @@ class SkincareView(MethodView):
             return self.error404(prod_id)
 
         cursor.execute("""
-            SELECT pharmacy_id, name FROM Pharmacy NATURAL JOIN pharmacy_product
+            SELECT DISTINCT (pharmacy_id), name, total_reviews, avg_rating
+             FROM Pharmacy NATURAL JOIN pharmacy_product NATURAL  JOIN  pharmacy_ratings
                 WHERE prod_id = %s 
         """, (prod_id,))
         pharmacy = cursor.fetchone()
@@ -89,6 +92,7 @@ class SkincareView(MethodView):
         cursor.execute("""SELECT skin_type  FROM applicable_skin_types
                 WHERE product_id = %s""", (prod_id,))
         skincare['applicable_skin_types'] = [skin_type[0] for skin_type in cursor.fetchall()]
+        skincare['prod_type'] = "Skincare"
         return jsonify(skincare)
 
     def put(self, prod_id: int):

@@ -316,6 +316,9 @@ CREATE TABLE Payment
     payment_time   timestamp      NOT NULL,
     payment_amount decimal(10, 2) NOT NULL,
     card_number    char(16)       NOT NULL,
+    card_holder    varchar(255)   NOT NULL,
+    card_cvv       char(3)        NOT NULL,
+    expiry_date    varchar(255)   NOT NULL,
     FOREIGN KEY (order_id) REFERENCES Orders (order_id)
 );
 
@@ -323,19 +326,21 @@ CREATE TABLE Payment
 -- VIEWS-------------------------------------------------------------------------
 
 CREATE VIEW pharmacy_reviews AS
-(
-SELECT review_id, title, body, rating, pharmacy_id, name, order_id
-FROM Review
-         NATURAL JOIN Orders
-         Natural JOIN Pharmacy
-    );
+SELECT Pharmacy.pharmacy_id, Pharmacy.name, Review.review_id, Review.rating, Review.title, Review.body
+FROM Pharmacy
+         JOIN Orders ON Orders.pharmacy_id = Pharmacy.pharmacy_id
+         JOIN Review ON Review.order_id = Orders.order_id;
 
 CREATE VIEW pharmacy_ratings AS
-(
-SELECT pharmacy_id, COUNT(*) AS total_reviews, AVG(rating) AS avg_rating
-FROM pharmacy_reviews
-GROUP BY pharmacy_id
-    );
+SELECT p.pharmacy_id,
+       IFNULL(r.total_reviews, 0) AS total_reviews,
+       IFNULL(r.avg_rating, 0)    AS avg_rating
+FROM Pharmacy p
+         LEFT JOIN (SELECT pharmacy_id,
+                           COUNT(*)    AS total_reviews,
+                           AVG(rating) AS avg_rating
+                    FROM pharmacy_reviews
+                    GROUP BY pharmacy_id) r ON p.pharmacy_id = r.pharmacy_id;
 
 
 CREATE view full_medicine AS
@@ -365,14 +370,9 @@ CREATE VIEW ordered_prescs AS
 (
 SELECT *
 FROM Prescription
-ORDER BY CASE
-             WHEN status = 'ACTIVE' THEN 1
-             ELSE 2
-             END,
+ORDER BY IF(status = 'ACTIVE', 1, 2),
          write_date DESC
     );
-
-
 -- TRIGGERS ------------------------------------------------------------------------------------
 /*
 CREATE TRIGGER update_prescription_status
@@ -392,31 +392,11 @@ BEGIN
 END IF;
 END;
 
-
-CREATE TRIGGER add_order_total_to_pharmacy_balance
-    AFTER UPDATE
-    ON Orders
-    FOR EACH ROW
-BEGIN
-    DECLARE pharmacy_balance double;
+*/
 
 
-   IF NEW.order_status = 'SHIPPED' AND OLD.order_status = 'ACTIVE' THEN
-    SELECT balance
-    INTO pharmacy_balance
-    FROM Pharmacy
-    WHERE pharmacy_id = NEW.pharmacy_id;
 
-
-    UPDATE Pharmacy
-    SET balance = pharmacy_balance + (SELECT SUM(price * count)
-                                      FROM product_order
-                                      WHERE order_id = NEW.order_id)
-    WHERE pharmacy_id = NEW.pharmacy_id;
-END IF;
-END;
-
-
+/*
 CREATE TRIGGER delete_medicine_join_tables
     AFTER DELETE
     ON Medicine
@@ -1048,3 +1028,19 @@ VALUES ('Cancer', 'Neoplastic'),
        ('Dyspareunia', 'Mental'),
        ('Dysuria', 'Mental'),
        ('Dysmenorrhea', 'Mental');
+
+
+INSERT INTO Prescription(doctor_id, patient_id, write_date, due_date, type, status)
+VALUES (2, 1, '2023-01-01', '2023-01-12', 'WHITE', 'ACTIVE'),
+       (2, 1, '2023-01-01', '2023-01-12', 'RED', 'ACTIVE'),
+       (2, 1, '2023-01-01', '2023-01-12', 'PURPLE', 'OVERDUE');
+
+INSERT INTO presc_disease(presc_id, disease_id)
+VALUES (1, 1),
+       (1, 2),
+       (1, 3);
+
+INSERT INTO medicine_presc(presc_id, med_id, dosage, description)
+VALUES (1, 1, '1 pill', 'Take once a day'),
+       (1, 2, '2 pills', 'Take once a day'),
+       (1, 3, '3 pills', 'Take once a day');

@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import PrescriptionFilter from "./PrescriptionFilter";
 import Modal from 'react-bootstrap/Modal';
 import Alert from 'react-bootstrap/Alert';
+import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
 const CustomMenu = React.forwardRef(
@@ -37,14 +38,12 @@ const CustomMenu = React.forwardRef(
     },
 );
 
-function PrescriptionSelectionComponent() {
-
-
+function PrescriptionSelectionComponent(props) {
     // check if state addMedicineSelected
     const [showAddMedicine, setShowAddMedicine] = useState(false);
 
     // state for added medicine array
-    const [medicineArr, setMedicineArr] = useState([1, 2, 1, 1, 1, 1]);
+    const [medicineArr, setMedicineArr] = useState([]);
 
     const addMedicineHandler = () => {
         setShowAddMedicine(true);
@@ -52,28 +51,155 @@ function PrescriptionSelectionComponent() {
 
     // delete clicked item
     const handleDelete = (id) => {
-        const updatedItems = medicineArr.filter((_, i) => i !== id - 1);
+        const updatedItems = medicineArr.filter((_, i) => i !== id);
         setMedicineArr(updatedItems);
     };
 
-    // fetch disease causes arr:
-    // TODO (şimdilik pseudo arr)
-    const options = [{ value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },];
+    const [options, setOptions] = useState([]);
+    const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        const fetchDisease = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get("http://localhost:5000/prescribe");
+                const newData = res.data;
+
+                let uniqueOptions = [];
+                console.log(options.length);
+                if (options.length == 0) {
+                    for (let i = 0; i < newData.length; i++) {
+                        let bool = true;
+                        for (let j = 0; j < options.length; j++) {
+                            if (newData[i].name == options[j].value) {
+                                bool = false;
+                                break
+                            }
+                        }
+                        if (bool) {
+                            uniqueOptions.push({ value: newData[i].name, label: newData[i].name });
+                        }
+                    }
+                }
+
+                setOptions((prevOptions) => [...uniqueOptions]);
+            } catch (error) {
+                // Handle error
+                console.error(error);
+            }
+            setLoading(false);
+        };
+
+        fetchDisease();
+    }, []);
+
+    // filter arranger:
+    // state for which drug class will be selected:
+    const [selectedDrugClass, setSelectedDrugClass] = useState([]);
+
+    // state for selected undesired effects:
+    const [selectedUndesiredEffects, setSelectedUndesiredEffects] = useState([]);
+
+    // state for selected prescription type:
+    const [selectedPrescriptionType, setSelectedPrescriptionType] = useState([]);
+
+    // state for age group:
+    const [selectedAge, setSelectedAge] = useState([]);
+
+    // state for intake method:
+    const [selectedIntake, setSelectedIntake] = useState([]);
+
+    const handleDrugClassSelection = (data) => {
+        // Update the information in the parent component
+        setSelectedDrugClass(data);
+    };
+
+    const handleUndesiredEffects = (data) => {
+        // Update the information in the parent component
+        if (data.length > 0)
+            setSelectedUndesiredEffects(data);
+        else
+            setSelectedUndesiredEffects(null);
+    };
+
+    const handlePrescriptionType = (data) => {
+        // Update the information in the parent component
+        if (data.length > 0)
+            setSelectedPrescriptionType(data);
+        else
+            setSelectedPrescriptionType(null);
+    };
+
+    const handleAgeSelection = (data) => {
+        // Update the information in the parent component
+        if (data.length > 0)
+            setSelectedAge(data);
+        else
+            setSelectedAge(null);
+    };
+
+    const handleIntakeSelection = (data) => {
+        if (data.length > 0)
+            setSelectedIntake(data);
+        else
+            setSelectedIntake(null);
+    }
+
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(false);
+
+    // fetch medicine data:
+    useEffect(() => {
+        setIsLoading(true);
+        fetch('http://localhost:5000/medicine', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                medicine_classes: selectedDrugClass,
+                side_effects: selectedUndesiredEffects,
+                presc_types: selectedPrescriptionType,
+                age_groups: selectedAge,
+                intake_types: selectedIntake,
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                setListOfMedicineArr(data);
+                setIsLoading(false);
+                setError(false);
+            })
+            .catch(error => {
+                console.log(error);
+                setIsLoading(false);
+                setError(true);
+            })
+    }, [selectedDrugClass, selectedPrescriptionType, selectedUndesiredEffects, selectedAge, selectedIntake]);
+
+    // state for fetching dosage types:
+    const [filterOptions, setFilterOptions] = useState(null);
+    // fetch drug classes:
+    useEffect(() => {
+        console.log("fetching filter options")
+        fetch('http://localhost:5000/medicine/filter_options')
+
+            .then(response => response.json())
+            .then(data => {
+                setFilterOptions(data);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }, []);
+
+
+    console.log(options);
     // state for selected disease causes arr:
     const [selectedCauses, setSelectedCauses] = useState([]);
 
     // FETCH MEDICINE:
-    // şimdilik pseudo:
-    const listOfMedicineArr = [
-        { id: 1, name: "parol" },
-        { id: 2, name: "marol" },
-        { id: 3, name: "nexium" },
-        { id: 4, name: "ibuprofen" },
-        { id: 5, name: "zaşgkmglkm" },
-    ]
+    const [listOfMedicineArr, setListOfMedicineArr] = useState([]);
 
     // selected medicine (from dropdown):
     const [selectedMedicine, setSelectedMedicine] = useState("");
@@ -82,6 +208,8 @@ function PrescriptionSelectionComponent() {
     }
 
     // for test purposes:
+    const [isSuitable, setIsSuitable] = useState(false);
+    // fetch if medicine is suitable:
     useEffect(() => {
         console.log(selectedMedicine);
     }, [selectedMedicine]);
@@ -93,7 +221,6 @@ function PrescriptionSelectionComponent() {
     const [goToDosage, setGoToDosage] = useState(false);
 
     const goToDosageHandler = () => {
-        let isSuitable = false;
         // check if medicine is selected:
         if (selectedMedicine === "")
             setShowSelectMed(true);
@@ -140,6 +267,13 @@ function PrescriptionSelectionComponent() {
         setMedicineDesc(event.target.value);
     }
 
+    // state for drug quantity:
+    const [medicineQty, setMedicineQty] = useState(1);
+
+    const handleMedicineQty = (event) => {
+        setMedicineQty(event.target.value);
+    }
+
     // go back to medicine selection page!
     const goBackMedicineSelection = () => {
         setShowAddMedicine(true);
@@ -148,6 +282,14 @@ function PrescriptionSelectionComponent() {
         setShowSuitableMedWarning(false);
     }
 
+    // for test purposes:
+    const [isDosageSuitable, setIsDosageSuitable] = useState(false);
+    // fetch if dosage is suitable:
+    useEffect(() => {
+        console.log(selectedMedicine);
+        //setIsDosageSuitable(true);
+    }, [medicineDesc]);
+
     // warnings for dosage amount page:
     const [showIsDosageEnteredWarning, setIsDosageEnteredWarning] = useState(false);
     const [showSuitableDosageWarning, setShowSuitableDosageWarning] = useState(false);
@@ -155,7 +297,6 @@ function PrescriptionSelectionComponent() {
     // add medicine to the precription handler:
     const addMedicineToPrescHandler = () => {
         // pseudo var to check if suitable:
-        let isDosageSuitable = false;
         // check if fields are full:
         if (dosageAmount === "" || dosageType === "")
             setIsDosageEnteredWarning(true);
@@ -173,7 +314,7 @@ function PrescriptionSelectionComponent() {
     const addMedicineToPrescAfterWarning = () => {
         setShowAddMedicine(false);
         setGoToDosage(false);
-        setMedicineArr([...medicineArr, 31]);
+        setMedicineArr([...medicineArr, { name: selectedMedicine, dosageAmount: dosageAmount, dosageType: dosageType, medicineDesc: medicineDesc, medicineQty: medicineQty }]);
         setShowSuitableDosageWarning(false);
         setIsDosageEnteredWarning(false);
     }
@@ -214,7 +355,7 @@ function PrescriptionSelectionComponent() {
                 // Reset the success message state
                 setIsSubmitted(false);
                 // Navigate to the desired page
-                
+
                 window.location.reload();
             }, 800); // Wait for 2 seconds (adjust as needed)
         }
@@ -240,21 +381,21 @@ function PrescriptionSelectionComponent() {
             <div className="divPrescArranger">
                 <div className="selectionHolder">
                     <div className="prescFirstCol">
-                        <h1 className="prescTitle">Prescription for 33550505334</h1>
+                        <h1 className="prescTitle">Prescription for {props.TCK}</h1>
                         <button className="addMedicineBtn" onClick={addMedicineHandler}>Add Medicine</button>
                     </div>
 
                     <div className="prescSecondCol">
-                        {medicineArr.map(medicine => (
-                            <div key={medicine.id} className="medicineInPresc">
-                                <p className="medicineContentPar">Nexium</p>
+                        {medicineArr.map((medicine, index) => (
+                            <div key={index} className="medicineInPresc">
+                                <p className="medicineContentPar">{medicine.name}</p>
                                 <div className="verticalLine"></div>
-                                <p className="medicineContentPar">3 mg</p>
+                                <p className="medicineContentPar">{medicine.dosageAmount + " " + medicine.dosageType}</p>
                                 <div className="verticalLine"></div>
-                                <p className="medicineContentPar">Amount: 2</p>
+                                <p className="medicineContentPar">{medicine.medicineQty}</p>
                                 <div className="verticalLine"></div>
-                                <p className="medicineContentPar">Take 2 times a day</p>
-                                <button className="deleteMedicineBtn" onClick={() => handleDelete(medicine.id)}>Delete</button>
+                                <p className="medicineContentPar">{medicine.medicineDesc}</p>
+                                <button className="deleteMedicineBtn" onClick={() => handleDelete(index)}>Delete</button>
                             </div>
                         ))}
                     </div>
@@ -268,6 +409,7 @@ function PrescriptionSelectionComponent() {
                             isMulti={true}
                         />
                     </div>
+
                     <button className="submitPrescBtn" onClick={submitPrescriptionHandler}>Submit Prescription</button>
                     <Modal show={showCauseEmptyWarning} onHide={handleCauseWarningClose}>
                         <Modal.Body>Please select prescription cause!</Modal.Body>
@@ -282,7 +424,9 @@ function PrescriptionSelectionComponent() {
                 {showAddMedicine &&
                     <div className="selectionHolder">
                         <div className="medicineSelectionDiv">
-                            <PrescriptionFilter />
+                            <PrescriptionFilter onDrugSelection={handleDrugClassSelection}
+                                onEffectSelection={handleUndesiredEffects} onPrescSelection={handlePrescriptionType}
+                                onAgeSelection={handleAgeSelection} onIntakeSelection={handleIntakeSelection} />
                             <div className="medicineSearcherBox">
                                 <h1 className="prescTitle">Selected drug: {selectedMedicine}</h1>
                                 <Dropdown onSelect={onDropdownMedicineSelect}>
@@ -329,13 +473,13 @@ function PrescriptionSelectionComponent() {
                         </Modal>
                     </div>
                 }
-
                 {goToDosage &&
                     <div className="selectionHolder">
                         <h1 className="prescTitle2">Drug Name: {selectedMedicine}</h1>
                         <div className="dosageHolder">
                             <div className="dosageDropdownHolder">
                                 <div className="dosageInput">
+                                    <label>Dosage Amount:</label>
                                     <input
                                         type="number"
                                         value={dosageAmount}
@@ -346,14 +490,26 @@ function PrescriptionSelectionComponent() {
                                     />
                                 </div>
                                 <div className="dosageInput2">
+                                    <label>Dosage Unit:</label>
                                     <select value={dosageType} onChange={handleDosageType}>
-                                        <option value="option1">mg</option>
-                                        <option value="option2">ml</option>
-                                        <option value="option3">tablet</option>
+                                        {filterOptions.units.map((unit, index) => (
+                                            <option key={index} value={unit}>{unit}</option>
+                                        ))}
                                     </select>
                                 </div>
 
 
+                            </div>
+                            <div className="dosageInput">
+                                <label>Drug Quantity:</label>
+                                <input
+                                    type="number"
+                                    value={medicineQty}
+                                    onChange={handleMedicineQty}
+                                    min={1}
+                                    step={1}
+                                    required
+                                />
                             </div>
                             <div className="dosageInput3">
                                 <input
@@ -364,6 +520,7 @@ function PrescriptionSelectionComponent() {
                                     style={{ height: "60px" }}
                                 />
                             </div>
+
                         </div>
                         <div className="dosageBtnHolder">
                             <button className="dosageBtn1" onClick={goBackMedicineSelection}>Back</button>

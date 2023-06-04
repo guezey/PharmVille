@@ -1,6 +1,6 @@
 import "./MainPageDoctor.css";
 import searchIcon from '../images/search-icon.png';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import PrescriptionSelectionComponent from "./PrescriptionSelectionComponent";
 
@@ -10,10 +10,43 @@ function MainPageDoctor() {
     // to search for TCK
     const [searchText, setSearchText] = useState('');
     // var to check if the given input is true
-    let isTCKCorrect = true;
+
+    const [isTCKCorrect, setIsTCKCorrect] = useState(false);
 
     // state to show warning msg
     const [showWarning, setShowWarning] = useState(false);
+
+    // error handler for TCK search
+    const [error, setError] = useState(false);
+    const [showErrorMsg, setShowErrorMsg] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+
+    // state to show patient info
+    const [patientInfo, setPatientInfo] = useState([]);
+
+    const fetchPatientData = () => {
+        fetch('http://localhost:5000/prescribe/' + searchText)
+            .then(response => response.json())
+            .then(data => {
+                setIsTCKCorrect(!data.hasOwnProperty('message'));
+                setPatientInfo(data);
+                console.log(data)
+                setError(data.hasOwnProperty('message'));
+                if (data.hasOwnProperty('message')) {
+                    setErrorMsg(data.message);
+                    setShowErrorMsg(true);
+                }
+                setIsEmpty(false);
+            })
+            .catch(error => {
+                setError(true);
+                setErrorMsg(error);
+                setIsEmpty(false);
+            });
+        console.log("BURAYA GELİYON MU")
+        console.log(patientInfo)
+    };
+    useEffect(() => { setIsEmpty(false); }, [searchText]);
 
     // state to show patient info
     const [showPatientInfo, setShowPatientInfo] = useState(false);
@@ -21,23 +54,38 @@ function MainPageDoctor() {
     // state to show next page
     const [showNextPage, setShowNextPage] = useState(false);
 
+    const [isEmpty, setIsEmpty] = useState(true);
+
+    const [buttonPressed, setButtonPressed] = useState(false);
+
+
     const searchTCKHandler = () => {
         // Process search operation with searchText
         console.log(searchText);
-
         // check if TCK is correct
-
-        // if TCK is not correct:
-        if (!isTCKCorrect) {
+        // check if searcText is 11 digits:
+        setIsTCKCorrect(searchText.length === 11 && isEmpty === false && error === false);
+        console.log(isTCKCorrect);
+        setButtonPressed(true);
+    };
+    useEffect(() => {
+        // Add an effect to monitor changes in isTCKCorrect
+        if (buttonPressed) {
+            // Code to run when the button is pressed
+            console.log('Button pressed!');
+            // Reset buttonPressed state to false
+            setButtonPressed(false);
+        }
+        if (isTCKCorrect) {
+            console.log("isTCKCorrect is true");
+            fetchPatientData();
+            setShowPatientInfo(true);
+            // Fetch patient data or perform any other actions
+        }
+        else if (!isTCKCorrect) {
             setShowWarning(true);
         }
-        else // if correct:
-        {
-            console.log("TCK is: ")
-            console.log(searchText);
-            setShowPatientInfo(true);
-        }
-    };
+    }, [buttonPressed]);
 
     const goToNextHandler = () => {
         // go to next page:
@@ -45,9 +93,20 @@ function MainPageDoctor() {
     };
 
     const handleClose = () => setShowWarning(false);
+    const handleClose2 = () => setShowErrorMsg(false);
 
     return (
         <div>
+            <Modal show={error} onHide={handleClose2}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{errorMsg}</Modal.Title>
+                </Modal.Header>
+                <Modal.Footer>
+                    <button onClick={handleClose2}>
+                        Close
+                    </button>
+                </Modal.Footer>
+            </Modal>
             {!showNextPage &&
                 <div className="prescMainHolder">
                     <div className="generalHolderPresc">
@@ -64,7 +123,7 @@ function MainPageDoctor() {
                                 />
                             </div>
                             <div className="selectTCKButtonHolder">
-                                <button className="selectTCKButton" onClick={searchTCKHandler}>Search</button>
+                                <button className="selectTCKButton" onClick={searchTCKHandler} disabled={isTCKCorrect}>Search</button>
                             </div>
                         </div>
                         <Modal show={showWarning} onHide={handleClose}>
@@ -78,16 +137,17 @@ function MainPageDoctor() {
                                 </button>
                             </Modal.Footer>
                         </Modal>
-                        {showPatientInfo &&
+
+                        {showPatientInfo && error === false &&
                             <div>
                                 <div className="patientInfoHolder">
-                                    <p className="searchTitle">Information of 33350035325</p>
+                                    <p className="searchTitle">Information of {searchText}</p>
                                     <div className="displayTCKInfoHolder">
                                         <div className="displayTCKInfoPar">
                                             <p className="displayTCKInfoPar2">Name:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">Ceren Akyar</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.name}  {patientInfo.surname}</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -95,7 +155,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Age:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">21 (Adult)</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.age}</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -103,7 +163,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Weight:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">49 kg</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.weight} kg</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -111,7 +171,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Height:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">155 cm</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.height} cm</p>
                                         </div>
                                     </div>
                                     <div className="displayTCKInfoHolder">
@@ -119,7 +179,7 @@ function MainPageDoctor() {
                                             <p className="displayTCKInfoPar2">Gender:</p>
                                         </div>
                                         <div className="displayTCKInfoPar">
-                                            <p className="displayTCKInfoPar2">Female</p>
+                                            <p className="displayTCKInfoPar2">{patientInfo.gender}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -131,10 +191,10 @@ function MainPageDoctor() {
                     </div>
                 </div>
             }
-            {showNextPage && 
-            <div>
-                <PrescriptionSelectionComponent />
-            </div>
+            {showNextPage &&
+                <div>
+                    <PrescriptionSelectionComponent TCK={searchText}/>
+                </div>
             }
         </div>
     );

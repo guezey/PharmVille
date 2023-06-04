@@ -7,3 +7,6 @@ from .review import bp as review_bp
 from .orders import bp as orders_bp
 from .patient import bp as patient_bp
 from .address import bp as address_bp
+from .products import bp as products_bp
+from .pharmacy import bp as pharmacy_bp
+

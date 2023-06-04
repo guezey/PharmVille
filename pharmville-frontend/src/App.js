@@ -6,7 +6,6 @@ import MainPageDoctor from "./DoctorComponents/MainPageDoctor";
 import NavbarPharmacy from "./PharmacyComponents/NavbarPharmacy";
 import Deliveries from "./PharmacyComponents/Deliveries";
 import SystemReports from "./PharmacyComponents/SystemReports";
-import Products from "./PharmacyComponents/Products";
 import MyShop from "./PharmacyComponents/MyShop";
 import NavbarAdmin from "./AdminComponents/NavbarAdmin";
 import MainPageAdmin from "./AdminComponents/MainPageAdmin";
@@ -65,6 +64,7 @@ function App() {
           <Route path={'/medicine/:id'} element={<Medicine />} />
           <Route path={'/review/:id'} element={<Reviews />} />
           <Route path={'/pharmacyStore/:id'} element={<PharmacyStorePage />} />
+          <Route path={'/:searcText'} element={<Store />} />
         </Routes>
       </Router>
     );
@@ -84,7 +84,6 @@ function App() {
           <NavbarPharmacy />
           <Routes>
             <Route path="/*" element={<PharmacyProfile />} />
-            <Route path="/products" element={<Products />} />
             <Route path="/deliveries" element={<Deliveries />} />
             <Route path="/reports" element={<SystemReports />} />
             <Route path='/profile' element={<DoctorProfile />} />
@@ -104,6 +103,7 @@ function App() {
       console.error("Invalid user role.");
       return <Login />;
   }
+
 }
 
 export default App;

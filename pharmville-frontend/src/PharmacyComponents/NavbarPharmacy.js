@@ -39,8 +39,9 @@ function NavbarPharmacy() {
             <Nav.Link as={NavLink} to={"/reports"} className="color-p">
               System Reports
             </Nav.Link>
-            <Logout onLogout={handleLogout} />
+           
           </Nav>
+          <Logout onLogout={handleLogout} />
         </Navbar.Collapse>
       </Container>
     </Navbar>

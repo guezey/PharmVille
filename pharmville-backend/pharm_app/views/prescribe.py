@@ -13,13 +13,14 @@ def error_404(patient_tck):
 
 class PrescribeView(MethodView):
 
-    def get(self, patient_tck: int):
+    def get(self, patient_tck: str):
         cursor = db.connection.cursor(DictCursor)
 
         cursor.execute(
             """
-            SELECT name, surname, tck, YEAR(NOW()) - YEAR(birth_date) AS age, weight, height, gender 
-            FROM Patient NATURAL JOIN Person 
+            SELECT name, surname, YEAR(NOW()) - YEAR(birth_date) AS age, weight, height, gender 
+            FROM Patient 
+            JOIN Person ON patient_id = person_id
             WHERE tck = %s
             """,
             (patient_tck,)
@@ -31,7 +32,8 @@ class PrescribeView(MethodView):
 
         return jsonify(patient)
 
-    def get(self):
+    @bp.route('/', methods=['GET'])
+    def get_diseases():
         cursor = db.connection.cursor(DictCursor)
 
         cursor.execute(
@@ -132,4 +134,3 @@ class PrescribeView(MethodView):
 
 
 bp.add_url_rule('<int:patient_tck>', view_func=PrescribeView.as_view('prescribe-patient'), methods=['GET', 'POST'])
-bp.add_url_rule('', view_func=PrescribeView.as_view('prescribe-general'), methods=['GET'])

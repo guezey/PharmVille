@@ -1,69 +1,130 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./PrescriptionFilter.css";
 import upArr from '../images/up-arrow-icon.png';
 import downArr from '../images/down-arrow-icon.png';
 
-function PrescriptionFilter() {
+function PrescriptionFilter(props) {
     const [showClassesOptions, setShowClassesOptions] = useState(true);
     const [showUndesiredSideEffects, setShowUndesiredSideEffect] = useState(true);
     const [showPrescType, setShowPrescType] = useState(true);
     const [showAgeGroup, setShowAgeGroup] = useState(false);
     const [showIntake, setShowIntake] = useState(false);
-    const [showMedicineType, setShowMedicineType] = useState(false);
 
+    // state for fetching drug classes:
+    const [filterOptions, setFilterOptions] = useState(null);
+    console.log("hübübü")
+    // fetch drug classes:
+    useEffect(() => {
+        console.log("fetching filter options")
+        fetch('http://localhost:5000/medicine/filter_options')
+
+            .then(response => response.json())
+            .then(data => {
+                    setFilterOptions(data);               
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }, []);
+    console.log(filterOptions)
+    
+  
     const handleDrugClassClick = () => {
         setShowClassesOptions(!showClassesOptions)
     }
+    const [drugClass, setDrugClass] = useState([]);
 
-    const handleDrugClassChange = () => {
-        console.log("değiştim")
+    const handleDrugClassChange = (event) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            setDrugClass([...drugClass, value]); // Add the value to the array
+        } else {
+            setDrugClass(drugClass.filter(option => option !== value)); // Remove the value from the array
+        }
+        console.log(drugClass)
     };
+
+    useEffect(() => {
+        props.onDrugSelection(drugClass); // Call the callback function with the updated array
+    }, [drugClass, props.onDrugSelection]);
 
     const handleUndSideEffClick = () => {
         setShowUndesiredSideEffect(!showUndesiredSideEffects)
     }
 
-    const handleUndSideEffChange = () => {
-        console.log("und side eff değişti");
+    const [undesiredEff, setUndesiredEff] = useState([]);
+    const handleUndSideEffChange = (event) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            setUndesiredEff([...undesiredEff, value]); // Add the value to the array
+        } else {
+            setUndesiredEff(undesiredEff.filter(option => option !== value)); // Remove the value from the array
+        }
     }
+
+    useEffect(() => {
+        props.onEffectSelection(undesiredEff); // Call the callback function with the updated array
+    }, [undesiredEff, props.onEffectSelection]);
 
     // prescription type:
     const handlePrescTypeClick = () => {
         setShowPrescType(!showPrescType)
     }
 
-    const handlePrescTypeChange = () => {
-        console.log("presc type değişti");
+    const [prescType, setPrescType] = useState([]);
+    const handlePrescTypeChange = (event) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            setPrescType([...prescType, value]); // Add the value to the array
+        } else {
+            setPrescType(prescType.filter(option => option !== value)); // Remove the value from the array
+        }
     }
+    useEffect(() => {
+        props.onPrescSelection(prescType); // Call the callback function with the updated array
+    }, [prescType, props.onPrescSelection]);
+
 
     // age group:
     const handleAgeGroupClick = () => {
         setShowAgeGroup(!showAgeGroup)
     }
+    // state for age group:
+    const [ageGroups, setAgeGroups] = useState([]);
 
-    const handleAgeGroupChange = () => {
-        console.log("age group değişti");
+    const handleAgeGroupChange = (event) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            setAgeGroups([...ageGroups, value]); // Add the value to the array
+        } else {
+            setAgeGroups(ageGroups.filter(option => option !== value)); // Remove the value from the array
+        }
     }
+    useEffect(() => {
+        props.onAgeSelection(ageGroups); // Call the callback function with the updated array
+    }, [ageGroups, props.onAgeSelection]);
 
     // intake method:
+    // state for intake method:
+    const [intakeMethod, setIntakeMethod] = useState([]);
+
     const handleIntakeClick = () => {
         setShowIntake(!showIntake)
     }
 
-    const handleIntakeChange = () => {
-        console.log("intake değişti");
+    const handleIntakeChange = (event) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            setIntakeMethod([...intakeMethod, value]); // Add the value to the array
+        } else {
+            setIntakeMethod(intakeMethod.filter(option => option !== value)); // Remove the value from the array
+        }
     }
+    useEffect(() => {
+        props.onIntakeSelection(intakeMethod); // Call the callback function with the updated array
+    }, [intakeMethod, props.onIntakeSelection]);
 
-    // medicine type:
-    const handleMedicineTypeClick = () => {
-        setShowMedicineType(!showMedicineType)
-    }
-
-    const handleMedicineTypeChange = () => {
-        console.log("medicine type değişti");
-    }
-
-    return (
+    return ( filterOptions != null &&
         <div className='filterPrescHolder'>
             <div className='genComp'>
                 <a onClick={handleDrugClassClick}>
@@ -76,22 +137,12 @@ function PrescriptionFilter() {
                 <hr></hr>
                 {showClassesOptions && (
                     <div className='radio-buttons'>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="feverReducer" onChange={handleDrugClassChange} name="class" />
-                            <label className='buttonLabel'>Fever Reducer</label>
-                        </div>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="painkiller" onChange={handleDrugClassChange} name="class" />
-                            <label className='buttonLabel'>Painkiller</label>
-                        </div>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="therapeutic" onChange={handleDrugClassChange} name="class" />
-                            <label className='buttonLabel'>Therapeutic</label>
-                        </div>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="hormonal" onChange={handleDrugClassChange} name="class" />
-                            <label className='buttonLabel'>Hormonal</label>
-                        </div>
+                        {filterOptions.medicine_class.map((item, index) =>
+                            <div className='buttonElements' key={index}>
+                                <input type="checkbox" value={item} onChange={handleDrugClassChange} name="class" />
+                                <label className='buttonLabel'>{item}</label>
+                            </div>
+                        )}
                     </div>
 
                 )}
@@ -107,14 +158,11 @@ function PrescriptionFilter() {
                 <hr></hr>
                 {showUndesiredSideEffects && (
                     <div className='radio-buttons'>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="fever" onChange={handleUndSideEffChange} name="class" />
-                            <label className='buttonLabel'>Fever</label>
-                        </div>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="fatigue" onChange={handleUndSideEffChange} name="class" />
-                            <label className='buttonLabel'>Fatigue</label>
-                        </div>
+                        {filterOptions.side_effects.map((item, index) =>
+                            <div className='buttonElements' key={index}>
+                                <input type="checkbox" value={item.effect_name} onChange={handleUndSideEffChange} name="class" />
+                                <label className='buttonLabel'>{item.effect_name}</label>
+                            </div>)}
                     </div>
                 )}
             </div>
@@ -129,14 +177,11 @@ function PrescriptionFilter() {
                 <hr></hr>
                 {showPrescType && (
                     <div className='radio-buttons'>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="red" onChange={handlePrescTypeChange} name="class" />
-                            <label className='buttonLabel'>Fever</label>
-                        </div>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="normal" onChange={handlePrescTypeChange} name="class" />
-                            <label className='buttonLabel'>Fatigue</label>
-                        </div>
+                        {filterOptions.presc_types.map((item, index) =>
+                            <div className='buttonElements'>
+                                <input type="checkbox" value={item} onChange={handlePrescTypeChange} name="class" />
+                                <label className='buttonLabel'>{item}</label>
+                            </div>)}
                     </div>
                 )}
             </div>
@@ -151,10 +196,11 @@ function PrescriptionFilter() {
                 <hr></hr>
                 {showAgeGroup && (
                     <div className='radio-buttons'>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="neonates" onChange={handleAgeGroupChange} name="class" />
-                            <label className='buttonLabel'>Neonates</label>
-                        </div>
+                        {filterOptions.age_groups.map((item, index) =>
+                            <div className='buttonElements'>
+                                <input type="checkbox" value={item.group_name} onChange={handleAgeGroupChange} name="class" />
+                                <label className='buttonLabel'>{item.group_name}</label>
+                            </div>)}
                     </div>
                 )}
             </div>
@@ -169,41 +215,15 @@ function PrescriptionFilter() {
                 <hr></hr>
                 {showIntake && (
                     <div className='radio-buttons'>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="oral" onChange={handleIntakeChange} name="class" />
-                            <label className='buttonLabel'>Oral</label>
-                        </div>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="injection" onChange={handleIntakeChange} name="class" />
-                            <label className='buttonLabel'>Injection</label>
-                        </div>
-                    </div>
-                )}
-            </div>
-            <div className='genComp'>
-                <a onClick={handleMedicineTypeClick}>
-                    <div className='filterComponent'>
-                        <label className='filterLabel'>Medicine Type</label>
-                        {showMedicineType && <img src={upArr} className='arrowSize'></img>}
-                        {!showMedicineType && <img src={downArr} className='arrowSize'></img>}
-                    </div>
-                </a>
-                <hr></hr>
-                {showMedicineType && (
-                    <div className='radio-buttons'>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="tablet" onChange={handleMedicineTypeChange} name="class" />
-                            <label className='buttonLabel'>Tablet</label>
-                        </div>
-                        <div className='buttonElements'>
-                            <input type="checkbox" value="syrup" onChange={handleIntakeChange} name="class" />
-                            <label className='buttonLabel'>Syrup</label>
-                        </div>
+                        {filterOptions.intake_types.map((item, index) =>
+                            <div className='buttonElements'>
+                                <input type="checkbox" value={item} onChange={handleIntakeChange} name="class" />
+                                <label className='buttonLabel'>{item}</label>
+                            </div>)}
                     </div>
                 )}
             </div>
         </div>
     );
 }
-
 export default PrescriptionFilter;

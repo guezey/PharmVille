@@ -65,14 +65,40 @@ class OrdersView(MethodView):
             for med in data['medicines']:
                 cursor.execute(
                     """
-                    SELECT NOW() < (SELECT due_date FROM Prescription WHERE presc_id = %s) AS is_valid
+                    SELECT NOW() > (SELECT due_date FROM Prescription WHERE presc_id = %s) AS is_expired
                     """,
                     (med['prescription_id'],)
                 )
-                is_presc_valid = cursor.fetchone()['is_valid']
+                is_presc_expired = cursor.fetchone()['is_expired']
 
-                if not is_presc_valid:
-                    return jsonify({"message": f"Prescription {med['prescription_id']} is not valid"}), 400
+                if is_presc_expired:
+                    cursor.execute(
+                        """
+                        UPDATE Prescription SET status = 'OVERDUE' WHERE presc_id = %s
+                        """,
+                        (med['prescription_id'],)
+                    )
+                    db.connection.commit()
+                    return jsonify({"message": f"Prescription {med['prescription_id']} is expired"}), 400
+
+                cursor.execute(
+                    """
+                    SELECT status FROM Prescription WHERE presc_id = %s
+                    """,
+                    (med['prescription_id'],)
+                )
+                presc_status = cursor.fetchone()['status']
+
+                if presc_status == 'USED':
+                    return jsonify({"message": f"Prescription {med['prescription_id']} is already used"}), 400
+
+                cursor.execute(
+                    """
+                    SELECT prod_id FROM Product WHERE name=%s
+                    """,
+                    (med['name'],)
+                )
+                med_id = cursor.fetchone()['prod_id']
 
                 cursor.execute(
                     """
@@ -90,7 +116,7 @@ class OrdersView(MethodView):
                 )
                 count = cursor.fetchone()['stock']
                 if count < med['count']:
-                    return jsonify({"message": f"Product {med['prod_id']} is not available"}), 400
+                    return jsonify({"message": f"Product {med_id} is not available at {data['pharmacy_name']}"}), 400
 
             cursor.execute(
                 """
@@ -123,13 +149,37 @@ class OrdersView(MethodView):
                     (order_id, med_id, med['prescription_id'], med['price'], med['count'])
                 )
 
+                cursor.execute(
+                    """
+                    UPDATE Prescription SET status = 'USED' WHERE presc_id = %s
+                    """,
+                    (med['prescription_id'],)
+                )
+
+            cursor.execute(
+                """
+                SELECT SUM(unit_price * count) AS total_price FROM product_order WHERE order_id = %s
+                """,
+                (order_id,)
+            )
+
+            total_price = cursor.fetchone()['total_price']
+
+            cursor.execute(
+                """
+                INSERT INTO Payment (order_id, payment_time, payment_amount, card_number, card_holder, card_cvv, expiry_date)
+                VALUES (%s, NOW(), %s, %s, %s, %s, %s)
+                """,
+                (order_id, total_price, data['card_number'], data['card_holder'], data['cvv'], data['exp'])
+            )
+
         except Error as e:
             print(e)
             db.connection.rollback()
-            return jsonify({"message": "Order could not be created"}), 400
+            return jsonify({"message": "Order could not be created. No payment done."}), 500
 
         db.connection.commit()
-        return jsonify({"message": "Order created"}), 201
+        return jsonify({"message": "Order created, Payment done."}), 201
 
 
 bp.add_url_rule('', view_func=OrdersView.as_view('orders'), methods=['GET', 'POST'])
