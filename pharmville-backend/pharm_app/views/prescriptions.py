@@ -1,6 +1,6 @@
 from MySQLdb.cursors import DictCursor
 from MySQLdb import Error
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, jsonify, session
 from flask.views import MethodView
 from pharm_app.extensions import db
 
@@ -11,6 +11,20 @@ class PrescriptionsView(MethodView):
     def get(self):
         cursor = db.connection.cursor(DictCursor)
         patient = session['user_id']
+
+        try:
+            cursor.execute(
+                """
+                UPDATE Prescription
+                SET status = 'OVERDUE'
+                WHERE status = 'ACTIVE' AND due_date < CURDATE() AND patient_id = %s
+                """,
+                (patient,)
+            )
+        except Error as e:
+            return jsonify({'error': str(e)}), 500
+
+        db.connection.commit()
 
         cursor.execute(
             """
