@@ -122,5 +122,7 @@ def get_profile():
     FROM Pharmacy PJ 
         JOIN User U ON U.user_id 
         WHERE pharmacy_id = %s""", (pharmacy_id,))
-
-    return jsonify(cursor.fetchone()), 200
+    pharmacy = cursor.fetchone()
+    cursor.execute("""SELECT * FROM Address NATURAL  JOIN Orders WHERE pharmacy_id = %s""", (pharmacy_id,))
+    pharmacy['address'] = cursor.fetchone()
+    return jsonify(pharmacy), 200
