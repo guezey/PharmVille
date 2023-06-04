@@ -370,14 +370,9 @@ CREATE VIEW ordered_prescs AS
 (
 SELECT *
 FROM Prescription
-ORDER BY CASE
-             WHEN status = 'ACTIVE' THEN 1
-             ELSE 2
-             END,
+ORDER BY IF(status = 'ACTIVE', 1, 2),
          write_date DESC
     );
-
-
 -- TRIGGERS ------------------------------------------------------------------------------------
 /*
 CREATE TRIGGER update_prescription_status
@@ -397,31 +392,11 @@ BEGIN
 END IF;
 END;
 
-
-CREATE TRIGGER add_order_total_to_pharmacy_balance
-    AFTER UPDATE
-    ON Orders
-    FOR EACH ROW
-BEGIN
-    DECLARE pharmacy_balance double;
+*/
 
 
-   IF NEW.order_status = 'SHIPPED' AND OLD.order_status = 'ACTIVE' THEN
-    SELECT balance
-    INTO pharmacy_balance
-    FROM Pharmacy
-    WHERE pharmacy_id = NEW.pharmacy_id;
 
-
-    UPDATE Pharmacy
-    SET balance = pharmacy_balance + (SELECT SUM(price * count)
-                                      FROM product_order
-                                      WHERE order_id = NEW.order_id)
-    WHERE pharmacy_id = NEW.pharmacy_id;
-END IF;
-END;
-
-
+/*
 CREATE TRIGGER delete_medicine_join_tables
     AFTER DELETE
     ON Medicine

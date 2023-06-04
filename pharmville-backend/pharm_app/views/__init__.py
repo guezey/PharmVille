@@ -6,3 +6,4 @@ from .prescriptions import bp as prescriptions_bp
 from .review import bp as review_bp
 from .orders import bp as orders_bp
 from .products import bp as products_bp
+from .pharmacy import bp as pharmacy_bp

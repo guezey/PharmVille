@@ -7,7 +7,7 @@ from .conf import MysqlConfig
 
 import bcrypt
 from .views import (medicine_bp, protein_powder_bp, skincare_bp, prescribe_bp, prescriptions_bp, products_bp, review_bp,
-                    orders_bp)
+                    orders_bp, pharmacy_bp)
 
 def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(medicine_bp)
@@ -18,7 +18,7 @@ def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(review_bp)
     flask_app.register_blueprint(orders_bp)
     flask_app.register_blueprint(products_bp)
-
+    flask_app.register_blueprint(pharmacy_bp)
 
 
 
