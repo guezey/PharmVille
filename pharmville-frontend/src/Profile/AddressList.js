@@ -2,21 +2,39 @@ import React, { useState } from 'react';
 import AddressModal from './AddressModal';
 import "./Profile.css"
 
-const AddressList = ({ addresses, setPatientData }) => {
+const AddressList = ({ addresses = [], setAddressData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddAddress = (newAddress) => {
-    setPatientData((prevState) => ({
+    setAddressData((prevState) => ([
       ...prevState,
-      addresses: [...prevState.addresses, { ...newAddress, id: Date.now() }],
-    }));
+      { ...newAddress, id: Date.now() },
+    ]));
   };
 
-  const handleDeleteAddress = (id) => {
-    setPatientData((prevState) => ({
-      ...prevState,
-      addresses: prevState.addresses.filter((address) => address.id !== id),
-    }));
+  const handleDeleteAddress = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/address/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+  
+      if(response.status === 401) {
+        alert("There is an ongoing order to this address. You cannot delete it.");
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      setAddressData((prevState) => (
+        prevState.filter((address) => address.id !== id)
+      ));
+      window.location.reload();
+
+    } catch (error) {
+      console.error('Failed to delete address:', error);
+    }
   };
 
   return (
@@ -27,7 +45,7 @@ const AddressList = ({ addresses, setPatientData }) => {
         {addresses.map((address) => (
           <li key={address.id}>
             {address.name}: {address.address_field}, {address.address_field_2}, {address.city} {address.country} {address.postal_code}
-            <button onClick={() => handleDeleteAddress(address.id)}>Delete</button>
+            <button onClick={() => handleDeleteAddress(address.address_id)}>Delete</button>
           </li>
         ))}
       </ul>

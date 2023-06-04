@@ -8,7 +8,7 @@ from .conf import MysqlConfig
 from .views import (medicine_bp, protein_powder_bp, skincare_bp,
                     prescribe_bp, prescriptions_bp, review_bp,
                     orders_bp, patient_bp, address_bp, pharmacy_bp,
-                    products_bp
+                    products_bp, doctor_bp
                     )
 import bcrypt
 
@@ -25,6 +25,7 @@ def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(address_bp)
     flask_app.register_blueprint(products_bp)
     flask_app.register_blueprint(pharmacy_bp)
+    flask_app.register_blueprint(doctor_bp)
 
 
 def register_extensions(flask_app: Flask):
@@ -126,6 +127,13 @@ def signup():
                     "INSERT INTO Pharmacy (pharmacy_id, name, is_on_duty, diploma_path, balance, approval_status) VALUES (%s, %s, %s, %s, %s, %s)",
                     (user_id, data['name'], False, None, 0, 'PENDING')
                 )
+                pharmacy_id = cursor.lastrowid
+                cursor.execute(
+                    """INSERT INTO Address(user_id, name, city, country, address_field, address_field_2, postal_code) 
+                        VALUES  (%s,%s,%s,%s,%s,%s,%s)""",
+                    (user_id, data['name'], data['city'], data['country'], data['address_field'], data['address_field_2'],
+                    data['postal_code'])
+                )
             else:
                 db.connection.rollback()
                 return jsonify({"message": "Invalid role"}), 400
@@ -135,8 +143,9 @@ def signup():
         else:
             db.connection.rollback()
             return jsonify({"message": "An Email already exists"}), 400
-    except KeyError:
+    except KeyError as e:
         db.connection.rollback()
+        app.logger.error(str(e))
         return 'Invalid username or password', 400
 
 

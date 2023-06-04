@@ -9,4 +9,5 @@ from .patient import bp as patient_bp
 from .address import bp as address_bp
 from .products import bp as products_bp
 from .pharmacy import bp as pharmacy_bp
+from .doctor import bp as doctor_bp
 
