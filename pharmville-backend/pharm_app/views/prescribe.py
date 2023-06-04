@@ -1,6 +1,6 @@
 from MySQLdb.cursors import DictCursor
 from MySQLdb import Error
-from flask import Blueprint, request, jsonify, session
+from flask import Blueprint, request, jsonify, session, current_app
 from flask.views import MethodView
 from pharm_app.extensions import db
 
@@ -75,7 +75,7 @@ class PrescribeView(MethodView):
             INSERT INTO Prescription(patient_id, doctor_id, write_date, due_date, type, status)
             VALUES (%s, %s, NOW(), DATE_ADD(NOW(), INTERVAL 72 HOUR), %s, 'ACTIVE')
             """,
-            (patient_tck, session['user_id'], data['type'])
+            (patient["person_id"], doctor_id, data['type'].upper())
         )
         cursor.execute(
             """
@@ -87,18 +87,18 @@ class PrescribeView(MethodView):
             for medicine in data['medicines']:
                 cursor.execute(
                     """
-                    SELECT prod_id FROM Product NATURAL JOIN Medicine WHERE name = %s AND amount = %s                
+                    SELECT prod_id FROM Product WHERE name = %s           
                     """,
-                    (medicine['name'], medicine['dosage_amount'])
+                    (medicine['name'])
                 )
                 med_id = cursor.fetchone()['prod_id']
 
                 cursor.execute(
                     """
-                    INSERT INTO medicine_presc(presc_id, med_id, dosage, description)
-                    VALUES (%s, %s, %s, %s)
+                    INSERT INTO medicine_presc(presc_id, med_id, count, dosage, description)
+                    VALUES (%s, %s, %s, %s, %s)
                     """,
-                    (prescription_id, med_id, medicine['dosage_type'], medicine['medicine_desc'])
+                    (prescription_id, med_id, medicine['count'], medicine['dosage_type'], medicine['medicine_desc'])
                 )
 
             for disease in data['diseases']:
@@ -120,8 +120,9 @@ class PrescribeView(MethodView):
         except Error as e:
             print(e)
             db.connection.rollback()
-            return jsonify({"message": "Error occurred while adding prescription."}), 500
-
+            current_app.logger.error(str(e)) 
+            return jsonify({"message": str(e)}), 500
+            
         db.connection.commit()
         return jsonify({"message": "Prescription successfully added."}), 202
 

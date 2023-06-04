@@ -233,6 +233,7 @@ CREATE TABLE medicine_presc
     med_id      int NOT NULL,
     presc_id    int NOT NULL,
     dosage      varchar(255),
+    count       int,
     description text,
     PRIMARY KEY (med_id, presc_id),
     FOREIGN KEY (med_id) REFERENCES Medicine (prod_id),
@@ -941,14 +942,14 @@ VALUES (1, 1, NULL, 87.33, 2),
 
        (7, 4, NULL, 55.22, 2)
 ;
-INSERT INTO Payment(payment_id, order_id, payment_time, payment_amount, card_number)
-VALUES (1, 1, '2023-05-25 15:30:00', 87.33, '1234123412341234'),
-       (2, 1, '2023-05-25 15:30:00', 81.22, '1234123412341234'),
-       (3, 1, '2023-05-25 15:30:00', 200.22, '1234123412341234'),
-       (4, 1, '2023-05-25 15:30:00', 200.21, '1234123412341234'),
-       (5, 1, '2023-05-25 15:30:00', 222.33, '1234123412341234'),
-       (6, 6, '2023-05-23 15:25:00', 94.22, '1234123412341234'),
-       (7, 6, '2023-05-23 15:25:00', 90.31, '1234123412341234')
+-- INSERT INTO Payment(payment_id, order_id, payment_time, payment_amount, card_number)
+-- VALUES (1, 1, '2023-05-25 15:30:00', 87.33, '1234123412341234'),
+--        (2, 1, '2023-05-25 15:30:00', 81.22, '1234123412341234'),
+--        (3, 1, '2023-05-25 15:30:00', 200.22, '1234123412341234'),
+--        (4, 1, '2023-05-25 15:30:00', 200.21, '1234123412341234'),
+--        (5, 1, '2023-05-25 15:30:00', 222.33, '1234123412341234'),
+--        (6, 6, '2023-05-23 15:25:00', 94.22, '1234123412341234'),
+--        (7, 6, '2023-05-23 15:25:00', 90.31, '1234123412341234')
 ;
 
 INSERT INTO Review(review_id, rating, title, body, order_id)
@@ -1040,7 +1041,7 @@ VALUES (1, 1),
        (1, 2),
        (1, 3);
 
-INSERT INTO medicine_presc(presc_id, med_id, dosage, description)
-VALUES (1, 1, '1 pill', 'Take once a day'),
-       (1, 2, '2 pills', 'Take once a day'),
-       (1, 3, '3 pills', 'Take once a day');
+INSERT INTO medicine_presc(presc_id, med_id, dosage, count, description)
+VALUES (1, 1, '1 pill', 3, 'Take once a day'),
+       (1, 2, '2 pills', 3, 'Take once a day'),
+       (1, 3, '3 pills', 3, 'Take once a day');

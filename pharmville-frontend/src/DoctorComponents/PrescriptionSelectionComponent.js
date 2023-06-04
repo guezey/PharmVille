@@ -250,7 +250,7 @@ function PrescriptionSelectionComponent(props) {
     }
 
     // for dosage amount:
-    const [dosageAmount, setDosageAmount] = useState(1);
+    const [dosageAmount, setDosageAmount] = useState("");
 
     const handleDosageAmount = (event) => {
         setDosageAmount(event.target.value);
@@ -271,7 +271,7 @@ function PrescriptionSelectionComponent(props) {
     }
 
     // state for drug quantity:
-    const [medicineQty, setMedicineQty] = useState(1);
+    const [medicineQty, setMedicineQty] = useState("");
 
     const handleMedicineQty = (event) => {
         setMedicineQty(event.target.value);
@@ -327,14 +327,14 @@ function PrescriptionSelectionComponent(props) {
             // if full:
             setShowAddMedicine(false);
             setGoToDosage(false);
-            setMedicineArr([...medicineArr, { name: selectedMedicine, dosage_amount: dosageAmount, dosage_type: dosageType, medicine_desc: medicineDesc, medicine_qty: medicineQty }]);
+            setMedicineArr([...medicineArr, { name: selectedMedicine, dosage_amount: dosageAmount, dosage_type: dosageType, medicine_desc: medicineDesc, count: medicineQty }]);
         }
     }
 
     const addMedicineToPrescAfterWarning = () => {
         setShowAddMedicine(false);
         setGoToDosage(false);
-        setMedicineArr([...medicineArr, { name: selectedMedicine, dosage_amount: dosageAmount, dosage_type: dosageType, medicine_desc: medicineDesc, medicine_qty: medicineQty }]);
+        setMedicineArr([...medicineArr, { name: selectedMedicine, dosage_amount: dosageAmount, dosage_type: dosageType, medicine_desc: medicineDesc, count: medicineQty }]);
         setShowSuitableDosageWarning(false);
         setIsDosageEnteredWarning(false);
     }
@@ -364,57 +364,72 @@ function PrescriptionSelectionComponent(props) {
     }
 
     useEffect(() => {
-        const submitPrescriptionHandler = () => {
-            console.log("submitting prescription");
-            console.log(selectedCauses);
-            // check if presc cause is empty:
-            if (selectedCauses.length <= 0)
-                setCauseEmptyWarning(true);
-            else if (medicineArr.length <= 0) {
-                setSubmitWarning(true);
-                setsubmitMsg("Please add at least one medicine to the prescription");
-            }
-            else if (prescType === "" || prescType === "None") {
-                setSubmitWarning(true);
-                setsubmitMsg("Please select a prescription type");
-            }
-            else {
-                setCauseEmptyWarning(false);
-                setShowAddMedicine(false)
-                setShowSelectMed(false)
-                setShowSuitableDosageWarning(false)
-                setShowSuitableMedWarning(false);
-                setGoToDosage(false)
-                setIsDosageEnteredWarning(false)
-                // submit aşko:
-                fetch('http://localhost:5000/prescribe/' + props.TCK, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
+        if (isSubmitPressed) {
+            const submitPrescriptionHandler = () => {
+                console.log("submitting prescription");
+                console.log(selectedCauses);
+                // check if presc cause is empty:
+                if (selectedCauses.length <= 0)
+                    setCauseEmptyWarning(true);
+                else if (medicineArr.length <= 0) {
+                    setSubmitWarning(true);
+                    setsubmitMsg("Please add at least one medicine to the prescription");
+                }
+                else if (prescType === "" || prescType === "None") {
+                    setSubmitWarning(true);
+                    setsubmitMsg("Please select a prescription type");
+                }
+                else {
+                    setCauseEmptyWarning(false);
+                    setShowAddMedicine(false)
+                    setShowSelectMed(false)
+                    setShowSuitableDosageWarning(false)
+                    setShowSuitableMedWarning(false);
+                    setGoToDosage(false)
+                    setIsDosageEnteredWarning(false)
+                    // submit aşko:
+                    const requestBody = {
+                        type: prescType,
+                        medicines: medicineArr,
+                        diseases: selectedCauses,
+                      };
+                      
+                      console.log('Request Body:', JSON.stringify(requestBody));
+                    console.log("submitting prescription");
+                    fetch('http://localhost:5000/prescribe/' + props.TCK, {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
                             type: prescType,
                             medicines: medicineArr,
                             diseases: selectedCauses,
-                            })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        setIsSubmitted(true);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-                    setTimeout(() => {
-                    // Reset the success message state
-                    setIsSubmitted(false);
-                    // Navigate to the desired page
+                        }
+                        )
 
-                    window.location.reload();
-                }, 800); // Wait for 2 seconds (adjust as needed)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            setIsSubmitted(true);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        })
+                    
+                    setTimeout(() => {
+                        // Reset the success message state
+                        setIsSubmitted(false);
+                        // Navigate to the desired page
+
+                        //window.location.reload();
+                        //
+                    }, 800); // Wait for 2 seconds (adjust as needed)
+                }
             }
+            submitPrescriptionHandler();
         }
-        submitPrescriptionHandler();
     }, [isSubmitPressed]);
 
     const submitPrescription = () => {
@@ -454,9 +469,9 @@ function PrescriptionSelectionComponent(props) {
                                 <div className="verticalLine"></div>
                                 <p className="medicineContentPar">{medicine.dosage_amount + " " + medicine.dosage_type}</p>
                                 <div className="verticalLine"></div>
-                                <p className="medicineContentPar">{medicine.medicineQty}</p>
+                                <p className="medicineContentPar">{medicine.count}</p>
                                 <div className="verticalLine"></div>
-                                <p className="medicineContentPar">{medicine.medicineDesc}</p>
+                                <p className="medicineContentPar">{medicine.medicine_desc}</p>
                                 <button className="deleteMedicineBtn" onClick={() => handleDelete(index)}>Delete</button>
                             </div>
                         ))}
@@ -552,6 +567,7 @@ function PrescriptionSelectionComponent(props) {
                     <div className="selectionHolder">
                         <h1 className="prescTitle2">Drug Name: {selectedMedicine}</h1>
                         <div className="dosageHolder">
+                        <label>Per Take:</label>
                             <div className="dosageDropdownHolder">
                                 <div className="dosageInput">
                                     <label>Dosage Amount:</label>
@@ -567,8 +583,9 @@ function PrescriptionSelectionComponent(props) {
                                 <div className="dosageInput2">
                                     <label>Dosage Unit:</label>
                                     <select value={dosageType} onChange={handleDosageType}>
+                                        <option value="">unit</option>
                                         {filterOptions.units.map((unit, index) => (
-                                            <option key={index} value={unit}>{unit}</option>
+                                            <option value={unit}>{unit}</option>
                                         ))}
                                     </select>
                                 </div>
@@ -576,7 +593,7 @@ function PrescriptionSelectionComponent(props) {
 
                             </div>
                             <div className="dosageInput">
-                                <label>Drug Quantity:</label>
+                                <label>Box Count:</label>
                                 <input
                                     type="number"
                                     value={medicineQty}
