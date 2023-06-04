@@ -15,7 +15,7 @@ const PharmacyProfile = () => {
 
   useEffect(() => {
     // Replace the URL with your Flask backend endpoint for pharmacy profile
-    fetch('http://localhost:5000/pharmacy_profile', {credentials: 'include'})
+    fetch('http://localhost:5000/pharmacy/profile', {credentials: 'include'})
       .then(response => response.json())
       .then(data => {
         setPharmacyData(data);

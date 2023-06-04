@@ -129,10 +129,10 @@ def signup():
                 )
                 pharmacy_id = cursor.lastrowid
                 cursor.execute(
-                    """INSERT INTO Address(address_id, city, country, address_field, address_field_2, postal_code) 
+                    """INSERT INTO Address(user_id, name, city, country, address_field, address_field_2, postal_code) 
                         VALUES  (%s,%s,%s,%s,%s,%s,%s)""",
-                    (pharmacy_id, data['city'], data['country'], data['address'], data['address2'],
-                     data['postalCode'])
+                    (user_id, data['name'], data['city'], data['country'], data['address_field'], data['address_field_2'],
+                    data['postal_code'])
                 )
             else:
                 db.connection.rollback()
@@ -143,8 +143,9 @@ def signup():
         else:
             db.connection.rollback()
             return jsonify({"message": "An Email already exists"}), 400
-    except KeyError:
+    except KeyError as e:
         db.connection.rollback()
+        app.logger.error(str(e))
         return 'Invalid username or password', 400
 
 

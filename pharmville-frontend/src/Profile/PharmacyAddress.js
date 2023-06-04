@@ -5,7 +5,7 @@ const PharmacyAddress = ({ address }) => {
     <div>
       <h2>Address</h2>
       <p style={{color:"black"}}>
-        {address.street}, {address.city}, {address.state} {address.zip}
+        {address.city}, {address.country}, {address.address_field} {address.address_field_2}, {address.postal_code}
       </p>
     </div>
   );
