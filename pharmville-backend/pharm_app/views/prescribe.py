@@ -83,11 +83,10 @@ class PrescribeView(MethodView):
         cursor.execute(
             """
             INSERT INTO Prescription(patient_id, doctor_id, write_date, due_date, type, status)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, NOW(), DATE_ADD(NOW(), INTERVAL 72 HOUR), %s, 'ACTIVE')
             """,
             (
-                prescription['patient_id'], prescription['doctor_id'], prescription['write_date'],
-                prescription['due_date'],
+                prescription['patient_id'], prescription['doctor_id'],
                 prescription['type'], prescription['status'])
         )
         # FIXME: (optional) critical section
