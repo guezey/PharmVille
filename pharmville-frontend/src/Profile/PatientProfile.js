@@ -56,7 +56,7 @@ const PatientProfile = () => {
       <Row>
         <Col>
           <div className="bg-light p-4 mb-4 text-dark text-left">
-            <AddressList addresses={addressData} />
+          <AddressList addresses={addressData} setAddressData={setAddressData} />
           </div>
         </Col>
       </Row>
