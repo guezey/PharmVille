@@ -277,6 +277,13 @@ function PrescriptionSelectionComponent(props) {
         setMedicineQty(event.target.value);
     }
 
+
+    // state for presc type:
+    const [prescType, setPrescType] = useState('');
+    const handlePrescTypeSelection = (event) => {
+        setPrescType(event.target.value);
+    }
+
     // go back to medicine selection page!
     const goBackMedicineSelection = () => {
         setShowAddMedicine(true);
@@ -350,39 +357,58 @@ function PrescriptionSelectionComponent(props) {
     const [submitWarning, setSubmitWarning] = useState(false);
     const [submitMsg, setsubmitMsg] = useState("");
 
+    const [isSubmitPressed, setIsSubmitPressed] = useState(false);
+
     const handleSubmitClose = () => {
         setSubmitWarning(false);
     }
 
-    const submitPrescriptionHandler = () => {
-        // check if presc cause is empty:
-        if (selectedCauses.length <= 0)
-            setCauseEmptyWarning(true);
-        else if (medicineArr.length <= 0)
-        {
-            setSubmitWarning(true);
-            setsubmitMsg("Please add at least one medicine to the prescription");
-        }
-        else {
-            setCauseEmptyWarning(false);
-            setShowAddMedicine(false)
-            setShowSelectMed(false)
-            setShowSuitableDosageWarning(false)
-            setShowSuitableMedWarning(false);
-            setGoToDosage(false)
-            setIsDosageEnteredWarning(false)
-            // submit aşko:
-            //TODO!!
-            setIsSubmitted(true);
-            setTimeout(() => {
-                // Reset the success message state
-                setIsSubmitted(false);
-                // Navigate to the desired page
+    useEffect(() => {
+        const submitPrescriptionHandler = () => {
+            // check if presc cause is empty:
+            if (selectedCauses.length <= 0)
+                setCauseEmptyWarning(true);
+            else if (medicineArr.length <= 0) {
+                setSubmitWarning(true);
+                setsubmitMsg("Please add at least one medicine to the prescription");
+            }
+            else if (prescType === "" || prescType === "None") {
+                setSubmitWarning(true);
+                setsubmitMsg("Please select a prescription type");
+            }
+            else {
+                setIsSubmitPressed(true);
+                setCauseEmptyWarning(false);
+                setShowAddMedicine(false)
+                setShowSelectMed(false)
+                setShowSuitableDosageWarning(false)
+                setShowSuitableMedWarning(false);
+                setGoToDosage(false)
+                setIsDosageEnteredWarning(false)
+                // submit aşko:
+                fetch('http://localhost:5000/medicine/filter_options')
 
-                window.location.reload();
-            }, 800); // Wait for 2 seconds (adjust as needed)
+                    .then(response => response.json())
+                    .then(data => {
+                        setFilterOptions(data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+                setIsSubmitted(true);
+                setTimeout(() => {
+                    // Reset the success message state
+                    setIsSubmitted(false);
+                    // Navigate to the desired page
+
+                    window.location.reload();
+                }, 800); // Wait for 2 seconds (adjust as needed)
+            }
         }
-    }
+        submitPrescriptionHandler();
+    }, [isSubmitPressed]);
+
+
 
     const handleCauseWarningClose = () => {
         setCauseEmptyWarning(false)
@@ -422,7 +448,6 @@ function PrescriptionSelectionComponent(props) {
                             </div>
                         ))}
                     </div>
-
                     <div className="prescThirdCol">
                         <h1 className="prescTitle">Select Causes for Prescription</h1>
                         <Select
@@ -431,7 +456,14 @@ function PrescriptionSelectionComponent(props) {
                             options={options}
                             isMulti={true}
                         />
+                        <h1 className="prescTitle">Select Prescription Type</h1>
+                        <select className="prescCauseSelect" onChange={handlePrescTypeSelection}>
+                            {filterOptions && filterOptions.presc_types.map((presc_type, index) => (
+                                <option value={presc_type} key={index}>{presc_type}</option>
+                            ))}
+                        </select>
                     </div>
+
 
                     <button className="submitPrescBtn" onClick={submitPrescriptionHandler}>Submit Prescription</button>
                     <Modal show={showCauseEmptyWarning} onHide={handleCauseWarningClose}>
