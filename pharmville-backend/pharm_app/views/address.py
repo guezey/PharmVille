@@ -79,8 +79,6 @@ class AddressDetailView(MethodView):
                 address_id, user_id))
             if cursor.fetchone():
                 raise ValueError("Address is used in an order")
-            if cursor.fetchone():
-                raise ValueError("Address is used in an order")
 
             cursor.execute("""DELETE FROM Address WHERE address_id = %s AND user_id = %s""",
                             (address_id, user_id))
