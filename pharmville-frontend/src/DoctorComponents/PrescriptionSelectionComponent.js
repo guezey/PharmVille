@@ -327,14 +327,14 @@ function PrescriptionSelectionComponent(props) {
             // if full:
             setShowAddMedicine(false);
             setGoToDosage(false);
-            setMedicineArr([...medicineArr, { name: selectedMedicine, dosageAmount: dosageAmount, dosageType: dosageType, medicineDesc: medicineDesc, medicineQty: medicineQty }]);
+            setMedicineArr([...medicineArr, { name: selectedMedicine, dosage_amount: dosageAmount, dosage_type: dosageType, medicine_desc: medicineDesc, medicine_qty: medicineQty }]);
         }
     }
 
     const addMedicineToPrescAfterWarning = () => {
         setShowAddMedicine(false);
         setGoToDosage(false);
-        setMedicineArr([...medicineArr, { name: selectedMedicine, dosageAmount: dosageAmount, dosageType: dosageType, medicineDesc: medicineDesc, medicineQty: medicineQty }]);
+        setMedicineArr([...medicineArr, { name: selectedMedicine, dosage_amount: dosageAmount, dosage_type: dosageType, medicine_desc: medicineDesc, medicine_qty: medicineQty }]);
         setShowSuitableDosageWarning(false);
         setIsDosageEnteredWarning(false);
     }
@@ -365,6 +365,8 @@ function PrescriptionSelectionComponent(props) {
 
     useEffect(() => {
         const submitPrescriptionHandler = () => {
+            console.log("submitting prescription");
+            console.log(selectedCauses);
             // check if presc cause is empty:
             if (selectedCauses.length <= 0)
                 setCauseEmptyWarning(true);
@@ -377,7 +379,6 @@ function PrescriptionSelectionComponent(props) {
                 setsubmitMsg("Please select a prescription type");
             }
             else {
-                setIsSubmitPressed(true);
                 setCauseEmptyWarning(false);
                 setShowAddMedicine(false)
                 setShowSelectMed(false)
@@ -386,17 +387,25 @@ function PrescriptionSelectionComponent(props) {
                 setGoToDosage(false)
                 setIsDosageEnteredWarning(false)
                 // submit aşko:
-                fetch('http://localhost:5000/medicine/filter_options')
-
+                fetch('http://localhost:5000/prescribe/' + props.TCK, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            type: prescType,
+                            medicines: medicineArr,
+                            diseases: selectedCauses,
+                            })
+                    })
                     .then(response => response.json())
                     .then(data => {
-                        setFilterOptions(data);
+                        setIsSubmitted(true);
                     })
                     .catch(error => {
                         console.log(error);
                     })
-                setIsSubmitted(true);
-                setTimeout(() => {
+                    setTimeout(() => {
                     // Reset the success message state
                     setIsSubmitted(false);
                     // Navigate to the desired page
@@ -407,6 +416,10 @@ function PrescriptionSelectionComponent(props) {
         }
         submitPrescriptionHandler();
     }, [isSubmitPressed]);
+
+    const submitPrescription = () => {
+        setIsSubmitPressed(true);
+    }
 
 
 
@@ -439,7 +452,7 @@ function PrescriptionSelectionComponent(props) {
                             <div key={index} className="medicineInPresc">
                                 <p className="medicineContentPar">{medicine.name}</p>
                                 <div className="verticalLine"></div>
-                                <p className="medicineContentPar">{medicine.dosageAmount + " " + medicine.dosageType}</p>
+                                <p className="medicineContentPar">{medicine.dosage_amount + " " + medicine.dosage_type}</p>
                                 <div className="verticalLine"></div>
                                 <p className="medicineContentPar">{medicine.medicineQty}</p>
                                 <div className="verticalLine"></div>
@@ -465,7 +478,7 @@ function PrescriptionSelectionComponent(props) {
                     </div>
 
 
-                    <button className="submitPrescBtn" onClick={submitPrescriptionHandler}>Submit Prescription</button>
+                    <button className="submitPrescBtn" onClick={submitPrescription}>Submit Prescription</button>
                     <Modal show={showCauseEmptyWarning} onHide={handleCauseWarningClose}>
                         <Modal.Body>Please select prescription cause!</Modal.Body>
                         <Modal.Footer>
