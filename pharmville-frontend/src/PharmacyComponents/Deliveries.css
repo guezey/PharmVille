@@ -17,11 +17,11 @@
 }
 
 .deliveriesHolder2 {
-    width: 450px;
+    width: 500px;
     max-height: 250px;
     margin: auto;
     overflow: auto;
-    margin-left: 180px;
+    margin-left: 160px;
     border-radius: 6px;
     background-color: #91AF9D;
 }

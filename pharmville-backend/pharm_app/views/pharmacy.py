@@ -9,14 +9,14 @@ bp = Blueprint('pharmacy', __name__, url_prefix='/pharmacy')
 @bp.route('/orders', methods=['GET'])
 def get_orders ():
     cursor = db.connection.cursor(DictCursor)
-    pharmacy = session['user_id']
+    pharmacy = 6
 
     try:
         # Fetch all active orders for the pharmacy
         cursor.execute(
             """
-            SELECT order_id, order_time, payment_amount AS total FROM Orders
-            NATURAL JOIN Payment
+            SELECT order_id, order_time, address_field, address_field_2, city, country, postal_code, order_status FROM Orders
+            JOIN Address ON Orders.address_id = Address.address_id
             WHERE pharmacy_id = %s AND order_status = 'ACTIVE'
             """,
             (pharmacy,)
@@ -41,7 +41,8 @@ def get_orders ():
         # Fetch all shipped and delivered orders for the pharmacy
         cursor.execute(
             """
-            SELECT order_id, order_time, order_status FROM Orders
+            SELECT order_id, order_time, address_field, address_field_2, city, country, postal_code, order_status FROM Orders
+            JOIN Address ON Orders.address_id = Address.address_id
             WHERE pharmacy_id = %s AND (order_status = 'SHIPPED' OR order_status = 'DELIVERED')
             ORDER BY IF(order_status = 'SHIPPED', 1, 2), order_time DESC
             """,
@@ -66,8 +67,8 @@ def get_orders ():
     except Error as e:
         return jsonify({'error': str(e)}), 500
 
-    return jsonify({"active-orders": active_orders,
-                    "shipped-and-delivered-orders": shipped_and_delivered_orders}), 200
+    return jsonify({"active_orders": active_orders,
+                    "shipped_and_delivered_orders": shipped_and_delivered_orders}), 200
 
 @bp.route('/orders', methods=['PUT'])
 def update_order_status():
