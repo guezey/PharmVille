@@ -4,7 +4,7 @@ from flask import Blueprint, request, jsonify, session, current_app
 from flask.views import MethodView
 from pharm_app.extensions import db
 
-bp = Blueprint('patient', __name__, url_prefix='/doctor')
+bp = Blueprint('doctor', __name__, url_prefix='/doctor')
 
 
 class DoctorVie(MethodView):
