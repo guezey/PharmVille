@@ -38,7 +38,7 @@ const CustomMenu = React.forwardRef(
     },
 );
 
-function PrescriptionSelectionComponent() {
+function PrescriptionSelectionComponent(props) {
     // check if state addMedicineSelected
     const [showAddMedicine, setShowAddMedicine] = useState(false);
 
@@ -51,7 +51,7 @@ function PrescriptionSelectionComponent() {
 
     // delete clicked item
     const handleDelete = (id) => {
-        const updatedItems = medicineArr.filter((_, i) => i !== id - 1);
+        const updatedItems = medicineArr.filter((_, i) => i !== id);
         setMedicineArr(updatedItems);
     };
 
@@ -162,7 +162,7 @@ function PrescriptionSelectionComponent() {
                 presc_types: selectedPrescriptionType,
                 age_groups: selectedAge,
                 intake_types: selectedIntake,
-            }) // Empty body
+            })
         })
             .then(response => response.json())
             .then(data => {
@@ -177,42 +177,21 @@ function PrescriptionSelectionComponent() {
             })
     }, [selectedDrugClass, selectedPrescriptionType, selectedUndesiredEffects, selectedAge, selectedIntake]);
 
-
+    // state for fetching dosage types:
+    const [filterOptions, setFilterOptions] = useState(null);
+    // fetch drug classes:
     useEffect(() => {
-        const fetchDisease = async () => {
-            setLoading(true);
-            try {
-                const res = await axios.get("http://localhost:5000/prescribe");
-                const newData = res.data;
+        console.log("fetching filter options")
+        fetch('http://localhost:5000/medicine/filter_options')
 
-                let uniqueOptions = [];
-                console.log(options.length);
-                if (options.length == 0) {
-                    for (let i = 0; i < newData.length; i++) {
-                        let bool = true;
-                        for (let j = 0; j < options.length; j++) {
-                            if (newData[i].name == options[j].value) {
-                                bool = false;
-                                break
-                            }
-                        }
-                        if (bool) {
-                            uniqueOptions.push({ value: newData[i].name, label: newData[i].name });
-                        }
-                    }
-                }
-
-                setOptions((prevOptions) => [...uniqueOptions]);
-            } catch (error) {
-                // Handle error
-                console.error(error);
-            }
-            setLoading(false);
-        };
-
-        fetchDisease();
+            .then(response => response.json())
+            .then(data => {
+                setFilterOptions(data);
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }, []);
-
 
 
     console.log(options);
@@ -221,7 +200,7 @@ function PrescriptionSelectionComponent() {
 
     // FETCH MEDICINE:
     const [listOfMedicineArr, setListOfMedicineArr] = useState([]);
-    
+
     // selected medicine (from dropdown):
     const [selectedMedicine, setSelectedMedicine] = useState("");
     const onDropdownMedicineSelect = (eventKey, event) => {
@@ -229,6 +208,8 @@ function PrescriptionSelectionComponent() {
     }
 
     // for test purposes:
+    const [isSuitable, setIsSuitable] = useState(false);
+    // fetch if medicine is suitable:
     useEffect(() => {
         console.log(selectedMedicine);
     }, [selectedMedicine]);
@@ -240,7 +221,6 @@ function PrescriptionSelectionComponent() {
     const [goToDosage, setGoToDosage] = useState(false);
 
     const goToDosageHandler = () => {
-        let isSuitable = false;
         // check if medicine is selected:
         if (selectedMedicine === "")
             setShowSelectMed(true);
@@ -287,6 +267,13 @@ function PrescriptionSelectionComponent() {
         setMedicineDesc(event.target.value);
     }
 
+    // state for drug quantity:
+    const [medicineQty, setMedicineQty] = useState(1);
+
+    const handleMedicineQty = (event) => {
+        setMedicineQty(event.target.value);
+    }
+
     // go back to medicine selection page!
     const goBackMedicineSelection = () => {
         setShowAddMedicine(true);
@@ -295,6 +282,14 @@ function PrescriptionSelectionComponent() {
         setShowSuitableMedWarning(false);
     }
 
+    // for test purposes:
+    const [isDosageSuitable, setIsDosageSuitable] = useState(false);
+    // fetch if dosage is suitable:
+    useEffect(() => {
+        console.log(selectedMedicine);
+        //setIsDosageSuitable(true);
+    }, [medicineDesc]);
+
     // warnings for dosage amount page:
     const [showIsDosageEnteredWarning, setIsDosageEnteredWarning] = useState(false);
     const [showSuitableDosageWarning, setShowSuitableDosageWarning] = useState(false);
@@ -302,7 +297,6 @@ function PrescriptionSelectionComponent() {
     // add medicine to the precription handler:
     const addMedicineToPrescHandler = () => {
         // pseudo var to check if suitable:
-        let isDosageSuitable = false;
         // check if fields are full:
         if (dosageAmount === "" || dosageType === "")
             setIsDosageEnteredWarning(true);
@@ -320,7 +314,7 @@ function PrescriptionSelectionComponent() {
     const addMedicineToPrescAfterWarning = () => {
         setShowAddMedicine(false);
         setGoToDosage(false);
-        setMedicineArr([...medicineArr, 31]);
+        setMedicineArr([...medicineArr, { name: selectedMedicine, dosageAmount: dosageAmount, dosageType: dosageType, medicineDesc: medicineDesc, medicineQty: medicineQty }]);
         setShowSuitableDosageWarning(false);
         setIsDosageEnteredWarning(false);
     }
@@ -387,21 +381,21 @@ function PrescriptionSelectionComponent() {
             <div className="divPrescArranger">
                 <div className="selectionHolder">
                     <div className="prescFirstCol">
-                        <h1 className="prescTitle">Prescription for 33550505334</h1>
+                        <h1 className="prescTitle">Prescription for {props.TCK}</h1>
                         <button className="addMedicineBtn" onClick={addMedicineHandler}>Add Medicine</button>
                     </div>
 
                     <div className="prescSecondCol">
-                        {medicineArr.map(medicine => (
-                            <div key={medicine.id} className="medicineInPresc">
-                                <p className="medicineContentPar">Nexium</p>
+                        {medicineArr.map((medicine, index) => (
+                            <div key={index} className="medicineInPresc">
+                                <p className="medicineContentPar">{medicine.name}</p>
                                 <div className="verticalLine"></div>
-                                <p className="medicineContentPar">3 mg</p>
+                                <p className="medicineContentPar">{medicine.dosageAmount + " " + medicine.dosageType}</p>
                                 <div className="verticalLine"></div>
-                                <p className="medicineContentPar">Amount: 2</p>
+                                <p className="medicineContentPar">{medicine.medicineQty}</p>
                                 <div className="verticalLine"></div>
-                                <p className="medicineContentPar">Take 2 times a day</p>
-                                <button className="deleteMedicineBtn" onClick={() => handleDelete(medicine.id)}>Delete</button>
+                                <p className="medicineContentPar">{medicine.medicineDesc}</p>
+                                <button className="deleteMedicineBtn" onClick={() => handleDelete(index)}>Delete</button>
                             </div>
                         ))}
                     </div>
@@ -415,6 +409,7 @@ function PrescriptionSelectionComponent() {
                             isMulti={true}
                         />
                     </div>
+
                     <button className="submitPrescBtn" onClick={submitPrescriptionHandler}>Submit Prescription</button>
                     <Modal show={showCauseEmptyWarning} onHide={handleCauseWarningClose}>
                         <Modal.Body>Please select prescription cause!</Modal.Body>
@@ -478,13 +473,13 @@ function PrescriptionSelectionComponent() {
                         </Modal>
                     </div>
                 }
-
                 {goToDosage &&
                     <div className="selectionHolder">
                         <h1 className="prescTitle2">Drug Name: {selectedMedicine}</h1>
                         <div className="dosageHolder">
                             <div className="dosageDropdownHolder">
                                 <div className="dosageInput">
+                                    <label>Dosage Amount:</label>
                                     <input
                                         type="number"
                                         value={dosageAmount}
@@ -495,14 +490,26 @@ function PrescriptionSelectionComponent() {
                                     />
                                 </div>
                                 <div className="dosageInput2">
+                                    <label>Dosage Unit:</label>
                                     <select value={dosageType} onChange={handleDosageType}>
-                                        <option value="option1">mg</option>
-                                        <option value="option2">ml</option>
-                                        <option value="option3">tablet</option>
+                                        {filterOptions.units.map((unit, index) => (
+                                            <option key={index} value={unit}>{unit}</option>
+                                        ))}
                                     </select>
                                 </div>
 
 
+                            </div>
+                            <div className="dosageInput">
+                                <label>Drug Quantity:</label>
+                                <input
+                                    type="number"
+                                    value={medicineQty}
+                                    onChange={handleMedicineQty}
+                                    min={1}
+                                    step={1}
+                                    required
+                                />
                             </div>
                             <div className="dosageInput3">
                                 <input
@@ -513,6 +520,7 @@ function PrescriptionSelectionComponent() {
                                     style={{ height: "60px" }}
                                 />
                             </div>
+
                         </div>
                         <div className="dosageBtnHolder">
                             <button className="dosageBtn1" onClick={goBackMedicineSelection}>Back</button>

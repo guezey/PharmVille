@@ -31,8 +31,9 @@ function NavbarDoctor() {
                     </Nav>
                     <Nav>
                         <Nav.Link as={NavLink} to={"/profile"} className='color-p'>Profile</Nav.Link>
-                        <Logout onLogout={handleLogout} />
+                       
                     </Nav>
+                    <Logout onLogout={handleLogout} />
 
                 </Navbar.Collapse>
             </Container>

@@ -64,6 +64,7 @@ function App() {
           <Route path={'/medicine/:id'} element={<Medicine />} />
           <Route path={'/review/:id'} element={<Reviews />} />
           <Route path={'/pharmacyStore/:id'} element={<PharmacyStorePage />} />
+          <Route path={'/:searcText'} element={<Store />} />
         </Routes>
       </Router>
     );

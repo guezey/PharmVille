@@ -235,47 +235,71 @@ function Filter(props) {
     props.onSkinTypeSelection(skinType); // Call the callback function with the updated array
   }, [skinType, props.onSkinTypeSelection]);
 
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(Number.MAX_SAFE_INTEGER);
+  const [newMinPrice, setNewMinPrice] = useState(1);
+  const [newMaxPrice, setNewMaxPrice] = useState(5000);
+
+  const [minPrice, setMinPrice] = useState(1);
+  const [maxPrice, setMaxPrice] = useState(5000);
 
   const handleMinPriceChange = (event) => {
-    const value = event.target.value;
+    let value = event.target.value;
+    console.log("min price")
     console.log(value)
-    if (value === null || value === '') {
-      setMinPrice(0);
-    } else if (value < 0) {
-      setMinPrice(1);
-    } else if (value > maxPrice) {
-      setMinPrice(maxPrice);
-    } else {
-      setMinPrice(value);
-    }
+    setMinPrice(value);
   };
-  useEffect(() => {
-    props.onMinChange(minPrice); // Call the callback function with the updated value
-  }, [minPrice, props.onMinChange]);
-
 
   const handleMaxPriceChange = (event) => {
-    console.log("AAAAAAAAAAA")
+    let value = event.target.value;
+    setMaxPrice(value);
+    console.log("bu benim max price")
     console.log(event.target.value)
-    const value = parseInt(event.target.value, 10); // Convert value to an integer
+  };
 
-    if (isNaN(value)) {
-      setMaxPrice(Number.MAX_SAFE_INTEGER);
-    } else if (value < 0) {
+  const handleSearchPrice = () => {
+    setMaxPrice(parseInt(maxPrice));
+    setMinPrice(parseInt(minPrice));
+    if (maxPrice === null || maxPrice === '') {
+      setNewMaxPrice(5000);
+      setMaxPrice(5000);
+    } else if (maxPrice < 0) {
+      setNewMaxPrice(1);
       setMaxPrice(1);
-    } else if (value < minPrice) {
+    } else if (maxPrice < minPrice) {
+      setNewMaxPrice(minPrice);
       setMaxPrice(minPrice);
     } else {
-      setMaxPrice(value);
+      setNewMaxPrice(maxPrice);
     }
+
+    if (minPrice === null || minPrice === '') {
+      setNewMinPrice(0);
+      setMinPrice(0);
+    } else if (minPrice > maxPrice) {
+      setNewMinPrice(maxPrice);
+      setMinPrice(maxPrice);
+    } else if (minPrice < 0) {
+      setNewMinPrice(1);
+      setMinPrice(1);
+    } else {
+      setNewMinPrice(minPrice);
+    }
+
+    console.log("bu benim new max price")
+    console.log(newMaxPrice)
+    console.log("bu benim new min price")
+    console.log(newMinPrice)
+    console.log("bu benim max price")
+    console.log(maxPrice)
+    console.log("bu benim min price")
+    console.log(minPrice)
+    console.log(maxPrice < minPrice)
   };
   useEffect(() => {
-    props.onMaxChange(maxPrice); // Call the callback function with the updated array
-  }, [maxPrice, props.onMaxChange]);
-
-
+    props.onMaxChange(newMaxPrice); // Call the callback function with the updated array
+  }, [newMaxPrice, props.onMaxChange]);
+  useEffect(() => {
+    props.onMinChange(newMinPrice); // Call the callback function with the updated value
+  }, [newMinPrice, props.onMinChange]);
 
   const handlePriceClick = () => {
     setShowPrice(!showPrice);
@@ -515,12 +539,12 @@ function Filter(props) {
               <input
                 type="number"
                 value={maxPrice}
-                onChange={() => handleMaxPriceChange()}
+                onChange={handleMaxPriceChange}
                 className="price-filter-input"
               />
             </div>
             <div>
-              <button className="price-filter-button" onClick={() => { handleMaxPriceChange(); handleMinPriceChange(); }}>Search Price</button>
+              <button className="price-filter-button" onClick={handleSearchPrice}>Search Price</button>
             </div>
           </div>
         )}

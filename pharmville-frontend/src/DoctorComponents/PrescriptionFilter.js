@@ -9,26 +9,26 @@ function PrescriptionFilter(props) {
     const [showPrescType, setShowPrescType] = useState(true);
     const [showAgeGroup, setShowAgeGroup] = useState(false);
     const [showIntake, setShowIntake] = useState(false);
-    const [showMedicineType, setShowMedicineType] = useState(false);
 
     // state for fetching drug classes:
-    const [filterOptions, setFilterOptions] = useState([]);
-
+    const [filterOptions, setFilterOptions] = useState(null);
+    console.log("hübübü")
     // fetch drug classes:
     useEffect(() => {
+        console.log("fetching filter options")
         fetch('http://localhost:5000/medicine/filter_options')
 
             .then(response => response.json())
             .then(data => {
-                setFilterOptions(data);
+                    setFilterOptions(data);               
             })
             .catch(error => {
                 console.log(error);
             })
     }, []);
-
-
-
+    console.log(filterOptions)
+    
+  
     const handleDrugClassClick = () => {
         setShowClassesOptions(!showClassesOptions)
     }
@@ -124,7 +124,7 @@ function PrescriptionFilter(props) {
         props.onIntakeSelection(intakeMethod); // Call the callback function with the updated array
     }, [intakeMethod, props.onIntakeSelection]);
 
-    return (
+    return ( filterOptions != null &&
         <div className='filterPrescHolder'>
             <div className='genComp'>
                 <a onClick={handleDrugClassClick}>
@@ -226,5 +226,4 @@ function PrescriptionFilter(props) {
         </div>
     );
 }
-
 export default PrescriptionFilter;

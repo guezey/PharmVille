@@ -1,5 +1,5 @@
 import Pagination from 'react-bootstrap/Pagination';
-import "./Filter.css";
+import "./Pagination.css";
 
 function Paginate({postsPerPage, totalPosts, paginate}) {
 
@@ -12,7 +12,9 @@ function Paginate({postsPerPage, totalPosts, paginate}) {
         );
     }
     return(
+      <div className="paginationHolder">
             <Pagination size="sm">{items}</Pagination>
+      </div>
     );
 }
 

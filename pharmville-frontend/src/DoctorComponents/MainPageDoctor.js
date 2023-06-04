@@ -18,6 +18,8 @@ function MainPageDoctor() {
 
     // error handler for TCK search
     const [error, setError] = useState(false);
+    const [showErrorMsg, setShowErrorMsg] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
     // state to show patient info
     const [patientInfo, setPatientInfo] = useState([]);
@@ -26,16 +28,25 @@ function MainPageDoctor() {
         fetch('http://localhost:5000/prescribe/' + searchText)
             .then(response => response.json())
             .then(data => {
-                setIsTCKCorrect(true);
+                setIsTCKCorrect(!data.hasOwnProperty('message'));
                 setPatientInfo(data);
                 console.log(data)
+                setError(data.hasOwnProperty('message'));
+                if (data.hasOwnProperty('message')) {
+                    setErrorMsg(data.message);
+                    setShowErrorMsg(true);
+                }
+                setIsEmpty(false);
             })
             .catch(error => {
-                //setIsTCKCorrect(false);
+                setError(true);
+                setErrorMsg(error);
+                setIsEmpty(false);
             });
         console.log("BURAYA GELİYON MU")
         console.log(patientInfo)
     };
+    useEffect(() => { setIsEmpty(false); }, [searchText]);
 
     // state to show patient info
     const [showPatientInfo, setShowPatientInfo] = useState(false);
@@ -43,26 +54,38 @@ function MainPageDoctor() {
     // state to show next page
     const [showNextPage, setShowNextPage] = useState(false);
 
+    const [isEmpty, setIsEmpty] = useState(true);
+
+    const [buttonPressed, setButtonPressed] = useState(false);
+
+
     const searchTCKHandler = () => {
         // Process search operation with searchText
         console.log(searchText);
         // check if TCK is correct
         // check if searcText is 11 digits:
-        setIsTCKCorrect(searchText.length === 11);
-        console.log(searchText.length === 11);
+        setIsTCKCorrect(searchText.length === 11 && isEmpty === false && error === false);
+        console.log(isTCKCorrect);
+        setButtonPressed(true);
     };
     useEffect(() => {
         // Add an effect to monitor changes in isTCKCorrect
+        if (buttonPressed) {
+            // Code to run when the button is pressed
+            console.log('Button pressed!');
+            // Reset buttonPressed state to false
+            setButtonPressed(false);
+        }
         if (isTCKCorrect) {
             console.log("isTCKCorrect is true");
             fetchPatientData();
             setShowPatientInfo(true);
             // Fetch patient data or perform any other actions
         }
-        else {
+        else if (!isTCKCorrect) {
             setShowWarning(true);
         }
-    }, [isTCKCorrect]);
+    }, [buttonPressed]);
 
     const goToNextHandler = () => {
         // go to next page:
@@ -70,9 +93,20 @@ function MainPageDoctor() {
     };
 
     const handleClose = () => setShowWarning(false);
+    const handleClose2 = () => setShowErrorMsg(false);
 
     return (
         <div>
+            <Modal show={error} onHide={handleClose2}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{errorMsg}</Modal.Title>
+                </Modal.Header>
+                <Modal.Footer>
+                    <button onClick={handleClose2}>
+                        Close
+                    </button>
+                </Modal.Footer>
+            </Modal>
             {!showNextPage &&
                 <div className="prescMainHolder">
                     <div className="generalHolderPresc">
@@ -89,7 +123,7 @@ function MainPageDoctor() {
                                 />
                             </div>
                             <div className="selectTCKButtonHolder">
-                                <button className="selectTCKButton" onClick={searchTCKHandler}>Search</button>
+                                <button className="selectTCKButton" onClick={searchTCKHandler} disabled={isTCKCorrect}>Search</button>
                             </div>
                         </div>
                         <Modal show={showWarning} onHide={handleClose}>
@@ -103,7 +137,8 @@ function MainPageDoctor() {
                                 </button>
                             </Modal.Footer>
                         </Modal>
-                        {showPatientInfo &&
+
+                        {showPatientInfo && error === false &&
                             <div>
                                 <div className="patientInfoHolder">
                                     <p className="searchTitle">Information of {searchText}</p>
@@ -158,7 +193,7 @@ function MainPageDoctor() {
             }
             {showNextPage &&
                 <div>
-                    <PrescriptionSelectionComponent />
+                    <PrescriptionSelectionComponent TCK={searchText}/>
                 </div>
             }
         </div>

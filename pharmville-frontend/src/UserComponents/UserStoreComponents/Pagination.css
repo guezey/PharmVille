@@ -1,0 +1,5 @@
+.paginationHolder {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* Adjust the top margin as needed */
+  }

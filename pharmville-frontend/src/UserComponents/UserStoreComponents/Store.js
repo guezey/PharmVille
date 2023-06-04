@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import Pharmacies from './Pharmacies';
 import "./Pharmacies.css";
@@ -27,6 +27,22 @@ function Store() {
 
     // state for intake method:
     const [selectedIntake, setSelectedIntake] = useState([]);
+
+    const currentURL = window.location.pathname;
+    const parts = currentURL.split('/'); // Split the pathname by '/'
+    const [searchText, setSearchText] = useState(''); // Initialize searchText to be the last part of the pathname  
+
+    const searchTextRef = useRef('');
+
+    useEffect(() => {
+        // Check if the URL ends with "/searchText"
+        if (currentURL.endsWith('/' + parts[parts.length - 1])) {
+            // Get the last part of the pathname as searchText
+            const temp = parts[parts.length - 1];
+            searchTextRef.current = temp;
+            setSearchText(temp);
+        }
+    }, [currentURL, parts]);
 
     const handleChildData = (data) => {
         // Update the information in the parent component
@@ -60,40 +76,40 @@ function Store() {
     const handleAgeSelection = (data) => {
         // Update the information in the parent component
         if (data.length > 0)
-        setSelectedAge(data);
+            setSelectedAge(data);
         else
-        setSelectedAge(null);
+            setSelectedAge(null);
     };
 
     const handleIntakeSelection = (data) => {
         if (data.length > 0)
-        setSelectedIntake(data);
+            setSelectedIntake(data);
         else
-        setSelectedIntake(null);
+            setSelectedIntake(null);
     }
 
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(Number.MAX_SAFE_INTEGER);
 
-  const handleMinChange = (data) => {
-    setMinPrice(data);
-    // Perform filtering logic or update the displayed data based on the filterData
-  };
+    const handleMinChange = (data) => {
+        setMinPrice(data);
+        // Perform filtering logic or update the displayed data based on the filterData
+    };
 
-  const handleMaxChange = (data) => {
-    setMaxPrice(data);
-    // Perform filtering logic or update the displayed data based on the filterData
-  };
+    const handleMaxChange = (data) => {
+        setMaxPrice(data);
+        // Perform filtering logic or update the displayed data based on the filterData
+    };
 
-  // state for aroma selection:
+    // state for aroma selection:
     const [selectedAroma, setSelectedAroma] = useState([]);
 
     const handleAromaSelection = (data) => {
         // Update the information in the parent component
         if (data.length > 0)
-        setSelectedAroma(data);
+            setSelectedAroma(data);
         else
-        setSelectedAroma(null);
+            setSelectedAroma(null);
     };
 
     // state for skin care selection:
@@ -102,9 +118,9 @@ function Store() {
     const handleSkinCareSelection = (data) => {
         // Update the information in the parent component
         if (data.length > 0)
-        setSelectedSkinCare(data);
+            setSelectedSkinCare(data);
         else
-        setSelectedSkinCare(null);
+            setSelectedSkinCare(null);
     };
 
     // state for skin type selection:
@@ -113,9 +129,9 @@ function Store() {
     const handleSkinTypeSelection = (data) => {
         // Update the information in the parent component
         if (data.length > 0)
-        setSelectedSkinType(data);
+            setSelectedSkinType(data);
         else
-        setSelectedSkinType(null);
+            setSelectedSkinType(null);
     };
 
     const [isLoading, setIsLoading] = useState(false);
@@ -130,6 +146,7 @@ function Store() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                search_key: searchText,
                 medicine_classes: selectedDrugClass,
                 side_effects: selectedUndesiredEffects,
                 presc_types: selectedPrescriptionType,
