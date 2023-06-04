@@ -2,8 +2,8 @@
 CREATE TABLE User
 (
     user_id  int PRIMARY KEY AUTO_INCREMENT,
-    email    varchar(255) NOT NULL,
-    password char(60)     NOT NULL,
+    email    varchar(255)                                    NOT NULL,
+    password char(60)                                        NOT NULL,
     phone    CHAR(10),
     role     ENUM ('Patient', 'Doctor', 'Pharmacy', 'Admin') NOT NULL,
     UNIQUE (email)
@@ -11,11 +11,11 @@ CREATE TABLE User
 
 CREATE TABLE Person
 (
-    person_id int PRIMARY KEY NOT NULL,
+    person_id int PRIMARY KEY       NOT NULL,
     name      varchar(255),
     surname   varchar(255),
-    tck       char(11)        NOT NULL,
-    is_admin  boolean     DEFAULT FALSE   NOT NULL,
+    tck       char(11)              NOT NULL,
+    is_admin  boolean DEFAULT FALSE NOT NULL,
     FOREIGN KEY (person_id) REFERENCES User (user_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -127,11 +127,11 @@ CREATE TABLE Orders
     order_id      int PRIMARY KEY AUTO_INCREMENT,
     order_time    timestamp                                            NOT NULL,
     pharmacy_id   int                                                  NOT NULL,
-    delivery_time timestamp NULL DEFAULT  NULL,
+    delivery_time timestamp                                            NULL DEFAULT NULL,
     patient_id    int                                                  NOT NULL,
     order_status  ENUM ('ACTIVE', 'SHIPPED', 'DELIVERED', 'CANCELED' ) NOT NULL,
     shipping_firm varchar(255),
-    address_id    int DEFAULT NULL,
+    address_id    int                                                       DEFAULT NULL,
     FOREIGN KEY (address_id) REFERENCES Address (address_id),
     FOREIGN KEY (pharmacy_id) REFERENCES Pharmacy (pharmacy_id),
     FOREIGN KEY (patient_id) REFERENCES Patient (patient_id)
@@ -301,8 +301,8 @@ CREATE TABLE product_order
     order_id   int    NOT NULL,
     prod_id    int    NOT NULL,
     presc_id   int DEFAULT NULL,
-    unit_price double NOT NULL,
     count      int    NOT NULL,
+    unit_price double NOT NULL,
     PRIMARY KEY (order_id, prod_id),
     FOREIGN KEY (order_id) REFERENCES Orders (order_id),
     FOREIGN KEY (prod_id) REFERENCES Product (prod_id),
@@ -313,9 +313,9 @@ CREATE TABLE Payment
 (
     payment_id     int PRIMARY KEY AUTO_INCREMENT,
     order_id       int            NOT NULL,
-    payment_date   timestamp      NOT NULL,
+    payment_time   timestamp      NOT NULL,
     payment_amount decimal(10, 2) NOT NULL,
-    card_number    int(16)        NOT NULL,
+    card_number    char(16)       NOT NULL,
     FOREIGN KEY (order_id) REFERENCES Orders (order_id)
 );
 
@@ -462,13 +462,19 @@ VALUES (1, 'deniz@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNP
        (3, 'dağhan@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '324324233', 'Patient'),
        (4, 'aliemir@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', NULL, 'Doctor'),
        (5, 'arda@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '3940909090', 'Patient'),
-       (6, 'faruk.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '423809444', 'Pharmacy'),
-       (7, 'gonul.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '213213122', 'Pharmacy'),
+       (6, 'faruk.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '423809444',
+        'Pharmacy'),
+       (7, 'gonul.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '213213122',
+        'Pharmacy'),
        (8, 'admin@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '312312312', 'Admin'),
-       (9, 'fatih.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '31232132', 'Pharmacy'),
-       (10, 'reject.rejectoğlu@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '533313231', 'Doctor'),
-       (11, 'rejectullah.ezczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '531011002', 'Pharmacy')
-
+       (9, 'fatih.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '31232132',
+        'Pharmacy'),
+       (10, 'reject.rejectoğlu@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '533313231',
+        'Doctor'),
+       (11, 'rejectullah.ezczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe',
+        '531011002', 'Pharmacy'),
+       (12, 'pharma.pharmacy.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe',
+        '533313200    ', 'Pharmacy')
 ;
 
 INSERT INTO Person(person_id, name, surname, tck, is_admin)
@@ -894,7 +900,6 @@ VALUES (6, 2, 10, 'Great medicine'),
        (12, 32, 3, 'YYYYEEEESS');
 
 
-
 -- Orders-----------------------------------------------------------
 INSERT INTO Orders(order_id, order_time, pharmacy_id, patient_id, delivery_time, order_status,
                    shipping_firm, address_id)
@@ -906,6 +911,8 @@ VALUES (1, '2023-05-25 15:30:00', 6, 1, '2023-05-27 21:30:00', 'SHIPPED', 'MNG',
        (5, '2023-05-25 10:00:00', 12, 5, '2023-05-24 12:12:12', 'DELIVERED', 'MNG', 4),
        (7, '2023-05-25 10:00:00', 12, 5, '2023-05-24 12:12:12', 'DELIVERED', 'MNG', 4)
 ;
+
+
 INSERT INTO product_order(order_id, prod_id, presc_id, unit_price, count)
 VALUES (1, 1, NULL, 87.33, 2),
        (1, 3, NULL, 81.22, 3),
@@ -954,7 +961,15 @@ VALUES (1, 1, NULL, 87.33, 2),
 
        (7, 4, NULL, 55.22, 2)
 ;
-
+INSERT INTO Payment(payment_id, order_id, payment_time, payment_amount, card_number)
+VALUES (1, 1, '2023-05-25 15:30:00', 87.33, '1234123412341234'),
+       (2, 1, '2023-05-25 15:30:00', 81.22, '1234123412341234'),
+       (3, 1, '2023-05-25 15:30:00', 200.22, '1234123412341234'),
+       (4, 1, '2023-05-25 15:30:00', 200.21, '1234123412341234'),
+       (5, 1, '2023-05-25 15:30:00', 222.33, '1234123412341234'),
+       (6, 6, '2023-05-23 15:25:00', 94.22, '1234123412341234'),
+       (7, 6, '2023-05-23 15:25:00', 90.31, '1234123412341234')
+;
 
 INSERT INTO Review(review_id, rating, title, body, order_id)
 VALUES (1, 4, 'Great Pharmacy', 'My order arrived a little late but no damages', 6),
