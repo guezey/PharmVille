@@ -14,7 +14,7 @@ const DoctorInfo = ({ doctorData }) => {
         <strong>Speciality:</strong> {doctorData.speciality}
       </p>
       <p style={{color:"black"}}>
-        <strong>Approval Status:</strong> {doctorData.approvalStatus}
+        <strong>Approval Status:</strong> {doctorData.approval_status}
       </p>
     </div>
   );
