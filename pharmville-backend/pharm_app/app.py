@@ -127,6 +127,13 @@ def signup():
                     "INSERT INTO Pharmacy (pharmacy_id, name, is_on_duty, diploma_path, balance, approval_status) VALUES (%s, %s, %s, %s, %s, %s)",
                     (user_id, data['name'], False, None, 0, 'PENDING')
                 )
+                pharmacy_id = cursor.lastrowid
+                cursor.execute(
+                    """INSERT INTO Address(address_id, name, city, country, address_field, address_field_2, postal_code) 
+                        VALUES  (%s,%s,%s,%s,%s,%s,%s)""",
+                    (pharmacy_id, data['name'], data['city'], data['country'], data['address'], data['address2'],
+                     data['postalCode'])
+                )
             else:
                 db.connection.rollback()
                 return jsonify({"message": "Invalid role"}), 400
