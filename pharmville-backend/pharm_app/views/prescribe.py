@@ -130,7 +130,6 @@ class PrescribeView(MethodView):
             return jsonify({"message": "Error occurred while adding prescription."}), 500
 
         db.connection.commit()
-
         return jsonify({"message": "Prescription successfully added."}), 202
 
 

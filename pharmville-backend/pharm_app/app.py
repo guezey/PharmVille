@@ -5,9 +5,13 @@ from flask_cors import CORS
 from .extensions import db
 from .conf import MysqlConfig
 
+from .views import (medicine_bp, protein_powder_bp, skincare_bp,
+                    prescribe_bp, prescriptions_bp, review_bp,
+                    orders_bp, patient_bp, address_bp, pharmacy_bp,
+                    products_bp
+                    )
 import bcrypt
-from .views import (medicine_bp, protein_powder_bp, skincare_bp, prescribe_bp, prescriptions_bp, products_bp, review_bp,
-                    orders_bp, pharmacy_bp)
+
 
 def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(medicine_bp)
@@ -17,9 +21,10 @@ def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(prescriptions_bp)
     flask_app.register_blueprint(review_bp)
     flask_app.register_blueprint(orders_bp)
+    flask_app.register_blueprint(patient_bp)
+    flask_app.register_blueprint(address_bp)
     flask_app.register_blueprint(products_bp)
     flask_app.register_blueprint(pharmacy_bp)
-
 
 
 def register_extensions(flask_app: Flask):
@@ -38,7 +43,7 @@ def create_app():
 
 app = create_app()
 Session(app)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 app.config["CORS_HEADERS"] = ["Content-Type", "Authorization"]
 
 
@@ -105,7 +110,7 @@ def signup():
                 cursor.execute(
                     "INSERT INTO Person (person_id, name, surname, tck, is_admin) VALUES (%s, %s, %s, %s, %s)",
                     (user_id, data['name'], data['surname'], data['tcKimlikNo'], False)
-                    )
+                )
                 cursor.execute("INSERT INTO Doctor (doctor_id, speciality, approval_status) VALUES (%s, %s, %s)",
                                (user_id, None, 'PENDING')
                                )
@@ -120,7 +125,7 @@ def signup():
                 cursor.execute(
                     "INSERT INTO Pharmacy (pharmacy_id, name, is_on_duty, diploma_path, balance, approval_status) VALUES (%s, %s, %s, %s, %s, %s)",
                     (user_id, data['name'], False, None, 0, 'PENDING')
-                    )
+                )
             else:
                 db.connection.rollback()
                 return jsonify({"message": "Invalid role"}), 400

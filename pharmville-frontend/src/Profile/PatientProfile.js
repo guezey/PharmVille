@@ -9,15 +9,28 @@ import { Container, Row, Col } from "react-bootstrap";
 
 const PatientProfile = () => {
   const [patientData, setPatientData] = useState(null);
+  const [addressData, setAddressData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Replace the URL with your Flask backend endpoint
-    fetch('http://localhost:5000/api/patient_profile')
+    // Fetching patient data
+    fetch('http://localhost:5000/patient', {credentials: 'include'})
       .then(response => response.json())
       .then(data => {
         setPatientData(data);
+        if (!addressData) setLoading(false); // Only stop loading if addressData has been fetched too
+      })
+      .catch(error => {
+        console.error('Error:', error);
         setLoading(false);
+      });
+
+    // Fetching address data
+    fetch('http://localhost:5000/address', {credentials: 'include'})
+      .then(response => response.json())
+      .then(data => {
+        setAddressData(data);
+        if (!patientData) setLoading(false); // Only stop loading if patientData has been fetched too
       })
       .catch(error => {
         console.error('Error:', error);
@@ -28,7 +41,9 @@ const PatientProfile = () => {
   if (loading) return <p>Loading...</p>;
 
   if (!patientData) return <p>Error loading patient data</p>;
-  
+
+  if (!addressData) return <p>Error loading address data</p>;
+
   return (
     <Container>
       <Row>
@@ -41,17 +56,11 @@ const PatientProfile = () => {
       <Row>
         <Col>
           <div className="bg-light p-4 mb-4 text-dark text-left">
-            <AddressList addresses={patientData.addresses} />
+            <AddressList addresses={addressData} />
           </div>
         </Col>
       </Row>
-      <Row>
-        <Col>
-          <div className="bg-light p-4 mb-4 text-dark text-left">
-            <Orders orders={patientData.orders} />
-          </div>
-        </Col>
-      </Row>
+
       <Row>
         <Col>
           <div className="bg-light p-4 mb-4 text-dark text-left">

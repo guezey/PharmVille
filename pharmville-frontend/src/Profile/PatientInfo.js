@@ -8,7 +8,9 @@ const PatientInfo = ({ patientData }) => {
         Name: {patientData.name} {patientData.surname}
       </p>
       <p style={{color:"black"}}>Email: {patientData.email}</p>
-      <p style={{color:"black"}}>TC National ID: {patientData.tcNationalId}</p>
+      <p style={{color:"black"}}>TC National ID: {patientData.tck}</p>
+      <p style={{color:"black"}}>Weight: {patientData.weight}</p>
+      <p style={{color:"black"}}>Height: {patientData.height}</p>
     </div>
   );
 };
