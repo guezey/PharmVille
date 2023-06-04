@@ -1,3 +1,4 @@
+/*
 DELIMITER //
 CREATE TRIGGER add_order_total_to_pharmacy_balance
 AFTER UPDATE
@@ -19,3 +20,4 @@ BEGIN
     END IF;
 END//
 DELIMITER ;
+*/
