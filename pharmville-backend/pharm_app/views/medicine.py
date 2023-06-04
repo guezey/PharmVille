@@ -1,6 +1,6 @@
 from MySQLdb.cursors import DictCursor, Cursor
 from MySQLdb import Error
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, session
 from flask.views import MethodView
 from pharm_app.extensions import db
 from pharm_app.utils.query_builder import MedicineQueryBuilder
@@ -98,7 +98,7 @@ class MedicineView(MethodView):
         medicine["age_groups"] = cursor.fetchall()
 
         cursor.execute("""
-            SELECT DISTINCT (pharmacy_id), name,total_reviews, avg_rating  
+            SELECT DISTINCT (pharmacy_id), name,total_reviews, avg_rating, stock, description  
             FROM Pharmacy NATURAL JOIN pharmacy_product NATURAL JOIN pharmacy_ratings
                 WHERE prod_id = %s 
         """, (prod_id,))
@@ -167,6 +167,24 @@ class MedicineView(MethodView):
             db.connection.rollback()
             return str(e), 400
         return f"Update on product: {prod_id} was successful", 202
+
+    def post(self, prod_id):
+        pharmacy_id = session['user_id']
+        req_body = request.get_json()
+        cursor = db.connection.cursor(DictCursor)
+        try:
+            cursor.execute("""INSERT INTO pharmacy_product(pharmacy_id, prod_id, stock, description) 
+                            VALUES (%s, %s, %s, %s)""",
+                           (pharmacy_id, prod_id, req_body['stock'], req_body['description']))
+            cursor.execute("""SELECT * FROM full_medicine WHERE prod_id = %s""", (prod_id,))
+            if not cursor.fetchone():
+                raise Error(f"Medicine with id: {prod_id} not found")
+
+            db.connection.commit()
+        except Error as e:
+            db.connection.rollback()
+            return str(e), 400
+        return f"Product: {prod_id} successfully added to pharmacy: {pharmacy_id}", 201
 
 
 bp.add_url_rule('<int:prod_id>', view_func=MedicineView.as_view('medicine'))
