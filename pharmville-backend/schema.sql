@@ -38,8 +38,7 @@ CREATE TABLE Doctor
     FOREIGN KEY (doctor_id) REFERENCES Person (person_id)
 );
 
-CREATE TABLE Pharmacy
-(
+CREATE TABLE Pharmacy(
     pharmacy_id     int PRIMARY KEY                        NOT NULL,
     name            varchar(255)                           NOT NULL,
     is_on_duty      boolean                                NOT NULL,
