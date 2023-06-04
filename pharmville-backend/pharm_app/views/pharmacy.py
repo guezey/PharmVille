@@ -6,8 +6,9 @@ from pharm_app.extensions import db
 
 bp = Blueprint('pharmacy', __name__, url_prefix='/pharmacy')
 
+
 @bp.route('/orders', methods=['GET'])
-def get_orders ():
+def get_orders():
     cursor = db.connection.cursor(DictCursor)
     # FIXME: pharmacy_id should be fetched from session
     pharmacy = 6
@@ -25,7 +26,6 @@ def get_orders ():
         active_orders = cursor.fetchall()
 
         for order in active_orders:
-
             cursor.execute(
                 """
                 SELECT name, count 
@@ -52,24 +52,25 @@ def get_orders ():
         shipped_and_delivered_orders = cursor.fetchall()
 
         for order in shipped_and_delivered_orders:
-                cursor.execute(
-                    """
-                    SELECT name, count 
-                    FROM product_order
-                    NATURAL JOIN Product
-                    WHERE order_id = %s
-                    """,
-                    (order['order_id'],)
-                )
-                products = cursor.fetchall()
+            cursor.execute(
+                """
+                SELECT name, count 
+                FROM product_order
+                NATURAL JOIN Product
+                WHERE order_id = %s
+                """,
+                (order['order_id'],)
+            )
+            products = cursor.fetchall()
 
-                order['products'] = products
+            order['products'] = products
 
     except Error as e:
         return jsonify({'error': str(e)}), 500
 
     return jsonify({"active_orders": active_orders,
                     "shipped_and_delivered_orders": shipped_and_delivered_orders}), 200
+
 
 @bp.route('/orders', methods=['PUT'])
 def update_order_status():
@@ -110,3 +111,16 @@ def update_order_status():
     db.connection.commit()
 
     return jsonify({'message': 'Order status updated successfully'}), 200
+
+
+@bp.route('/profile', methods=['GET'])
+def get_profile():
+    pharmacy_id = session['user_id']
+    cursor = db.connection.cursor(DictCursor)
+
+    cursor.execute("""SELECT name, is_on_duty, balance, approval_status 
+    FROM Pharmacy PJ 
+        JOIN User U ON U.user_id 
+        WHERE pharmacy_id = %s""", (pharmacy_id,))
+
+    return jsonify(cursor.fetchone()), 200
