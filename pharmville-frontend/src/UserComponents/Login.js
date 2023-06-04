@@ -347,7 +347,7 @@ function Login({onLogin}) {
     };
 
     try {
-      const response = await axios.post(apiUrl, data);
+      const response = await axios.post(apiUrl, data, { withCredentials: true });
       const userRole = response.data.role;
       const userData = response.data;
 
