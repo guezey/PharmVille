@@ -1,6 +1,6 @@
 from MySQLdb.cursors import DictCursor, Cursor
 from MySQLdb import Error
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, session
 from flask.views import MethodView
 from pharm_app.extensions import db
 from pharm_app.utils.query_builder import ProteinPowderQueryBuilder
@@ -21,7 +21,9 @@ def _parse_protein_powder_props(data):
         'sugar_percent': data.get('sugar_percent'),
         'fat_percent': data.get('fat_percent'),
         'protein_percent': data.get('protein_percent'),
-        'aroma': data['aroma']
+        'aroma': data['aroma'],
+        'stock': data['stock'],
+        'description': data.get('description')
     }
     return protein_powder
 
@@ -44,7 +46,7 @@ class ProteinPowderGroupView(MethodView):
 
     def post(self):
         protein_powder = _parse_protein_powder_props(request.get_json())
-
+        pharmacy_id = session['user_id']
         cursor = db.connection.cursor(DictCursor)
         try:
             cursor.execute("""INSERT INTO Product (name, company, image_url, price) 
@@ -61,12 +63,17 @@ class ProteinPowderGroupView(MethodView):
                   protein_powder['arginine_percent'], protein_powder['sugar_percent'], protein_powder['fat_percent'],
                   protein_powder['protein_percent'], protein_powder['aroma']
                   ))
+            cursor.execute(
+                """INSERT INTO pharmacy_product(prod_id, pharmacy_id, stock, description) 
+                VALUES (%s, %s, %s, %s)""",
+                (pk, pharmacy_id, protein_powder['stock'], protein_powder['description']))
 
             db.connection.commit()
         except Error as e:
             current_app.logger.error(str(e))
             db.connection.rollback()
             return str(e), 400
+
         return {'message': f"Protein powder with id: {pk} was added"}, 202
 
 
@@ -88,7 +95,7 @@ class ProteinPowderView(MethodView):
         # fetch and merge remaining attributes
 
         cursor.execute("""
-            SELECT DISTINCT (pharmacy_id), name,total_reviews, avg_rating  
+            SELECT DISTINCT (pharmacy_id), name,total_reviews, avg_rating, stock, description  
             FROM Pharmacy NATURAL JOIN pharmacy_product NATURAL  JOIN pharmacy_ratings
                 WHERE prod_id = %s 
         """, (prod_id,))
@@ -118,8 +125,9 @@ class ProteinPowderView(MethodView):
             arginine_percent = %s, sugar_percent = %s, fat_percent = %s, protein_percent = %s, aroma_name = %s
             WHERE prod_id = %s 
              """, (protein_powder['weight'], protein_powder['bcaa_percent'],
-                protein_powder['service_amount'], protein_powder['arginine_percent'], protein_powder['sugar_percent'],
-                protein_powder['fat_percent'], protein_powder['protein_percent'], protein_powder['aroma'],prod_id))
+                   protein_powder['service_amount'], protein_powder['arginine_percent'],
+                   protein_powder['sugar_percent'],
+                   protein_powder['fat_percent'], protein_powder['protein_percent'], protein_powder['aroma'], prod_id))
 
             # cursor.execute("""UPDATE ProteinPowder SET """)
             db.connection.commit()

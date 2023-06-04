@@ -1,6 +1,6 @@
 from MySQLdb.cursors import DictCursor, Cursor
 from MySQLdb import Error
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify, current_app, session
 from flask.views import MethodView
 from pharm_app.extensions import db
 from pharm_app.utils.query_builder import SkincareQueryBuilder
@@ -16,7 +16,9 @@ def _parse_skincare_props(data):
         'price': data.get('price'),
         'volume': data.get('volume'),
         'skin_types': data.get('skin_types'),
-        'skincare_type': data.get('skincare_type')
+        'skincare_type': data.get('skincare_type'),
+        'stock': data['stock'],
+        'description': data.get('description')
     }
     return skincare
 
@@ -33,13 +35,13 @@ class SkincareGroupView(MethodView):
         cursor.execute(query)
 
         skincare = cursor.fetchall()
-        for skincare_prod in skincare :
+        for skincare_prod in skincare:
             skincare_prod["prod_type"] = "Skincare"
         return jsonify(skincare)
 
     def post(self):
         skincare = _parse_skincare_props(request.get_json())
-
+        pharmacy_id = session['user_id']
         cursor = db.connection.cursor(DictCursor)
         try:
             cursor.execute("""INSERT INTO Product (name, company, image_url, price) 
@@ -56,6 +58,9 @@ class SkincareGroupView(MethodView):
                 cursor.execute("""INSERT INTO applicable_skin_types (skin_type, product_id)
                 VALUES (%s, %s)""", (skin_type, pk))
 
+            cursor.execute("""INSERT INTO pharmacy_product(pharmacy_id, prod_id, stock, description)
+                VALUES (%s, %s, %s, %s)""",
+                           (pharmacy_id, pk, skincare['stock'], skincare["description"]))
             db.connection.commit()
         except Error as e:
             current_app.logger.error(str(e))
@@ -81,7 +86,7 @@ class SkincareView(MethodView):
             return self.error404(prod_id)
 
         cursor.execute("""
-            SELECT DISTINCT (pharmacy_id), name, total_reviews, avg_rating
+            SELECT DISTINCT (pharmacy_id), name, total_reviews, avg_rating, stock, description
              FROM Pharmacy NATURAL JOIN pharmacy_product NATURAL  JOIN  pharmacy_ratings
                 WHERE prod_id = %s 
         """, (prod_id,))
