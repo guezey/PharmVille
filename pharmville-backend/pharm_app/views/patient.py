@@ -1,12 +1,10 @@
 from MySQLdb.cursors import DictCursor
 from MySQLdb import Error
-from flask import Blueprint, request, jsonify, session,current_app
+from flask import Blueprint, request, jsonify, session, current_app
 from flask.views import MethodView
 from pharm_app.extensions import db
 
 bp = Blueprint('patient', __name__, url_prefix='/patient')
-
-bp.route("", methods=["GET"])
 
 
 class PatientInfoView(MethodView):

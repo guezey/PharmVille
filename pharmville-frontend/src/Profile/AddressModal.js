@@ -6,9 +6,9 @@ const AddressModal = ({ isOpen, onClose, onAddAddress }) => {
     name: '',
     country: '',
     city: '',
-    addressField1: '',
-    addressField2: '',
-    postalCode: '',
+    address_field: '',
+    address_field_2: '',
+    postal_code: '',
   });
 
   const handleInputChange = (event) => {
@@ -17,7 +17,8 @@ const AddressModal = ({ isOpen, onClose, onAddAddress }) => {
   };
 
   const handleSubmit = () => {
-    fetch('http://localhost:5000/api/add_address', {
+    fetch('http://localhost:5000/address', {
+      credentials: 'include',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -30,7 +31,7 @@ const AddressModal = ({ isOpen, onClose, onAddAddress }) => {
       return response.json();
     }).then(data => {
       onAddAddress(newAddress);
-      setNewAddress({name: '', country: '', city: '', addressField1: '', addressField2: '', postalCode: ''});
+      setNewAddress({name: '', country: '', city: '', address_field: '', address_field_2: '', postal_code: ''});
       onClose();
     }).catch(error => {
       console.error('There was a problem with the fetch operation:', error);
@@ -66,22 +67,22 @@ const AddressModal = ({ isOpen, onClose, onAddAddress }) => {
         />
         <input
           type="text"
-          name="addressField1"
-          value={newAddress.addressField1}
+          name="address_field"
+          value={newAddress.address_field}
           onChange={handleInputChange}
           placeholder="Address Field 1"
         />
         <input
           type="text"
-          name="addressField2"
-          value={newAddress.addressField2}
+          name="address_field_2"
+          value={newAddress.address_field_2}
           onChange={handleInputChange}
           placeholder="Address Field 2"
         />
         <input
           type="text"
-          name="postalCode"
-          value={newAddress.postalCode}
+          name="postal_code"
+          value={newAddress.postal_code}
           onChange={handleInputChange}
           placeholder="Postal Code"
         />

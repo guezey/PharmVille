@@ -25,6 +25,12 @@ function Register({ onBackToLogin }) {
   const [licenseFile, setLicenseFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [address_field, setaddress_field] = useState("");
+  const [address_field_2, setaddress_field_2] = useState("");
+  const [postal_code, setpostal_code] = useState("");
+
   const FormSelect = ({
     wrapperClass,
     label,
@@ -94,12 +100,13 @@ function Register({ onBackToLogin }) {
 
     if (
       (!name ||
-      !surname ||
-      !tcKimlikNo ||
-      !email ||
-      !password ||
-      !confirmPassword ||
-      !role) && role !== "Pharmacy"
+        !surname ||
+        !tcKimlikNo ||
+        !email ||
+        !password ||
+        !confirmPassword ||
+        !role) &&
+      role !== "Pharmacy"
     ) {
       setErrorMessage("All fields are required.");
       return;
@@ -135,14 +142,24 @@ function Register({ onBackToLogin }) {
 
     const apiUrl = "http://localhost:5000/signup";
 
-    const data = {
+    const data = role === "Pharmacy" ? {
+      name,
+      email,
+      password,
+      role,
+      city,
+      country,
+      address_field,
+      address_field_2,
+      postal_code
+    } : {
       name,
       surname,
       tcKimlikNo,
       email,
       password,
       role,
-    };
+    };    
 
     try {
       // Note: You should not manually set the "Content-Type" to "application/json" when sending FormData.
@@ -151,6 +168,7 @@ function Register({ onBackToLogin }) {
 
       // After successful registration, navigate back to login
       onBackToLogin();
+      alert("Registration successful!");
     } catch (error) {
       // Handle errors while registering
       setErrorMessage("An error occurred while registering. Please try again.");
@@ -199,67 +217,118 @@ function Register({ onBackToLogin }) {
           )}
           {role === "Pharmacy" && (
             <div>
-            <FormFileInput
-              wrapperClass="mb-4"
-              label="Upload Pharmacy License"
-              id="formLicenseFile"
-              onChange={handleLicenseFileChange}
-              fileName={licenseFile && licenseFile.name}
-            />
-            <label htmlFor="formName" className="form-label">
-              Name
-            </label>
-            <input
-              className="form-control"
-              id="formName"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+              <FormFileInput
+                wrapperClass="mb-4"
+                label="Upload Pharmacy License"
+                id="formLicenseFile"
+                onChange={handleLicenseFileChange}
+                fileName={licenseFile && licenseFile.name}
+              />
+              <label htmlFor="formName" className="form-label">
+                Name
+              </label>
+              <input
+                className="form-control"
+                id="formName"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <label htmlFor="formCity" className="form-label">
+                City
+              </label>
+              <input
+                className="form-control"
+                id="formCity"
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              />
+              <label htmlFor="formCountry" className="form-label">
+                Country
+              </label>
+              <input
+                className="form-control"
+                id="formCountry"
+                type="text"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+              />
+              <label htmlFor="formaddress_field" className="form-label">
+                Address Field 1
+              </label>
+              <input
+                className="form-control"
+                id="formaddress_field"
+                type="text"
+                value={address_field}
+                onChange={(e) => setaddress_field(e.target.value)}
+              />
+              <label htmlFor="formaddress_field_2" className="form-label">
+                Address Field 2
+              </label>
+              <input
+                className="form-control"
+                id="formaddress_field_2"
+                type="text"
+                value={address_field_2}
+                onChange={(e) => setaddress_field_2(e.target.value)}
+              />
+              <label htmlFor="formpostal_code" className="form-label">
+                Postal Code
+              </label>
+              <input
+                className="form-control"
+                id="formpostal_code"
+                type="text"
+                value={postal_code}
+                onChange={(e) => setpostal_code(e.target.value)}
+              />
+            </div>
+          )}
+
+          {role !== "Pharmacy" && (
+            <div className="mb-4">
+              <label htmlFor="formName" className="form-label">
+                Name
+              </label>
+              <input
+                className="form-control"
+                id="formName"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
           )}
           {role !== "Pharmacy" && (
-          <div className="mb-4">
-            <label htmlFor="formName" className="form-label">
-              Name
-            </label>
-            <input
-              className="form-control"
-              id="formName"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
+            <div className="mb-4">
+              <label htmlFor="formSurname" className="form-label">
+                Surname
+              </label>
+              <input
+                className="form-control"
+                id="formSurname"
+                type="text"
+                value={surname}
+                onChange={(e) => setSurname(e.target.value)}
+              />
+            </div>
           )}
           {role !== "Pharmacy" && (
-          <div className="mb-4">
-            <label htmlFor="formSurname" className="form-label">
-              Surname
-            </label>
-            <input
-              className="form-control"
-              id="formSurname"
-              type="text"
-              value={surname}
-              onChange={(e) => setSurname(e.target.value)}
-            />
-          </div>
-          )}
-          {role !== "Pharmacy" && (
-          <div className="mb-4">
-            <label htmlFor="formTCKimlikNo" className="form-label">
-              TC Kimlik No
-            </label>
-            <input
-              className="form-control"
-              id="formTCKimlikNo"
-              type="text"
-              maxLength="11"
-              value={tcKimlikNo}
-              onChange={(e) => setTcKimlikNo(e.target.value)}
-            />
-          </div>
+            <div className="mb-4">
+              <label htmlFor="formTCKimlikNo" className="form-label">
+                TC Kimlik No
+              </label>
+              <input
+                className="form-control"
+                id="formTCKimlikNo"
+                type="text"
+                maxLength="11"
+                value={tcKimlikNo}
+                onChange={(e) => setTcKimlikNo(e.target.value)}
+              />
+            </div>
           )}
           <div className="mb-4">
             <label htmlFor="formEmail" className="form-label">
@@ -315,7 +384,7 @@ function Register({ onBackToLogin }) {
   );
 }
 
-function Login({onLogin}) {
+function Login({ onLogin }) {
   const [isRegistering, setIsRegistering] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -347,7 +416,9 @@ function Login({onLogin}) {
     };
 
     try {
-      const response = await axios.post(apiUrl, data, { withCredentials: true });
+      const response = await axios.post(apiUrl, data, {
+        withCredentials: true,
+      });
       const userRole = response.data.role;
       const userData = response.data;
 

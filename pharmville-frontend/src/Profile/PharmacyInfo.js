@@ -8,16 +8,13 @@ const PharmacyInfo = ({ pharmacyData }) => {
                 <strong>Name:</strong> {pharmacyData.name}
             </p>
             <p style={{color:"black"}}>
-                <strong>On Duty:</strong> {pharmacyData.onDuty ? "Yes" : "No"}
-            </p>
-            <p style={{color:"black"}}>
-                <strong>Diploma Path:</strong> {pharmacyData.diplomaPath}
+                <strong>On Duty:</strong> {pharmacyData.is_on_duty ? "Yes" : "No"}
             </p>
             <p style={{color:"black"}}>
                 <strong>Balance:</strong> ${pharmacyData.balance}
             </p>
             <p style={{color:"black"}}>
-                <strong>Approval Status:</strong> {pharmacyData.approvalStatus}
+                <strong>Approval Status:</strong> {pharmacyData.approval_status}
             </p>
         </div>
     );
