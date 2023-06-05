@@ -1,5 +1,5 @@
 from MySQLdb.cursors import DictCursor
-from flask import Blueprint, redirect, url_for, jsonify
+from flask import Blueprint, redirect, url_for, jsonify, current_app
 
 from pharm_app.extensions import db
 
@@ -14,9 +14,11 @@ def get_products(prod_id):
         SELECT * FROM full_medicine WHERE prod_id = %s
     """, (prod_id,))
     medicine = cursor.fetchone()
+    current_app.logger.info(medicine)
     if medicine:
         return redirect(url_for("medicine.medicine", prod_id=prod_id))
-
+    
+    
     cursor.execute("""
         SELECT * FROM full_protein_powder WHERE prod_id = %s
     """, (prod_id,))

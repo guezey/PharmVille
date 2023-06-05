@@ -423,7 +423,7 @@ function PrescriptionSelectionComponent(props) {
                         setIsSubmitted(false);
                         // Navigate to the desired page
 
-                        //window.location.reload();
+                        window.location.reload();
                         //
                     }, 800); // Wait for 2 seconds (adjust as needed)
                 }

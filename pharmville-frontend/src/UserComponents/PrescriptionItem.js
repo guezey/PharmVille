@@ -15,7 +15,7 @@ function PrescriptionItem(props) {
         <div>
             <div className='itemHolder'>
                 <Row>
-                    <Col className='borders'><h1 className='presch1'>Date</h1> <p className='prescPar'>{props.date}</p></Col>
+                    <Col className='borders'><h1 className='presch1'>Given Date</h1> <p className='prescPar'>{props.date}</p></Col>
                     <Col className='borders'><h1 className='presch1'>Prescription ID</h1><p className='prescPar'>{props.id}</p></Col>
                     <Col className='borders'><h1 className='presch1'>Type</h1><p className='prescPar'>{props.type}</p></Col>
                     <Col>
@@ -31,16 +31,19 @@ function PrescriptionItem(props) {
                 {openDetails &&
                     <div className='detailsHolder'>
                         <div className='drugNamesList'>
-                            <h1 className='presch1'>Expire Date: {props.expired}</h1>
+                            <h1 className='prescParLeft'>Expire Date: {props.due_date}</h1>
                             {props.drug.map((medicine) =>
                                 <div className='drugDescList'>
-                                    <div style={{ width: '100px' }}><p className='prescLi'>{medicine}</p></div>
-                                    <div style={{ width: '150px' }}><p className='prescLi'>Dosage: 5mg</p></div>
-                                    <div style={{ width: '300px' }}> <p className='prescLi'>Description: Take one every morning</p></div>
+                                    <div style={{ width: '100px' }}><p className='prescLi'>{medicine.name}</p></div>
+                                    <div style={{ width: '100px' }}><p className='prescLi'>x{medicine.box_count}</p></div>
+                                    <div style={{ width: '150px' }}><p className='prescLi'>Dosage: {medicine.dosage}</p></div>
+                                    <div style={{ width: '300px' }}> <p className='prescLi'>{medicine.description}</p></div>
                                 </div>)}
                         </div>
                         <div>
-                            <p className='prescLi2'>Causes for Prescription: Stomachache, Nausea</p>
+                            <p className='prescParLeft'>Causes for Prescription: {
+                                props.diseases.map((cause) => " " + cause.name + ", ")
+                            }</p>
                         </div>
                     </div>}
             </div>

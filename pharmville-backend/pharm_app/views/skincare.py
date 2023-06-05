@@ -81,7 +81,7 @@ class SkincareView(MethodView):
             return self.error404(prod_id)
 
         cursor.execute("""
-            SELECT DISTINCT (pharmacy_id), name, total_reviews, avg_rating
+            SELECT DISTINCT (pharmacy_id), name, total_reviews, ROUND(avg_rating, 2) AS avg_rating
              FROM Pharmacy NATURAL JOIN pharmacy_product NATURAL  JOIN  pharmacy_ratings
                 WHERE prod_id = %s 
         """, (prod_id,))

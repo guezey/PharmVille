@@ -28,17 +28,15 @@
 }
 .detailsButton {
     display: block;
-    height: 30px;
     border-radius: 8px;
+    height: 40px;
     margin-left: auto;
     border-color: var(--cardDark);
     background-color: var(--cardDark);
     color: var(--cardFont);
     font-size: 16px;
-    padding: 10px;
+    padding-bottom: 20px;
     text-align: center;
-    margin-bottom: 0.3rem;
-    margin-top: 0;
 }
 
 .button-holder {
@@ -51,13 +49,30 @@
     text-align: left;
     border-radius: 8px;
     width: 1000px;
-    display: flex;
+    display: block;
 }
 
 .prescLi {
     margin-left: 1rem;
     color: var(--cardFont);
     margin-bottom: 4px;
+}
+
+.prescPar {
+    margin-left: 20px;
+    color: var(--cardFont);
+    margin-bottom: 4px;
+    font-size: 16px;
+}
+
+.prescParLeft {
+    margin-left: 20px;
+    color: var(--cardFont);
+    margin-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+    text-align: left;
 }
 
 .prescLi2 {

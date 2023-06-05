@@ -1,78 +1,60 @@
 import "./Reviews.css";
 import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
 function Reviews() {
-    // fetch reviews from domain
-    //TODO
 
-    // for now: a fake arr:
-    const reviews = [
-        {
-            id: 1,
-            user: "Ceren",
-            rating: 4.0,
-            comment: "Fast delivery. Totally will buy from them again.",
-        },
-        {
-            id: 2,
-            user: "Deniz",
-            rating: 4.3,
-            comment: "I asked only for Parol. They shipped it 6 days after??? It was extremely slow.",
-        },
-        {
-            id: 3,
-            user: "Ali Emir",
-            rating: 3.3,
-            comment: "Bought protein powder, they even send me a little gift! It was quite refreshing to see some stores care about customer service.",
-        },
-        {
-            id: 4,
-            user: "Dağhan",
-            rating: 2.1,
-            comment: "It was mid. This whole idea of online pharmacy is weird in general.",
-        },
-        {
-            id: 5,
-            user: "Dağhan",
-            rating: 2.1,
-            comment: "It was mid. This whole idea of online pharmacy is weird in general.",
-        },
-        {
-            id: 6,
-            user: "Dağhan",
-            rating: 2.1,
-            comment: "It was mid. This whole idea of online pharmacy is weird in general.",
-        },
-        {
-            id: 7,
-            user: "Dağhan",
-            rating: 2.1,
-            comment: "It was mid. This whole idea of online pharmacy is weird in general.",
-        },
-    ];
+    // domain'den objeyi çekkk
+    const currentURL = window.location.pathname;
+    const parts = currentURL.split('/'); // Split the pathname by '/'
+    // set-id:
+    const id = parts[parts.length - 1]; // Get the last part of the pathname
+    console.log(id);
+
+    // state for reviews:
+    const [reviews, setReviews] = useState([]);
+
+    // fetch medicine data:
+    useEffect(() => {
+        fetch('http://localhost:5000/reviews/pharmacy/' + id, {
+            credentials: 'include',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                setReviews(data);
+                console.log(data)
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }, []);
 
     const navigate = useNavigate();
-    const goToPharmacyStoreHandler = (item) => {
-        navigate(`/pharmacyStore/${item}`);
+    const goToPharmacyStoreHandler = () => {
+        navigate(`/pharmacyStore/${id}`);
     };
 
     return (
         <div className="reviewHolder">
 
             <div className="pharTitleElements">
-                <h1 className="reviewPharmacyTitle" onClick={() => goToPharmacyStoreHandler(1)}>Reviews for <u>Gönül Pharmacy</u></h1>
-                <p className="pharTitlePar"><strong>(9 Reviews)</strong></p>
-                <p className="pharTitlePar">4.2/5.0</p>
+                <h1 className="reviewPharmacyTitle" onClick={() => goToPharmacyStoreHandler()}>Reviews for <u>{reviews.length !== 0 ? (reviews.stats.name): "Pharmacy"}</u></h1>
+                <p className="pharTitlePar"><strong>({reviews.length !== 0 ? (reviews.stats.total_reviews): "Pharmacy"} Reviews)</strong></p>
+                <p className="pharTitlePar">{reviews.length !== 0 ? (reviews.stats.avg_rating): "Pharmacy"}/5.0</p>
             </div>
 
             <div className="commentsHolder">
-                {reviews.map(review => (
-                    <div key={review.id} className="commentHolder">
+                { reviews.length !== 0 && reviews.reviews.map(review => (
+                    <div className="commentHolder">
                         <div className="commentHeaderElements">
-                            <p className="commentHeader" ><strong>{review.user}</strong></p>
+                            <p className="commentHeader" ><strong>{review.title}</strong></p>
                             <p className="commentHeader">{review.rating}/5.0</p>
                         </div>
-                        <p className="commentBody">{review.comment}</p>
+                        <p className="commentBody">{review.body}</p>
                     </div>
                 ))}
             </div>
