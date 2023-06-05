@@ -42,6 +42,26 @@ function CartItem(props) {
     const deleteActualDeletion = () => {
         // burada aslında sepetten çıkarma işlemi yapılacak
         setShowModal(false);
+        console.log(props.id.toString());
+        console.log(typeof props.id.toString());
+        fetch('http://localhost:5000/patient/cart', {
+                credentials: 'include',
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    prod_id: props.id
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+                window.location.reload()
         console.log("Item deleted");
     };
 

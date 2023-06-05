@@ -20,19 +20,20 @@ function Cart() {
   // state to determine if cart is empty: 
   const [isEmpty, setIsEmpty] = useState(false);
 
-
+  const [cartItems, setCartItems] = useState([]);
   // fetch cart items from database:
-  /*
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/prescriptions');
+        const response = await fetch('http://localhost:5000/patient/cart', {
+          credentials: 'include'});
         if (!response.ok) {
           throw new Error('Something went wrong!');
         }
 
         const data = await response.json();
-        setPrescriptions(data);
+        setCartItems(data);
+        console.log(data);
       } catch (error) {
         console.error('Error:', error);
       }
@@ -40,15 +41,15 @@ function Cart() {
 
     fetchData();
   }, []);
-  */
 
 
-
-  const [cartItems, setCartItems] = useState([
+  /*
+  
     { id: 1, imgURL: "https://picsum.photos/200/200", name: "Panadol", prec: "No prescription", qty: 1, price: 10 },
     { id: 2, imgURL: "https://picsum.photos/200/200", name: "Parol", prec: "No prescription", qty: 1, price: 200 },
     { id: 3, imgURL: "https://picsum.photos/200/200", name: "Aspirin", prec: "No prescription", qty: 1, price: 15 },
   ]);
+  */
 
 
   useEffect(() => {
@@ -57,7 +58,7 @@ function Cart() {
       if (cartItems.length !== 0) {
         let total = 0;
         cartItems.forEach(item => {
-          total += item.price * item.qty;
+          total += item.price * 1;
         });
         setTotalPrice(total);
       }
@@ -152,12 +153,12 @@ function Cart() {
             <h1 className='cartTitle'>Pharmacy: Yıldız Pharmacy</h1>
             {cartItems.map((item) =>
               <CartItem
-                key={item.id}
-                id={item.id}
+                key={item.prod_id}
+                id={item.prod_id}
                 imgURL={item.imgURL}
                 name={item.name}
                 prec={item.prec}
-                qty={item.qty}
+                qty={1}
                 price={item.price}
               />
             )}

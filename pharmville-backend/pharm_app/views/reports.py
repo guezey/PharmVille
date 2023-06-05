@@ -118,12 +118,12 @@ FROM (SELECT DATE(order_time) AS order_date,
     return report
 
 
-@bp.route('/', methods=['GET'])
+@bp.route('', methods=['GET'])
 def get_report():
     pharmacy_id = session['user_id']
     start_date = _parse_str_to_time(request.args.get('start_date'))
     end_date = _parse_str_to_time(request.args.get('end_date'))
-
+    current_app.logger.info(f"Hereee----------------")
     if start_date and end_date:
         report = report_with_date(pharmacy_id, start_date, end_date)
     else:

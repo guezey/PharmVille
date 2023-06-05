@@ -1,10 +1,41 @@
 import "./SystemReports.css"
-import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { Bar } from 'react-chartjs-2';
+import Dropdown from 'react-bootstrap/Dropdown';
+import React, { useState, useEffect } from 'react';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import { VictoryBar, VictoryChart, VictoryAxis } from 'victory';
 
+
+const CustomMenu = React.forwardRef(
+    ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
+        const [value, setValue] = useState('');
+
+        return (
+            <div
+                ref={ref}
+                style={style}
+                className={className}
+                aria-labelledby={labeledBy}
+            >
+                <Form.Control
+                    autoFocus
+                    className="mx-3 my-2 w-auto"
+                    placeholder="Type to filter..."
+                    onChange={(e) => setValue(e.target.value)}
+                    value={value}
+                />
+                <ul className="list-unstyled">
+                    {React.Children.toArray(children).filter(
+                        (child) =>
+                            !value || child.props.children.toLowerCase().startsWith(value),
+                    )}
+                </ul>
+            </div>
+        );
+    },
+);
 
 function SystemReports() {
 
@@ -31,6 +62,84 @@ function SystemReports() {
     // state for showing reports
     const [showReports, setShowReports] = useState(true);
 
+    // state for medicineArr:
+    const [listOfMedicineArr, setListOfMedicineArr] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(false);
+    const [errMsg, setErrMsg] = useState("");
+    // fetch medicine data:
+    useEffect(() => {
+        setIsLoading(true);
+        fetch('http://localhost:5000/medicine', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                setListOfMedicineArr(data);
+                setIsLoading(false);
+                setError(false);
+            })
+            .catch(error => {
+                console.log(error);
+                setIsLoading(false);
+                setError(true);
+            })
+    }, []);
+
+    const createSysRepHandler = () => {
+        console.log("tık")
+        console.log(startDate)
+        console.log(endDate)
+        console.log(getAllTimeData)
+        // check if dates are valid:
+        if (startDate !== null && endDate !== null && startDate > endDate) {
+            setErrMsg("Start date must be before end date!");
+        } else if (getAllTimeData) {
+            // diğer türlü fetch system report:
+            fetch('http://localhost:5000/report', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setData(data);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+
+        }
+        else {
+            // diğer türlü fetch system report:
+            fetch('http://localhost:5000/report', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setData(data);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
+        // show reports:
+        setShowReports(true);
+    }
+
+    const handleClose = () => setError(false);
+
     // data state:
     const [data, setData] = useState([
         { date: '2023-05-01', productName: 'Product A', amountSold: 10, totalEarned: 100 },
@@ -39,7 +148,7 @@ function SystemReports() {
     ]);
 
     // for pie chart:
-    const data2 = [
+    const [data2, setData2] = [
         { product: 'Product A', sales: 100 },
         { product: 'Product B', sales: 80 },
         { product: 'Product C', sales: 150 },
@@ -48,6 +157,16 @@ function SystemReports() {
     return (
         <div style={{ display: 'flex' }}>
             <div>
+                <Modal show={error} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>{errMsg}</Modal.Body>
+                    <Modal.Footer>
+                        <button onClick={handleClose}>
+                            Close
+                        </button>
+                    </Modal.Footer>
+                </Modal>
                 <div className="reportSelectorHolder">
                     <h1 className="systemReportsTitle">New System Report</h1>
                     <div className="dateArranger">
@@ -80,7 +199,7 @@ function SystemReports() {
                             Get all time data
                         </label>
                     </div>
-
+                    <button className="buttonSysRep" onClick={createSysRepHandler}>Create System Report</button>
                 </div>
             </div>
             {showReports &&
@@ -88,48 +207,34 @@ function SystemReports() {
                     <table className="table">
                         <thead>
                             <tr>
-                                <th>Date</th>
                                 <th>Product Name</th>
                                 <th>Amount Sold</th>
                                 <th>Total Earned</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((row, index) => (
-                                <tr key={index}>
-                                    <td>{row.date}</td>
-                                    <td>{row.productName}</td>
-                                    <td>{row.amountSold}</td>
-                                    <td>{row.totalEarned}</td>
-                                </tr>
-                            ))}
+                            {
+                                data.top3_most_sold && data.top3_most_sold.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.name}</td>
+                                        <td>{row.order_count}</td>
+                                        <td>{row.price}</td>
+                                    </tr>
+                                ))
+                            }
                         </tbody>
                     </table>
                     <div className="analysisHolder">
                         <h1 className="systemReportsTitle">Order Status (For Selected Dates)</h1>
-                        <p className="reportDetailInfo">Total Earned: 2217,7 TL</p>
-                        <p className="reportDetailInfo">Total Orders: 12</p>
-                        <p className="reportDetailInfo">Highest Revenue Date: 12-03-23</p>
-                        <p className="reportDetailInfo">Total Number of Canceled Orders: 1</p>
+                        <p className="reportDetailInfo">Total Earned: {data ? data.revenue : "No data found"}</p>
+                        <p className="reportDetailInfo">Total Orders: {data ? data.order_count : "No data found"}</p>
+                        <p className="reportDetailInfo">Highest Revenue Date: {data.max_revenue_date ? data.max_revenue_date.order_date : "No data found"}</p>
+                        <p className="reportDetailInfo">Total Number of Canceled Orders: {data ? data.canceled_orders_count : "No data found"}</p>
                     </div>
                 </div>}
             {showReports &&
                 <div className="chartHolder">
-                    <VictoryChart>
-                        <VictoryAxis
-                            dependentAxis
-                            domainPadding={10}
-                        />
-                        <VictoryAxis style={{ tickLabels: { fontSize: 8 } }} />
-                        <VictoryBar
-                            data={data2}
-                            x="product"
-                            y="sales"
-                            style={{ data: { fill: '#91AF9D' } }}
-                            barWidth={12} // Adjust the bar width as desired
-                            alignment="start"
-                        />
-                    </VictoryChart>
+                   
                 </div>}
         </div>
     );

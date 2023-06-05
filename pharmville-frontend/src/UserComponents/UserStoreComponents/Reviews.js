@@ -48,7 +48,7 @@ function Reviews() {
             </div>
 
             <div className="commentsHolder">
-                { reviews.length !== 0 && reviews.reviews.map(review => (
+                { reviews.reviews && reviews.reviews.map(review => (
                     <div className="commentHolder">
                         <div className="commentHeaderElements">
                             <p className="commentHeader" ><strong>{review.title}</strong></p>
@@ -58,7 +58,7 @@ function Reviews() {
                     </div>
                 ))}
                 {
-                    reviews.reviews.length === 0 && <p className="commentBody">No reviews yet.</p>
+                    !reviews && <p className="commentBody">No reviews yet.</p>
                 }
             </div>
         </div>

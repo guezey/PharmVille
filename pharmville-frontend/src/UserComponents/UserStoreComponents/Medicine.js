@@ -44,10 +44,12 @@ function Medicine(props) {
     const [prodType, setIsProdType] = useState("");
 
     const [buyButn, setBuyButn] = useState(false);
+    const [selectedPharmacy, setSelectedPharmacy] = useState("");
 
-    const addToCartHandler = () => {
+    const addToCartHandler = (item) => {
         // kullanıcının uyuşan prescriptionlarını çek
         setBuyButn(true);
+        setSelectedPharmacy(item.pharmacy_id);
     }
 
     const [presc, setPresc] = useState([]);
@@ -55,7 +57,7 @@ function Medicine(props) {
     useEffect(() => {
         const handleAddToCart = () => {
             if (product.presc_type === "NONE") {
-                // satın al
+                handleBuy();
             } else {
                 setShow(true);
                 fetch('http://localhost:5000/prescriptions/' + id, {
@@ -74,7 +76,7 @@ function Medicine(props) {
                         console.log(error);
                     })
             }
-            //navigate(`/`);
+
         }
         if (buyButn) {
             handleAddToCart();
@@ -83,25 +85,35 @@ function Medicine(props) {
 
     const handleBuy = () => {
         // burada sepete atma
-        // navigate(`/`);
-        if (product.prod_type === "Medicine" && selectedPresc === "") {
+        if (product.prod_type === "Medicine" && product.presc_type !== "NONE" && selectedPresc === "") {
             // hata ver
         } else {
+            console.log(JSON.stringify({
+                presc_id: selectedPresc,
+                pharmacy_id: product.pharmacy_id,
+                product_id: id
+            }));
             fetch('http://localhost:5000/prescriptions/' + id, {
-                    credentials: 'include',
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                credentials: 'include',
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    presc_id: selectedPresc.id,
+                    pharmacy_id: selectedPharmacy,
+                    product_id: id
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        setPresc(data);
-                        console.log(data);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    setPresc(data);
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+                navigate(`/`);
         }
     }
 
@@ -120,6 +132,8 @@ function Medicine(props) {
 
     // handle selected prescription:
     const handleSelect = (event) => {
+        console.log("----------------");
+        console.log(event.target.value);
         setSelectedPresc(event.target.value);
     };
 
@@ -230,15 +244,15 @@ function Medicine(props) {
                         <Form>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Prescription</Form.Label>
-                                {presc.applicable_prescriptions && presc.applicable_prescriptions.length !== 0 && 
-                                <select value={selectedPresc} onChange={handleSelect} className="prescSelectDropdown">
-                                    <option value="">Select a prescription</option>
-                                    {presc.applicable_prescriptions.map((option, index) => (
-                                        <option key={index} value={option}>
-                                            {option.presc_id}
-                                        </option>
-                                    ))}
-                                </select>
+                                {presc.applicable_prescriptions && presc.applicable_prescriptions.length !== 0 &&
+                                    <select value={selectedPresc} onChange={handleSelect} className="prescSelectDropdown">
+                                        <option value="">Select a prescription</option>
+                                        {presc.applicable_prescriptions.map((option, index) => (
+                                            <option key={index} value={option.presc_id}>
+                                                {option.presc_id}
+                                            </option>
+                                        ))}
+                                    </select>
                                 }
                                 {presc.message &&
                                     <p>No prescription available for current medicine</p>
@@ -251,9 +265,9 @@ function Medicine(props) {
                             Cancel
                         </button>
                         {!presc.message &&
-                        <button onClick={handleBuy}>
-                            Add to Cart
-                        </button>}
+                            <button onClick={handleBuy}>
+                                Add to Cart
+                            </button>}
                     </Modal.Footer>
                 </Modal>
             </div>}
