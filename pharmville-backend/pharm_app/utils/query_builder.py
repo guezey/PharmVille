@@ -10,7 +10,7 @@ class BaseQueryBuilder:
         self.ordering = kwargs.get("ordering")
         self.order_type = kwargs.get("order_type")
         self.min_price = kwargs.get('min_price')
-        self.max_price = kwargs.get('max_price'),
+        self.max_price = kwargs.get('max_price')
         self.pharmacy_id = kwargs.get('pharmacy_id')
 
     def _apply_ordering(self):
@@ -103,7 +103,7 @@ class MedicineQueryBuilder(BaseQueryBuilder):
             """)
 
         price_predicate = self._apply_price_range()
-        if not price_predicate:
+        if price_predicate:
             predicates.append(price_predicate)
 
         pharmacy_predicate = self._get_pharmacy_id_predicate()
@@ -136,7 +136,7 @@ class ProteinPowderQueryBuilder(BaseQueryBuilder):
         if self.aromas and len(self.aromas) > 0:
             predicates.append(f""" aroma_name IN ({to_string_tuple(self.aromas)}) """)
         price_predicate = self._apply_price_range()
-        if not price_predicate:
+        if price_predicate:
             predicates.append(price_predicate)
 
         pharmacy_predicate = self._get_pharmacy_id_predicate()
@@ -176,7 +176,7 @@ class SkincareQueryBuilder(BaseQueryBuilder):
                 """)
 
         price_predicate = self._apply_price_range()
-        if not price_predicate:
+        if price_predicate:
             predicates.append(price_predicate)
 
         pharmacy_predicate = self._get_pharmacy_id_predicate()
