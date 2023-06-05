@@ -1,6 +1,6 @@
 from MySQLdb.cursors import DictCursor
 from MySQLdb import Error
-from flask import Blueprint, jsonify, session
+from flask import Blueprint, jsonify, session, request
 from flask.views import MethodView
 from pharm_app.extensions import db
 
@@ -108,8 +108,14 @@ def get(prod_id: int):
     if not presc:
         return jsonify({"message": "No such prescription"}), 404
 
-
-
     return jsonify({"applicable_prescriptions": presc}), 200
+@bp.route('/<int:prod_id>', methods=['POST'])
+def add_to_cart(prod_id: int):
+    cursor = db.connection.cursor(DictCursor)
+    data = request.get_json()
+    if 'cart' not in session:
+        session['cart'] = []
+    session['cart'].append({'prod_id': prod_id, 'presc_id': data['presc_id']})
+    return jsonify({"message": "Added to cart"}), 200
 
 bp.add_url_rule('', view_func=PrescriptionsView.as_view('prescriptions'), methods=['GET'])

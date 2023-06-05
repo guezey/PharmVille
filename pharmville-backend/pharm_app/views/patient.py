@@ -20,5 +20,24 @@ class PatientInfoView(MethodView):
         patient = cursor.fetchone()
         return jsonify(patient), 200
 
+@bp.route('/cart', methods=['GET'])
+def get_cart():
+    if 'cart' not in session:
+        return jsonify({'message': 'NO cART included'}), 404
+
+    cursor = db.connection.cursor(DictCursor)
+
+    for item in session['cart']:
+        cursor.execute(
+            """
+            SELECT name, price FROM Product
+            WHERE prod_id = %s
+            """,
+            (item['prod_id'],)
+        )
+        item['name'], item['price'] = cursor.fetchone().values()
+
+    return jsonify(session['cart']), 200
+
 
 bp.add_url_rule("", view_func=PatientInfoView.as_view("patient-info"))
