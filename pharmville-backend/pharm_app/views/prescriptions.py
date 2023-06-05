@@ -91,5 +91,25 @@ class PrescriptionsView(MethodView):
 
         return jsonify({"prescriptions": prescriptions_with_medicines_and_diseases}), 200
 
+@bp.route('/<int:prod_id>', methods=['GET'])
+def get(prod_id: int):
+    cursor = db.connection.cursor(DictCursor)
+
+    cursor.execute(
+        """
+        SELECT presc_id, write_date FROM Prescription
+        NATURAL JOIN medicine_presc
+        WHERE med_id = %s AND patient_id = %s
+        """,
+        (prod_id, session['user_id'])
+    )
+    presc = cursor.fetchone()
+
+    if not presc:
+        return jsonify({"message": "No such prescription"}), 404
+
+
+
+    return jsonify({"applicable_prescriptions": presc}), 200
 
 bp.add_url_rule('', view_func=PrescriptionsView.as_view('prescriptions'), methods=['GET'])
