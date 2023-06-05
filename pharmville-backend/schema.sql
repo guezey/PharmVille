@@ -38,7 +38,8 @@ CREATE TABLE Doctor
     FOREIGN KEY (doctor_id) REFERENCES Person (person_id)
 );
 
-CREATE TABLE Pharmacy(
+CREATE TABLE Pharmacy
+(
     pharmacy_id     int PRIMARY KEY                        NOT NULL,
     name            varchar(255)                           NOT NULL,
     is_on_duty      boolean                                NOT NULL,
@@ -111,7 +112,7 @@ CREATE TABLE Address
 (
     address_id      int PRIMARY KEY AUTO_INCREMENT,
     user_id         int          NOT NULL,
-    name            varchar(255) DEFAULT  NULL,
+    name            varchar(255) DEFAULT NULL,
     city            varchar(255) NOT NULL,
     country         varchar(255) NOT NULL,
     address_field   varchar(255) NOT NULL,
@@ -395,7 +396,6 @@ END;
 */
 
 
-
 /*
 CREATE TRIGGER delete_medicine_join_tables
     AFTER DELETE
@@ -439,7 +439,7 @@ END;
 INSERT INTO User (user_id, email, password, phone, role)
 VALUES (1, 'deniz@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '532033931', 'Patient'),
        (2, 'ceren@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '324323024', 'Doctor'),
-       (3, 'dağhan@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '324324233', 'Patient'),
+       (3, 'daghan@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '324324233', 'Patient'),
        (4, 'aliemir@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', NULL, 'Doctor'),
        (5, 'arda@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '3940909090', 'Patient'),
        (6, 'faruk.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '423809444',
@@ -449,7 +449,7 @@ VALUES (1, 'deniz@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNP
        (8, 'admin@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '312312312', 'Admin'),
        (9, 'fatih.eczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '31232132',
         'Pharmacy'),
-       (10, 'reject.rejectoğlu@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '533313231',
+       (10, 'reject.rejectoglu@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe', '533313231',
         'Doctor'),
        (11, 'rejectullah.ezczane@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNPx2eiV0SKgWe',
         '531011002', 'Pharmacy'),
@@ -460,16 +460,16 @@ VALUES (1, 'deniz@gmail.com', '$2a$12$vNnmP3VRIqs0jqrCle41IO/gaREBbNMU8AztwNqTNP
 INSERT INTO Person(person_id, name, surname, tck, is_admin)
 VALUES (1, 'Deniz Mert', 'Dilaverler', '41963970444', FALSE),
        (2, 'Ceren', 'Akyar', '21837129811', FALSE),
-       (3, 'Dağhan', 'Ünal', '23123123301', FALSE),
-       (4, 'Ali Emir', 'Güzey', '21312332986', FALSE),
-       (5, 'Arda', 'Baktır', '12312321228', FALSE),
-       (8, 'Admin', 'Adminoğlu', '12312312764', TRUE),
-       (10, 'Reject', 'Rejectoğlu', '12321312315', FALSE)
+       (3, 'Daghan', 'Unal', '23123123301', FALSE),
+       (4, 'Ali Emir', 'Guzey', '21312332986', FALSE),
+       (5, 'Arda', 'Baktir', '12312321228', FALSE),
+       (8, 'Admin', 'Adminoglu', '12312312764', TRUE),
+       (10, 'Reject', 'Rejectoglu', '12321312315', FALSE)
 ;
 
 INSERT INTO Pharmacy(pharmacy_id, name, is_on_duty, diploma_path, balance, approval_status)
 VALUES (6, 'Faruk Pharmacy', TRUE, NULL, 2000, 'APPROVED'),
-       (7, 'Gönül Pharmacy', FALSE, NULL, 3000, 'APPROVED'),
+       (7, 'Gonul Pharmacy', FALSE, NULL, 3000, 'APPROVED'),
        (9, 'Fatih Pharmacy', TRUE, NULL, 0, 'PENDING'),
        (11, 'Rejectullah Pharmacy', TRUE, NULL, 1, 'REJECTED'),
        (12, 'Pharma Pharmacy', TRUE, NULL, 213213, 'APPROVED')
@@ -488,15 +488,15 @@ VALUES (1, '2002-04-05', 78.5, 182, 'M'),
 ;
 
 INSERT INTO Address(address_id, user_id, name, city, country, address_field, address_field_2, postal_code)
-VALUES (1, 1, 'Home', 'Istanbul', 'Turkey', 'Ümraniye Parseller Mahallesi',
+VALUES (1, 1, 'Home', 'Istanbul', 'Turkey', 'Umraniye Parseller Mahallesi',
         'Abdullahazam Caddesi Aqua City1. Etap Villa 1-1', '21301'),
-       (2, 1, 'Dorm', 'Ankara', 'Turkey', 'Çankaya, Üniversiteler mahallesi',
-        'Bilkent Üniversitesi merkez kampüsü 82. yurt', '12312'),
-       (3, 3, 'MY Home', 'Ankara', 'Turkey', 'Çankaya, Çayyolu', 'Dağhanın bizi çağırdığı site', '12342'),
-       (4, 5, 'Cozy Home', 'Cehennem', 'Ahiret', 'Adolf Hitler Mahallesi', 'Cayır Cayır sokak', '89343'),
+       (2, 1, 'Dorm', 'Ankara', 'Turkey', 'Cankaya, Universiteler mahallesi',
+        'Bilkent Universitesi merkez kampsu 82. yurt', '12312'),
+       (3, 3, 'MY Home', 'Ankara', 'Turkey', 'Cankaya, Cayyolu', 'Daghan sokak daggan', '12342'),
+       (4, 5, 'Cozy Home', 'Cehennem', 'Ahiret', 'Cehennem Mahallesi', 'Cayir Cayir sokak', '89343'),
        (5, 6, 'Pharmacy', 'Ankara', 'Turkey', 'Habudu habudu sokak', 'Habudu Habudu caddesi Faruk Pharmacy', '12332'),
-       (6, 7, 'Tükkan', 'Istanbul', 'Turkey', 'Hob hob sokak', 'Hib hob caddesi Gönül Pharmacy', '12345'),
-       (7, 12, 'My Tükkan', 'Aydın', 'Turkey', 'Zom zom sokak', 'zim Zom caddesi Pharmac Pharmacy', '23243')
+       (6, 7, 'Tukkan', 'Istanbul', 'Turkey', 'Hob hob sokak', 'Hib hob caddesi Gonul Pharmacy', '12345'),
+       (7, 12, 'My Tukkan', 'Aydin', 'Turkey', 'Zom zom sokak', 'zim Zom caddesi Pharmac Pharmacy', '23243')
 ;
 
 -- Product --------------------------------------------------------------------------------
@@ -507,9 +507,9 @@ VALUES (1, 'Calpol', 'Bayer', 70),
        (4, 'Arveles', 'Bayer', 60),
        (5, 'Majezik', 'Abdi Ibrahim', 60.90),
        (6, 'Advil', 'Abdi Ibrahim', 62.30),
-       (7, 'Aferin', 'Eczacıbaşı', 40.20),
-       (8, 'Rennie', 'Eczacıbaşı', 50.30),
-       (9, 'Nurofen', 'Eczacıbaşı', 80.20),
+       (7, 'Aferin', 'Eczacibasi', 40.20),
+       (8, 'Rennie', 'Eczacibasi', 50.30),
+       (9, 'Nurofen', 'Eczacibasi', 80.20),
        (10, 'Paranox', 'Bayer', 30.40),
        (11, 'Ventolin', 'Bayer', 60)
 ;
@@ -518,14 +518,14 @@ INSERT INTO SideEffect(effect_name, description)
 VALUES ('Nausea', 'Urge to vomit'),
        ('Abdominal Pain', 'Pain in the Abdomen'),
        ('Headache', 'Pain in the head'),
-       ('Diarrhea', 'Wet poop'),
-       ('Constipation', 'No Poop ;('),
+       ('Diarrhea', 'Bad'),
+       ('Constipation', 'Bad :('),
        ('Allergic Reaction', 'Medicine can cause allergic reactions on some patients'),
        ('Heartburn', 'Burning feeling on heart'),
        ('Dizziness', 'Dizzy feeling'),
        ('Stomach Upset', 'Sad stomach :('),
        ('Stomach Pain', 'Pain in the stomach'),
-       ('Increased Heart Rate', 'Heart rate go VROOOOOM!'),
+       ('Increased Heart Rate', 'Heart rate increases!'),
        ('Elevated blood pressure', 'Blood pressure increases'),
        ('Restlessness', 'Inability to stay relaxed'),
        ('Nervousness', 'Feeling of unease and anxiety')
@@ -884,12 +884,14 @@ VALUES (6, 2, 10, 'Great medicine'),
 INSERT INTO Orders(order_id, order_time, pharmacy_id, patient_id, delivery_time, order_status,
                    shipping_firm, address_id)
 VALUES (1, '2023-05-25 15:30:00', 6, 1, '2023-05-27 21:30:00', 'SHIPPED', 'MNG', 1),
-       (6, '2023-05-23 15:25:00', 6, 1, '2023-05-24 15:30:00', 'DELIVERED', 'Yurtiçi', 2),
+       (6, '2023-05-23 15:25:00', 6, 1, '2023-05-24 15:30:00', 'DELIVERED', 'Yurtici', 2),
        (2, '2023-05-24 23:00:00', 7, 3, '2023-05-22 12:23:00', 'SHIPPED', NULL, NULL),
        (3, '2023-05-24 12:00:00', 12, 3, '2023-05-23 12:30:00', 'ACTIVE', NULL, 3),
        (4, '2023-05-25 11:00:00', 12, 5, '2023-05-24 12:30:00', 'DELIVERED', 'Homdom Kargo', 4),
        (5, '2023-05-25 10:00:00', 12, 5, '2023-05-24 12:12:12', 'DELIVERED', 'MNG', 4),
-       (7, '2023-05-25 10:00:00', 12, 5, '2023-05-24 12:12:12', 'DELIVERED', 'MNG', 4)
+       (7, '2023-05-25 10:00:00', 12, 5, '2023-05-24 12:12:12', 'DELIVERED', 'MNG', 4),
+       (8, '2023-05-22 11:00:00', 6, 1, '2023-05-24 12:30:00', 'DELIVERED', 'Homdom Kargo', 1),
+       (9, '2023-05-27 11:00:00', 6, 1, '2023-05-29 12:30:00', 'DELIVERED', 'hodomom', 1)
 ;
 
 
@@ -939,18 +941,31 @@ VALUES (1, 1, NULL, 87.33, 2),
        (5, 30, NULL, 54.22, 1),
        (5, 31, NULL, 59.22, 2),
 
-       (7, 4, NULL, 55.22, 2)
+       (7, 4, NULL, 55.22, 2),
+
+       (8, 3, NULL, 98.23, 4),
+       (8, 2, NULL, 96.55, 3),
+       (8, 22, NULL, 200, 4),
+       (8, 23, NULL, 230, 5),
+
+       (9, 5, NULL, 96.25, 7),
+       (9, 11,  NULL, 120, 4),
+       (9, 23, NULL, 232, 3),
+       (9, 24, NULL, 210, 4)
+
 ;
-INSERT INTO Payment(payment_id, order_id, payment_time, payment_amount, card_number, card_holder ,
-    card_cvv,     
-    expiry_date )
+INSERT INTO Payment(payment_id, order_id, payment_time, payment_amount, card_number, card_holder,
+                    card_cvv,
+                    expiry_date)
 VALUES (1, 1, '2023-05-25 15:30:00', 87.33, '1234123412341234', 'John Doe', '123', '5/25'),
        (2, 2, '2023-05-25 15:30:00', 81.22, '1234123412341234', 'Mehmet', '123', '5/25'),
        (3, 3, '2023-05-25 15:30:00', 200.22, '1234123412341234', 'John Doe', '123', '5/25'),
        (4, 4, '2023-05-25 15:30:00', 200.21, '1234123412341234', 'John Doe', '123', '5/25'),
        (5, 5, '2023-05-25 15:30:00', 222.33, '1234123412341234', 'John Doe', '123', '5/25'),
        (6, 6, '2023-05-23 15:25:00', 94.22, '1234123412341234', 'John Doe', '123', '5/25'),
-       (7, 7, '2023-05-23 15:25:00', 90.31, '1234123412341234','Frank', '123', '6/25')
+       (7, 7, '2023-05-23 15:25:00', 90.31, '1234123412341234', 'Frank', '123', '6/25'),
+       (8, 8, '2023-05-23 15:25:00', 94.22, '1234123412341234', 'John Doe', '123', '5/25'),
+       (9, 9, '2023-05-23 15:25:00', 90.31, '1234123412341234', 'Frank', '123', '6/25')
 ;
 
 INSERT INTO Review(review_id, rating, title, body, order_id)
@@ -959,30 +974,30 @@ VALUES (1, 4, 'Great Pharmacy', 'My order arrived a little late but no damages',
        (2, 1, 'Disastorous', 'I recieved my package 1 week late and the they sent the wrong medicine', 5);
 
 INSERT INTO DiseaseType(disease_type)
-VALUE ('Deadly'),
-         ('Chronic'),
-         ('Acute'),
-         ('Infectious'),
-         ('Hereditary'),
-         ('Nutritional'),
-         ('Neoplastic'),
-         ('Idiopathic'),
-         ('Iatrogenic'),
-         ('Congenital'),
-         ('Degenerative'),
-         ('Autoimmune'),
-         ('Allergic'),
-         ('Mental'),
-         ('Physical'),
-         ('Social'),
-         ('Spiritual'),
-         ('Environmental'),
-         ('Occupational'),
-         ('Substance-related'),
-         ('Developmental'),
-         ('Functional'),
-         ('Psychosomatic'),
-         ('Other');
+    VALUE ('Deadly'),
+    ('Chronic'),
+    ('Acute'),
+    ('Infectious'),
+    ('Hereditary'),
+    ('Nutritional'),
+    ('Neoplastic'),
+    ('Idiopathic'),
+    ('Iatrogenic'),
+    ('Congenital'),
+    ('Degenerative'),
+    ('Autoimmune'),
+    ('Allergic'),
+    ('Mental'),
+    ('Physical'),
+    ('Social'),
+    ('Spiritual'),
+    ('Environmental'),
+    ('Occupational'),
+    ('Substance-related'),
+    ('Developmental'),
+    ('Functional'),
+    ('Psychosomatic'),
+    ('Other');
 
 INSERT INTO Disease(name, disease_type)
 VALUES ('Cancer', 'Neoplastic'),
