@@ -58,6 +58,8 @@ def delete_from_cart():
         if item['prod_id'] == prod_id:
             session['cart'].remove(item)
             break
+    else:
+        return jsonify({'message': 'Item not found'}), 404
 
     return jsonify(session['cart']), 200
 
