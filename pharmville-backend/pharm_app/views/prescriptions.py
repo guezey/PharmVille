@@ -91,7 +91,7 @@ class PrescriptionsView(MethodView):
 
         return jsonify({"prescriptions": prescriptions_with_medicines_and_diseases}), 200
 
-@bp.route('/<int:prod_id>', methods=['GET'])
+@bp.route('<int:prod_id>', methods=['GET'])
 def get(prod_id: int):
     cursor = db.connection.cursor(DictCursor)
 

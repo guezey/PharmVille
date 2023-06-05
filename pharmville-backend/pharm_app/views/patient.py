@@ -37,14 +37,14 @@ def get_cart():
         )
         item['name'], item['price'] = cursor.fetchone().values()
 
-        cursor.execute(
-            """
-            SELECT name FROM Pharmacy
-            WHERE pharmacy_id = %s
-            """,
-            (item['pharmacy_id'],)
-        )
-        item['pharmacy_name'] = cursor.fetchone()['name']
+        # cursor.execute(
+            # """
+        #     SELECT name FROM Pharmacy
+        #     WHERE pharmacy_id = %s
+        #     """,
+        #     (item['pharmacy_id'],)
+        # )
+        # item['pharmacy_name'] = cursor.fetchone()['name']
 
     return jsonify(session['cart']), 200
 @bp.route('/cart', methods=['DELETE'])

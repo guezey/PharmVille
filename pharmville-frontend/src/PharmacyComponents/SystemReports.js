@@ -118,8 +118,19 @@ function SystemReports() {
 
         }
         else {
+            
+let year = startDate.getFullYear();
+let month = String(startDate.getMonth() + 1).padStart(2, '0');
+let day = String(startDate.getDate()).padStart(2, '0');
+let start_date_str = year + '-' + month + '-' + day;
+
+year = endDate.getFullYear();
+month = String(endDate.getMonth() + 1).padStart(2, '0');
+day = String(endDate.getDate()).padStart(2, '0');
+let end_date_str = year + '-' + month + '-' + day;
+            const url = `https://localhost:5000/report/?start_date=${start_date_str}&end_date=${end_date_str}`;
             // diğer türlü fetch system report:
-            fetch('http://localhost:5000/report', {
+            fetch(url, {
                 method: 'GET',
                 credentials: 'include',
                 headers: {

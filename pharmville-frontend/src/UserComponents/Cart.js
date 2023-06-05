@@ -150,7 +150,7 @@ function Cart() {
       {step1 &&
         <div className='generalHolder'>
           <div className='cartDiv'>
-            <h1 className='cartTitle'>Pharmacy: Yıldız Pharmacy</h1>
+            <h1 className='cartTitle'>Pharmacy:  Faruk Pharmacy</h1>
             {cartItems.map((item) =>
               <CartItem
                 key={item.prod_id}
