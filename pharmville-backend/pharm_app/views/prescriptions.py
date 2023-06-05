@@ -103,12 +103,10 @@ def get(prod_id: int):
         """,
         (prod_id, session['user_id'])
     )
-    presc = cursor.fetchone()
+    presc = cursor.fetchall()
 
     if not presc:
         return jsonify({"message": "No such prescription"}), 404
-
-
 
     return jsonify({"applicable_prescriptions": presc}), 200
 

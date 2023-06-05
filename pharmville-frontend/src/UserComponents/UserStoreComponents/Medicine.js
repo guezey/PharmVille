@@ -50,19 +50,60 @@ function Medicine(props) {
         setBuyButn(true);
     }
 
+    const [presc, setPresc] = useState([]);
+
     useEffect(() => {
-    const handleAddToCart = () => {
-        // add to cart
-        console.log("added to cart");
-        if (product.presc_type === "NONE") {
-            // satın al
-        } else {
-            setShow(true);
+        const handleAddToCart = () => {
+            if (product.presc_type === "NONE") {
+                // satın al
+            } else {
+                setShow(true);
+                fetch('http://localhost:5000/prescriptions/' + id, {
+                    credentials: 'include',
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        setPresc(data);
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            }
+            //navigate(`/`);
         }
-        //navigate(`/`);
-    }
-    handleAddToCart();
+        if (buyButn) {
+            handleAddToCart();
+        }
     }, [buyButn]);
+
+    const handleBuy = () => {
+        // burada sepete atma
+        // navigate(`/`);
+        if (product.prod_type === "Medicine" && selectedPresc === "") {
+            // hata ver
+        } else {
+            fetch('http://localhost:5000/prescriptions/' + id, {
+                    credentials: 'include',
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        setPresc(data);
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+        }
+    }
 
 
 
@@ -121,13 +162,13 @@ function Medicine(props) {
                         {prodType === "Skincare" &&
                             <div>
                                 <p className="productInfoPar"><strong>Company:</strong> {product.company}</p>
-                                <p className="productInfoPar"><strong>Applicable Skin Types:</strong> 
-                                {product.applicable_skin_types.map((cause) => " " + cause + ", ")}
+                                <p className="productInfoPar"><strong>Applicable Skin Types:</strong>
+                                    {product.applicable_skin_types.map((cause) => " " + cause + ", ")}
                                 </p>
                                 <p className="productInfoPar"><strong>Volume:</strong> {product.volume}</p>
                                 <p className="productInfoPar"><strong>Skin Care Type:</strong> {product.skincare_type}</p>
                             </div>}
-                            {prodType === "ProteinPowder" &&
+                        {prodType === "ProteinPowder" &&
                             <div>
                                 <p className="productInfoPar"><strong>Company: </strong> {product.company}</p>
                                 <p className="productInfoPar"><strong>Aroma:</strong> {product.aroma_name}</p>
@@ -161,23 +202,23 @@ function Medicine(props) {
                     ))
                 }
                 {
-                   ( prodType === "Skincare" || prodType === "ProteinPowder" ) &&
-                        <div className="pharmacyInfoHolder">
-                            <p className="pharmacyTitle" onClick={() => goToPharmacyStoreHandler(product.pharmacy)}>{product.pharmacy.name}</p>
-                            <div className="pharmacyReviewInfo">
-                                <p className="pharmacyInfoPar" onClick={() => goToReviewHandler(product.pharmacy)}>{product.pharmacy.total_reviews} Reviews</p>
-                                <div className="starHolder">
-                                    {[...Array(Math.ceil(product.pharmacy.avg_rating))].map((_, index) => (
-                                        <img src={star} className="starImg"></img>
-                                    ))}
-                                    {[...Array(Math.ceil(5 - product.pharmacy.avg_rating))].map((_, index) => (
-                                        <img src={blackStar} className="starImg"></img>
-                                    ))}
-                                    <p style={{ color: "black" }}>({product.pharmacy.avg_rating})</p>
-                                </div>
-                                <button className="addCartBtn" onClick={addToCartHandler}>Add to Cart</button>
+                    (prodType === "Skincare" || prodType === "ProteinPowder") &&
+                    <div className="pharmacyInfoHolder">
+                        <p className="pharmacyTitle" onClick={() => goToPharmacyStoreHandler(product.pharmacy)}>{product.pharmacy.name}</p>
+                        <div className="pharmacyReviewInfo">
+                            <p className="pharmacyInfoPar" onClick={() => goToReviewHandler(product.pharmacy)}>{product.pharmacy.total_reviews} Reviews</p>
+                            <div className="starHolder">
+                                {[...Array(Math.ceil(product.pharmacy.avg_rating))].map((_, index) => (
+                                    <img src={star} className="starImg"></img>
+                                ))}
+                                {[...Array(Math.ceil(5 - product.pharmacy.avg_rating))].map((_, index) => (
+                                    <img src={blackStar} className="starImg"></img>
+                                ))}
+                                <p style={{ color: "black" }}>({product.pharmacy.avg_rating})</p>
                             </div>
+                            <button className="addCartBtn" onClick={handleBuy}>Add to Cart</button>
                         </div>
+                    </div>
                 }
             </div>
             {product.presc_type !== "NONE" && <div>
@@ -189,14 +230,19 @@ function Medicine(props) {
                         <Form>
                             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                                 <Form.Label>Prescription</Form.Label>
+                                {presc.applicable_prescriptions && presc.applicable_prescriptions.length !== 0 && 
                                 <select value={selectedPresc} onChange={handleSelect} className="prescSelectDropdown">
                                     <option value="">Select a prescription</option>
-                                    {prescription.map((option, index) => (
+                                    {presc.applicable_prescriptions.map((option, index) => (
                                         <option key={index} value={option}>
-                                            {option}
+                                            {option.presc_id}
                                         </option>
                                     ))}
                                 </select>
+                                }
+                                {presc.message &&
+                                    <p>No prescription available for current medicine</p>
+                                }
                             </Form.Group>
                         </Form>
                     </Modal.Body>
@@ -204,9 +250,10 @@ function Medicine(props) {
                         <button onClick={handleClose}>
                             Cancel
                         </button>
-                        <button onClick={addToCartHandler}>
+                        {!presc.message &&
+                        <button onClick={handleBuy}>
                             Add to Cart
-                        </button>
+                        </button>}
                     </Modal.Footer>
                 </Modal>
             </div>}
