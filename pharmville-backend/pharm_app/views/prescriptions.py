@@ -115,7 +115,10 @@ def add_to_cart(prod_id: int):
     data = request.get_json()
     if 'cart' not in session:
         session['cart'] = []
-    session['cart'].append({'prod_id': prod_id, 'presc_id': data['presc_id'], 'pharmacy_id': data['pharmacy_id']})
+    if 'presc_id' not in data:
+        session['cart'].append({'prod_id': prod_id, 'pharmacy_id': data['pharmacy_id']})
+    else:
+        session['cart'].append({'prod_id': prod_id, 'presc_id': data['presc_id'], 'pharmacy_id': data['pharmacy_id']})
     return jsonify({"message": "Added to cart"}), 200
 
 bp.add_url_rule('', view_func=PrescriptionsView.as_view('prescriptions'), methods=['GET'])
