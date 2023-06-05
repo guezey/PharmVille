@@ -11,3 +11,5 @@ from .products import bp as products_bp
 from .pharmacy import bp as pharmacy_bp
 from .doctor import bp as doctor_bp
 
+
+from .reports import bp as reports_bp
