@@ -52,7 +52,7 @@ def delete_from_cart():
     if 'cart' not in session:
         return jsonify({'message': 'NO cART included'}), 404
 
-    prod_id = request.args.get('prod_id')
+    prod_id = request.get_json()['prod_id']
 
     for item in session['cart']:
         if item['prod_id'] == prod_id:
