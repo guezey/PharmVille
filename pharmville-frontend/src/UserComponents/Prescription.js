@@ -4,17 +4,20 @@ import PrescriptionItem from './PrescriptionItem';
 
 function Prescription() {
   const [prescriptions, setPrescriptions] = useState([]);
-  /** 
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/prescriptions');
+        const response = await fetch('http://localhost:5000/prescriptions', {
+          credentials: 'include',
+        });
         if (!response.ok) {
           throw new Error('Something went wrong!');
         }
-
         const data = await response.json();
         setPrescriptions(data);
+        console.log(data.prescriptions);
+        //console.log(prescriptions);
       } catch (error) {
         console.error('Error:', error);
       }
@@ -22,24 +25,28 @@ function Prescription() {
 
     fetchData();
   }, []);
-  */
  
   return (
     <Container className='prescHolder'>
-      <div>
-        {prescriptions.map((prescription) => 
+    <div>
+      {prescriptions.length === 0 && <p>No prescriptions found!</p>}
+      {prescriptions && prescriptions.length !== 0 && (
+        prescriptions.prescriptions.map((prescription) => (
           <PrescriptionItem
-            key={prescription.id}
-            id={prescription.id}
-            date={prescription.date}
+            key={prescription.presc_id}
+            id={prescription.presc_id}
+            date={prescription.write_date}
             type={prescription.type}
             status={prescription.status}
-            drug={prescription.drug}
+            drug={prescription.medicines}
             expired={prescription.expired}
+            due_date={prescription.due_date}
+            diseases={prescription.diseases}
           />
-        )}
-      </div>
-    </Container>
+        ))
+      )}
+    </div>
+  </Container>
   );
 }
 

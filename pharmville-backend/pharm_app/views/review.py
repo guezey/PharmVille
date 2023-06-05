@@ -22,9 +22,11 @@ def _parse_review(data):
 def pharmacy_reviews(pharmacy_id):
     cursor = db.connection.cursor(DictCursor)
     pharmacy_reviews = {}
-    cursor.execute("""SELECT * FROM pharmacy_reviews WHERE pharmacy_id = %s""", (pharmacy_id,))
+    cursor.execute("""SELECT body, rating, review_id, title FROM pharmacy_reviews WHERE pharmacy_id = %s""", (pharmacy_id,))
     pharmacy_reviews['reviews'] = cursor.fetchall()
-    cursor.execute("""SELECT * FROM pharmacy_ratings WHERE pharmacy_id = %s """, (pharmacy_id,))
+    cursor.execute("""SELECT ROUND(avg_rating, 2) AS avg_rating, pharmacy_id, total_reviews, name 
+    FROM pharmacy_ratings  NATURAL JOIN Pharmacy
+    WHERE pharmacy_id = %s """, (pharmacy_id,))
     pharmacy_reviews['stats'] = cursor.fetchone()
     return jsonify(pharmacy_reviews), 200
 

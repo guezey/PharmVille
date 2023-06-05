@@ -40,7 +40,7 @@ function Register({ onBackToLogin }) {
     options,
   }) => {
     return (
-      <div className={wrapperClass}>
+      <div className={wrapperClass} >
         <label htmlFor={id} className="form-label">
           {label}
         </label>
@@ -192,7 +192,7 @@ function Register({ onBackToLogin }) {
   return (
     <div>
       <h1 className="logInFont">Register</h1>
-      <MDBContainer className="p-3 my-5 d-flex flex-column logInHolder">
+      <MDBContainer className="p-3 my-5 d-flex flex-column logInHolder logInDiv">
         <form onSubmit={handleSubmit}>
           <FormSelect
             wrapperClass="mb-4"
@@ -467,7 +467,7 @@ function Login({ onLogin }) {
     return (
       <div>
         <h1 className="logInFont">Forgot Password</h1>
-        <MDBContainer className="p-3 my-5 d-flex flex-column logInHolder">
+        <MDBContainer className="p-3 my-5 d-flex flex-column logInHolder logInDiv">
           <form onSubmit={handleForgotPasswordSubmit}>
             <MDBInput
               wrapperClass="mb-4"
@@ -497,7 +497,7 @@ function Login({ onLogin }) {
   return (
     <div>
       <h1 className="logInFont">Login</h1>
-      <MDBContainer className="p-3 my-5 d-flex flex-column logInHolder">
+      <MDBContainer className="p-3 my-5 d-flex flex-column logInHolder logInDiv">
         <form onSubmit={handleSubmit}>
           <MDBInput
             wrapperClass="mb-4"
