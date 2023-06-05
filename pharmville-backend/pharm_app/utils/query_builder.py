@@ -10,7 +10,8 @@ class BaseQueryBuilder:
         self.ordering = kwargs.get("ordering")
         self.order_type = kwargs.get("order_type")
         self.min_price = kwargs.get('min_price')
-        self.max_price = kwargs.get('max_price')
+        self.max_price = kwargs.get('max_price'),
+        self.pharmacy_id = kwargs.get('pharmacy_id')
 
     def _apply_ordering(self):
         order_str = ""
@@ -28,6 +29,15 @@ class BaseQueryBuilder:
                 raise ValueError(f"'ordering' must be 'ASC' or 'DESC' current value: {self.ordering}")
         return order_str
 
+    def _get_pharmacy_id_predicate(self):
+        predicate = ""
+        if self.pharmacy_id:
+            predicate = f" prod_id IN (SELECT prod_id FROM pharmacy_product WHERE pharmacy_id = {self.pharmacy_id} )"
+        if predicate == "":
+            return None
+        else:
+            return predicate
+
     def _apply_price_range(self):
         price_predicate = ""
         # validate fields
@@ -38,7 +48,11 @@ class BaseQueryBuilder:
             price_predicate = f" price >= {self.min_price} "
         elif self.max_price:
             price_predicate = f" price <= {self.max_price} "
-        return price_predicate
+
+        if price_predicate == "":
+            return None
+        else:
+            return price_predicate
 
 
 class MedicineQueryBuilder(BaseQueryBuilder):
@@ -89,8 +103,12 @@ class MedicineQueryBuilder(BaseQueryBuilder):
             """)
 
         price_predicate = self._apply_price_range()
-        if price_predicate != "":
+        if not price_predicate:
             predicates.append(price_predicate)
+
+        pharmacy_predicate = self._get_pharmacy_id_predicate()
+        if pharmacy_predicate:
+            predicates.append(pharmacy_predicate)
 
         if len(predicates) != 0:
             query += "WHERE "
@@ -118,9 +136,12 @@ class ProteinPowderQueryBuilder(BaseQueryBuilder):
         if self.aromas and len(self.aromas) > 0:
             predicates.append(f""" aroma_name IN ({to_string_tuple(self.aromas)}) """)
         price_predicate = self._apply_price_range()
-        if price_predicate != "":
+        if not price_predicate:
             predicates.append(price_predicate)
 
+        pharmacy_predicate = self._get_pharmacy_id_predicate()
+        if pharmacy_predicate:
+            predicates.append(pharmacy_predicate)
         if len(predicates) != 0:
             query += " WHERE "
             query += " AND ".join(predicates)
@@ -155,9 +176,12 @@ class SkincareQueryBuilder(BaseQueryBuilder):
                 """)
 
         price_predicate = self._apply_price_range()
-        if price_predicate != "":
+        if not price_predicate:
             predicates.append(price_predicate)
 
+        pharmacy_predicate = self._get_pharmacy_id_predicate()
+        if pharmacy_predicate:
+            predicates.append(pharmacy_predicate)
         if len(predicates) != 0:
             query += " WHERE "
             query += " AND ".join(predicates)
