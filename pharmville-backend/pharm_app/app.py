@@ -8,7 +8,7 @@ from .conf import MysqlConfig
 from .views import (medicine_bp, protein_powder_bp, skincare_bp,
                     prescribe_bp, prescriptions_bp, review_bp,
                     orders_bp, patient_bp, address_bp, pharmacy_bp,
-                    products_bp, doctor_bp
+                    products_bp, doctor_bp, reports_bp
                     )
 import bcrypt
 
@@ -26,6 +26,7 @@ def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(products_bp)
     flask_app.register_blueprint(pharmacy_bp)
     flask_app.register_blueprint(doctor_bp)
+    flask_app.register_blueprint(reports_bp)
 
 
 def register_extensions(flask_app: Flask):
@@ -44,7 +45,7 @@ def create_app():
 
 app = create_app()
 Session(app)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 app.config["CORS_HEADERS"] = ["Content-Type", "Authorization"]
 
 
@@ -82,6 +83,7 @@ def login():
     return 'Logged in'
 
 
+
 @app.route('/logout', methods=['POST'])
 def logout():
     try:
@@ -103,7 +105,7 @@ def signup():
 
         if result is None:
             cursor.execute("INSERT INTO User (email, password, role) VALUES (%s, %s, %s)",
-                           (data['email'], hashed, data['role'])
+                                   (data['email'], hashed, data['role'])
                            )
             cursor.execute("SELECT user_id FROM User WHERE email=%s", (data['email'],))
             user_id = cursor.fetchone()['user_id']
