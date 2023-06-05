@@ -18,7 +18,6 @@ class PrescriptionsView(MethodView):
                 UPDATE Prescription
                 SET status = 'OVERDUE'
                 WHERE status = 'ACTIVE' AND due_date < CURDATE() AND patient_id = %s
-                ORDER BY IF(status = 'ACTIVE', 1, 2), due_date
                 """,
                 (patient,)
             )
@@ -30,6 +29,7 @@ class PrescriptionsView(MethodView):
         cursor.execute(
             """
             SELECT * FROM Prescription WHERE patient_id = %s
+            ORDER BY IF(status = 'ACTIVE', 1, 2), due_date
             """,
             (patient,)
         )

@@ -42,9 +42,9 @@ function Reviews() {
         <div className="reviewHolder">
 
             <div className="pharTitleElements">
-                <h1 className="reviewPharmacyTitle" onClick={() => goToPharmacyStoreHandler()}>Reviews for <u>{reviews.length !== 0 ? (reviews.stats.name): "Pharmacy"}</u></h1>
-                <p className="pharTitlePar"><strong>({reviews.length !== 0 ? (reviews.stats.total_reviews): "Pharmacy"} Reviews)</strong></p>
-                <p className="pharTitlePar">{reviews.length !== 0 ? (reviews.stats.avg_rating): "Pharmacy"}/5.0</p>
+                <h1 className="reviewPharmacyTitle" onClick={() => goToPharmacyStoreHandler()}>Reviews for <u>{(reviews.stats ) ? (reviews.stats.name): "Pharmacy"}</u></h1>
+                <p className="pharTitlePar"><strong>({(reviews.stats) ? (reviews.stats.total_reviews): "0"} Reviews)</strong></p>
+                <p className="pharTitlePar">{(reviews.stats )? (reviews.stats.avg_rating): "-"}/5.0</p>
             </div>
 
             <div className="commentsHolder">
@@ -57,6 +57,9 @@ function Reviews() {
                         <p className="commentBody">{review.body}</p>
                     </div>
                 ))}
+                {
+                    reviews.reviews.length === 0 && <p className="commentBody">No reviews yet.</p>
+                }
             </div>
         </div>
     );

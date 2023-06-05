@@ -283,16 +283,6 @@ function Filter(props) {
     } else {
       setNewMinPrice(minPrice);
     }
-
-    console.log("bu benim new max price")
-    console.log(newMaxPrice)
-    console.log("bu benim new min price")
-    console.log(newMinPrice)
-    console.log("bu benim max price")
-    console.log(maxPrice)
-    console.log("bu benim min price")
-    console.log(minPrice)
-    console.log(maxPrice < minPrice)
   };
   useEffect(() => {
     props.onMaxChange(newMaxPrice); // Call the callback function with the updated array
@@ -534,12 +524,14 @@ function Filter(props) {
                 type="number"
                 value={minPrice}
                 onChange={handleMinPriceChange}
+                min={0}
                 className="price-filter-input"
               />
               <input
                 type="number"
                 value={maxPrice}
                 onChange={handleMaxPriceChange}
+                min={0}
                 className="price-filter-input"
               />
             </div>
