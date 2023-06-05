@@ -27,7 +27,6 @@ def reg_blueprints(flask_app: Flask):
     flask_app.register_blueprint(pharmacy_bp)
     flask_app.register_blueprint(doctor_bp)
     flask_app.register_blueprint(reports_bp)
-    flask_app.register_blueprint(reports_bp)
 
 
 def register_extensions(flask_app: Flask):
