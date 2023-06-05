@@ -38,22 +38,32 @@ function Medicine(props) {
                 console.log(error);
             })
     }, []);
-    // onu satan eczaneleri çekk
-
-    // TODO
 
     // burada bi şekilde medicine mı product mı öğrenmem lazım:
-    // TODO
     const [product, setProduct] = useState([]);
     const [prodType, setIsProdType] = useState("");
 
+    const [buyButn, setBuyButn] = useState(false);
 
-
-    // button handler for adding toshopping cart
-    const addToCartHandler = (item) => {
+    const addToCartHandler = () => {
         // kullanıcının uyuşan prescriptionlarını çek
-        setShow(true);
+        setBuyButn(true);
     }
+
+    useEffect(() => {
+    const handleAddToCart = () => {
+        // add to cart
+        console.log("added to cart");
+        if (product.presc_type === "NONE") {
+            // satın al
+        } else {
+            setShow(true);
+        }
+        //navigate(`/`);
+    }
+    handleAddToCart();
+    }, [buyButn]);
+
 
 
     const handleClose = () => {
@@ -83,7 +93,6 @@ function Medicine(props) {
 
     // check if the item is medicine or prescription is needed, else no need to show a modal while adding to cart:
     // TODO
-    let isModalNeeded = true;
 
     return (
         <div>
@@ -166,12 +175,12 @@ function Medicine(props) {
                                     ))}
                                     <p style={{ color: "black" }}>({product.pharmacy.avg_rating})</p>
                                 </div>
-                                <button className="addCartBtn" onClick={() => addToCartHandler(product.pharmacy)}>Add to Cart</button>
+                                <button className="addCartBtn" onClick={addToCartHandler}>Add to Cart</button>
                             </div>
                         </div>
                 }
             </div>
-            {isModalNeeded && <div>
+            {product.presc_type !== "NONE" && <div>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title className="modalTitle">{arr.length > 0 ? "Select Prescription to Add Item to Cart" : "No prescription available"}</Modal.Title>
@@ -195,7 +204,7 @@ function Medicine(props) {
                         <button onClick={handleClose}>
                             Cancel
                         </button>
-                        <button onClick={handleClose}>
+                        <button onClick={addToCartHandler}>
                             Add to Cart
                         </button>
                     </Modal.Footer>

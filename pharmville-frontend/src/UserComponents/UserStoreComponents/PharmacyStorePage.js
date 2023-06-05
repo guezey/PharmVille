@@ -122,6 +122,14 @@ function PharmacyStorePage() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(false);
 
+     // domain'den objeyi çekkk
+     const currentURL = window.location.pathname;
+     const parts = currentURL.split('pharmacyStore/'); // Split the pathname by '/'
+     // set-id:
+     const id = parts[parts.length - 1]; // Get the last part of the pathname
+     console.log(id);
+ 
+
     // fetch medicine data:
     useEffect(() => {
         setIsLoading(true); // Set isLoading to true before starting the fetch
@@ -141,6 +149,7 @@ function PharmacyStorePage() {
                 aromas: selectedAroma,
                 skincare_types: selectedSkinCare,
                 skin_types: selectedSkinType,
+                pharmacy_id: id
             }) // Empty body
         })
             .then(response => response.json())
@@ -164,8 +173,8 @@ function PharmacyStorePage() {
     }
 
     const navigate = useNavigate();
-    const goToReviewHandler = (item) => {
-        navigate(`/review/${item}`);
+    const goToReviewHandler = () => {
+        navigate(`/review/${id}`);
     };
 
 
@@ -173,7 +182,7 @@ function PharmacyStorePage() {
         <div>
             <div className='pharmacyTitleHolder'>
                 <h1 className='pharmacyTitleForStore'>Products of Faruk Pharmacy</h1>
-                <p className='pharmacyParForStore' onClick={() => goToReviewHandler(1)}>Reviews 4.2/5.0</p>
+                <p className='pharmacyParForStore' onClick={() => goToReviewHandler()}>See Reviews</p>
             </div>
             <div className="container">
                 <div className="column-1">
