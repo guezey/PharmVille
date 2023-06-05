@@ -47,6 +47,18 @@ def get_cart():
         item['pharmacy_name'] = cursor.fetchone()['name']
 
     return jsonify(session['cart']), 200
+@bp.route('/cart', methods=['DELETE'])
+def delete_from_cart():
+    if 'cart' not in session:
+        return jsonify({'message': 'NO cART included'}), 404
 
+    prod_id = request.args.get('prod_id')
+
+    for item in session['cart']:
+        if item['prod_id'] == prod_id:
+            session['cart'].remove(item)
+            break
+
+    return jsonify(session['cart']), 200
 
 bp.add_url_rule("", view_func=PatientInfoView.as_view("patient-info"))
